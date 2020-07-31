@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">ScanQ</string>
+
+    <string name="text_button_activity_main">prüfen</string>
+    <string name="title_activity_main2">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="shortcut_disabled">Shortcut deaktiviert</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="galerie">Galerie</string>
+    <string name="kamera">Kamera</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="eingabe_1">Name</string>
+    <string name="textview1">TextView</string>
+    <string name="ergebnis">Ergebnis</string>
+    <string name="bild_hinzuf_gen">Bild Hinzufügen</string>
+    <string name="weiteres">weiteres</string>
+    <string name="scanq">ScanQ</string>
+    <string name="title_activity_einstellung">einstellung</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Überschrift 1</string>
+    <string name="sync_header">Überscrhift 2</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Dein Name</string>
+    <string name="reply_title">Auswahl Einstellung</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Schalter Einstllung</string>
+    <string name="attachment_title">potentielle Einstellung</string>
+    <string name="attachment_summary_on">zusätzliche Erklärung unterhalb  einer Einstellung für Fall 2</string>
+    <string name="attachment_summary_off">zusätzliche Erklärung unterhalb  einer Einstellung für Fall 1</string>
+    <string name="bild_vorschau">Bild Vorschau</string>
+    <string name="hier_steht_gleich_dein_ergebnis">Hier steht gleich dein Ergebnis…</string>
+    <string name="home">home</string>
+    <string name="aufgabe">aufgabe</string>
+    <string name="neu">neu</string>
+    <string name="einstellungen">Einstellungen</string>
+    <string name="titelbild">TitelBild</string>
+    <string name="brauchst_du_hilfe">Brauchst du Hilfe ?</string>
+    <string name="faq">FAQ</string>
+    <string name="tutorial">Tutorial</string>
+    <string name="emptyspaceneu">Neu</string>
+    <string name="quiz">Quiz</string>
+    <string name="dateien">Dateien</string>
+    <string name="anzeigen">anzeigen</string>
+    <string name="l_schen">löschen</string>
+    <string name="bez_speichern">speichern</string>
+    <string name="aendern">ändern</string>
+    <string name="previous_button">previous Button</string>
+    <string name="next_button">next Button</string>
+    <string name="_0">0</string>
+    <string name="appicon">AppIcon</string>
+</resources>
