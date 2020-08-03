@@ -43,6 +43,8 @@ public class quiz extends AppCompatActivity {
 
         TextView question = (TextView) findViewById(R.id.question);
         question.setText("Welche Übersetzung passt?");
+        TextView voc = (TextView) findViewById(R.id.voc);
+        voc.setText("Essen");
 
         answer1 = (Button) findViewById(R.id.answer1);
         answer2 = (Button) findViewById(R.id.answer2);
@@ -52,10 +54,10 @@ public class quiz extends AppCompatActivity {
         ImageButton previous = (ImageButton) findViewById(R.id.quizleft);
         ImageButton next = (ImageButton) findViewById(R.id.quizright);
 
-        String text1 = "Antwort";
-        String text2 = "falsch";
-        String text3 = "richtig";
-        String text4 = "möglich";
+        String text1 = "foot";
+        String text2 = "fod";
+        String text3 = "food";
+        String text4 = "fot";
 
         answer1.setText(text1);
         answer2.setText(text2);
@@ -101,9 +103,9 @@ public class quiz extends AppCompatActivity {
                 answer2.setClickable(false);
                 answer3.setClickable(false);
                 answer4.setClickable(false);
-                int newpoint = currentpoint+1;
-                points.setText(String.valueOf(newpoint));
-                editor.putString("myKey1", String.valueOf(newpoint));
+                int newPoint = currentpoint+1;
+                points.setText(String.valueOf(newPoint));
+                editor.putString("myKey1", String.valueOf(newPoint));
                 editor.apply();
             }
         });
