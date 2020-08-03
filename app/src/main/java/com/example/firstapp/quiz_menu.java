@@ -11,8 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class quiz_menu extends AppCompatActivity {
 
     private Button quizMulti;
-    private Button quizGer;
     private Button quizEngl;
+    private Button quizGer;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -20,8 +20,8 @@ public class quiz_menu extends AppCompatActivity {
         setContentView(R.layout.quiz_menu);
 
         quizMulti = (Button) findViewById(R.id.playMult);
-        quizGer = (Button) findViewById(R.id.playGer);
         quizEngl = (Button) findViewById(R.id.playEng);
+        quizGer = (Button) findViewById(R.id.playGer);
 
         quizMulti.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,17 +31,18 @@ public class quiz_menu extends AppCompatActivity {
             }
         });
 
-        quizGer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
         quizEngl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(quiz_menu.this, quiz2.class);
+                quiz_menu.this.startActivity(intent);
+            }
+        });
+
+        quizGer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(quiz_menu.this, quiz3.class);
                 quiz_menu.this.startActivity(intent);
             }
         });
