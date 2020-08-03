@@ -58,4 +58,18 @@
     <string name="next_button">next Button</string>
     <string name="_0">0</string>
     <string name="appicon">AppIcon</string>
+    <string name="union_jack">union jack</string>
+    <string name="pruefen">prüfen</string>
+    <string name="bersetze_deutsche_n_vokabeln">Übersetze deutsche \n Vokabeln</string>
+    <string name="play">play</string>
+    <string name="bersetze_englische_n_vokabeln">Übersetze englische \n Vokabeln</string>
+    <string name="w_hle_aus_4_m_glichkeiten">Wähle aus 4 \nmöglichen Antworten</string>
+    <string name="multiple_choice">Multiple Choice</string>
+    <string name="flag">Flag</string>
+    <string name="uebersetzte_folgedes">Übersetzte folgedes:</string>
+    <string name="food">food</string>
+    <string name="loesung">Lösung</string>
+    <string name="richtig">Richtig</string>
+    <string name="food_essen">food = Essen</string>
+    <string name="falsch">Falsch</string>
 </resources>

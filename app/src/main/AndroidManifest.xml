@@ -35,7 +35,13 @@
             android:name=".Haupt"
             android:theme="@style/AppTheme.SlideActivity" />
         <activity
+            android:name=".quiz_menu"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".quiz"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".quiz2"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".weiteres"

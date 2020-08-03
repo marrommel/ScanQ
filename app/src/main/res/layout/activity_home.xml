@@ -133,59 +133,64 @@
         app:cardCornerRadius="6dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/card1">
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/homeToNew"
-                android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="80dp"
-                android:backgroundTint="#219a95"
-                android:paddingEnd="25dp"
-                android:paddingStart="13dp"
-                android:paddingVertical="8dp"
-                app:iconTint="#ffffff"
-                app:icon="@drawable/neu"
-                app:iconSize="35dp"
-                android:textSize="30sp"
-                android:textColor="#ffffff"
-                android:text="@string/emptyspaceneu" />
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/homeToQuiz"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50dp"
-                android:backgroundTint="#219a95"
-                android:paddingEnd="25dp"
-                android:paddingStart="13dp"
-                android:paddingVertical="8dp"
-                android:textSize="30sp"
-                android:textColor="#ffffff"
-                app:iconTint="#ffffff"
-                app:iconSize="35dp"
-                app:icon="@drawable/game"
-                android:text="@string/quiz" />
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/homeToData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="50dp"
-                android:backgroundTint="#219a95"
-                android:paddingEnd="25dp"
-                android:paddingStart="13dp"
-                android:paddingVertical="8dp"
-                android:textSize="30sp"
-                android:textColor="#ffffff"
-                app:iconTint="#ffffff"
-                app:iconSize="35dp"
-                app:icon="@drawable/dateien"
-                android:text="@string/dateien" />
-        </LinearLayout>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:orientation="vertical">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/homeToNew"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:backgroundTint="#219a95"
+                    android:paddingEnd="25dp"
+                    android:paddingStart="13dp"
+                    android:paddingVertical="8dp"
+                    app:iconTint="#ffffff"
+                    app:icon="@drawable/neu"
+                    app:iconSize="35dp"
+                    android:textSize="30sp"
+                    android:textColor="#ffffff"
+                    android:text="@string/emptyspaceneu" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/homeToQuiz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="50dp"
+                    android:backgroundTint="#219a95"
+                    android:paddingEnd="25dp"
+                    android:paddingStart="13dp"
+                    android:paddingVertical="8dp"
+                    android:textSize="30sp"
+                    android:textColor="#ffffff"
+                    app:iconTint="#ffffff"
+                    app:iconSize="35dp"
+                    app:icon="@drawable/game"
+                    android:text="@string/quiz" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/homeToData"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="50dp"
+                    android:backgroundTint="#219a95"
+                    android:paddingEnd="25dp"
+                    android:paddingStart="13dp"
+                    android:paddingVertical="8dp"
+                    android:textSize="30sp"
+                    android:textColor="#ffffff"
+                    app:iconTint="#ffffff"
+                    app:iconSize="35dp"
+                    app:icon="@drawable/dateien"
+                    android:text="@string/dateien" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -73,7 +73,7 @@ public class home extends AppCompatActivity {
         quiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(home.this, quiz.class);
+                Intent myIntent = new Intent(home.this, quiz_menu.class);
                 home.this.startActivity(myIntent);
             }
         });

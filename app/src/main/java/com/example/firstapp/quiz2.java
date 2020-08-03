@@ -13,8 +13,6 @@ import androidx.cardview.widget.CardView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.Objects;
-
 public class quiz2 extends AppCompatActivity {
 
     private TextView points2;
@@ -25,19 +23,19 @@ public class quiz2 extends AppCompatActivity {
     private CardView falsch;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quiz2);
 
         points2 = (TextView) findViewById(R.id.points2);
 
-        SharedPreferences SPR = getSharedPreferences("point2", 0);
-        final SharedPreferences.Editor editor = SPR.edit();
-        if(Objects.equals(SPR.getString("myKey2", ""), "0")) {
-            editor.putString("myKey2", "0");
-            editor.apply();
-        }
-        String currPoints = SPR.getString("myKey2","");
+        SharedPreferences mSPR = getSharedPreferences("point2", 0);
+        final SharedPreferences.Editor editor = mSPR.edit();
+        editor.putString("myKey1", "0");
+        editor.apply();
+
+        String currPoints = mSPR.getString("myKey1","");
+        assert currPoints != null;
         final int currentPoints = Integer.parseInt(currPoints);
 
         layoutloesung = (TextInputLayout) findViewById(R.id.loesungEBox);
@@ -52,13 +50,13 @@ public class quiz2 extends AppCompatActivity {
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int newpoint = currentPoints+1;
+                int newPoint = currentPoints+1;
                 if(loesung.getText().toString().toLowerCase().equals("essen")){
                     layoutloesung.setVisibility(View.GONE);
                     check.setVisibility(View.GONE);
                     richtig.setVisibility(View.VISIBLE);
-                    points2.setText(String.valueOf(newpoint));
-                    editor.putString("myKey1", String.valueOf(newpoint));
+                    points2.setText(String.valueOf(newPoint));
+                    editor.putString("myKey1", String.valueOf(newPoint));
                     editor.apply();
                 }else{
                     layoutloesung.setVisibility(View.GONE);
@@ -73,7 +71,7 @@ public class quiz2 extends AppCompatActivity {
         super.onDestroy();
         SharedPreferences mySPR = getSharedPreferences("point2", 0);
         final SharedPreferences.Editor editor = mySPR.edit();
-        editor.putString("myKey2", "0");
+        editor.putString("myKey1", "0");
         editor.apply();
     }
 
@@ -82,7 +80,7 @@ public class quiz2 extends AppCompatActivity {
         super.onStop();
         SharedPreferences mySPR = getSharedPreferences("point2", 0);
         final SharedPreferences.Editor editor = mySPR.edit();
-        editor.putString("myKey2", "0");
+        editor.putString("myKey1", "0");
         editor.apply();
     }
 }
