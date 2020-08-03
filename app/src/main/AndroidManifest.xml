@@ -44,6 +44,9 @@
             android:name=".quiz2"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".quiz3"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".weiteres"
             android:label="weiteres"
             android:theme="@style/AppTheme.SlideActivity" />

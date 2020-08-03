@@ -72,4 +72,12 @@
     <string name="richtig">Richtig</string>
     <string name="food_essen">food = Essen</string>
     <string name="falsch">Falsch</string>
+    <string name="essen_food">Essen = food</string>
+    <string name="das_essen">(das) Essen</string>
+    <string name="solution">solution</string>
+    <string name="wrong">wrong</string>
+    <string name="right">right</string>
+    <string name="translate_the_following">translate the following</string>
+    <string name="check">check</string>
+    <string name="correct">correct</string>
 </resources>

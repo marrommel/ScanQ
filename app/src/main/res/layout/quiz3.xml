@@ -103,7 +103,7 @@
                         android:paddingTop="10dp"
                         android:textSize="40sp"
                         android:textColor="#426e13"
-                        android:text="@string/right"/>
+                        android:text="@string/correct"/>
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
