@@ -77,7 +77,7 @@
     <string name="solution">solution</string>
     <string name="wrong">wrong</string>
     <string name="right">right</string>
-    <string name="translate_the_following">translate the following</string>
+    <string name="translate_the_following">translate the following:</string>
     <string name="check">check</string>
     <string name="correct">correct</string>
 </resources>
