@@ -25,6 +25,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.room.Room;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
@@ -39,9 +40,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Haupt extends AppCompatActivity {
+    final Datenbank db = Room.databaseBuilder(getApplicationContext(), Datenbank.class, "Vokabeln").build();
 
     private static String FILE_NAME;
     private Datei datei;
@@ -66,6 +69,8 @@ public class Haupt extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstaceState){
+
+
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_haupt);
 
@@ -85,13 +90,13 @@ public class Haupt extends AppCompatActivity {
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-        ImageView home = (ImageView) findViewById(R.id.homeButton);
-        ImageView aufgabe = (ImageView) findViewById(R.id.aufgabeButton);
+        ImageView home = findViewById(R.id.homeButton);
+        ImageView aufgabe = findViewById(R.id.aufgabeButton);
         /*ImageButton neu = (ImageButton) findViewById(R.id.neuButton);
         ImageButton neuClicked = (ImageButton) findViewById(R.id.neuClicked);*/
-        Button anzeigen = (Button) findViewById(R.id.anzeigen);
-        Button speichern = (Button) findViewById(R.id.speichern);
-        Button loeschen = (Button) findViewById(R.id.loeschen);
+        Button anzeigen = findViewById(R.id.anzeigen);
+        Button speichern = findViewById(R.id.speichern);
+        Button loeschen = findViewById(R.id.loeschen);
 
         loeschen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -128,7 +133,7 @@ public class Haupt extends AppCompatActivity {
             public void onClick(View view) {
                 if(ergebnisEt.getText().toString().trim().length() != 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(Haupt.this);
-                    builder.setTitle("Dateiname: ");
+                    builder.setTitle("Kategorie: ");
 
                     final EditText input = new EditText(Haupt.this);
                     final TextInputLayout textInputLayout = new TextInputLayout(Haupt.this);
@@ -140,9 +145,18 @@ public class Haupt extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             m_Text = input.getText().toString();
-                            FileOutputStream fos = null;
-                            FILE_NAME = m_Text;
 
+                            if (m_Text.trim().length() != 0) {
+                                List<String> vokabelnText = Arrays.asList(ergebnisEt.getText().toString().split(" "));
+                                VokabelnDao vocabDao = db.vokabelnDao();
+                                //Diese Vorgehensweise muss überarbeitet werden!
+                                for (int i = 0; i < vokabelnText.size(); i+= 2) {
+                                    Vokabel voc = new Vokabel(vokabelnText.get(i), vokabelnText.get(i + 1), m_Text);
+                                    vocabDao.insertVokabel(voc);
+                                }
+
+                            }
+                            /*
                             try {
                                 if(m_Text.trim().length() != 0) {
                                     fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
@@ -167,7 +181,7 @@ public class Haupt extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                 }
-                            }
+                            }*/
                         }
                     });
                     builder.setNegativeButton("abbrechen", new DialogInterface.OnClickListener() {
