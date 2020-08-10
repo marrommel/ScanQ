@@ -16,8 +16,14 @@ public interface VokabelnDao {
     @Query("SELECT * FROM VOKABELN WHERE markiert = :markiert")
     List<Vokabel> getMarkierte(boolean markiert);
 
-    @Query("SELECT *FROM VOKABELN WHERE kategorie = :kategorie")
+    @Query("SELECT * FROM VOKABELN WHERE kategorie = :kategorie")
     List<Vokabel> getKategorieVokabeln(String kategorie);
+
+    @Query("SELECT vokabelDE FROM VOKABELN WHERE vokabelENG = :vokabelENG LIMIT 1")
+    String getAntwortDE(String vokabelENG);
+
+    @Query("SELECT vokabelENG FROM VOKABELN WHERE vokabelDE = :vokabelDE LIMIT 1")
+    String getAntwortENG(String vokabelDE);
 
     @Query("UPDATE VOKABELN SET vokabelENG = :neu WHERE vokabelENG = :alt")
     void updateVokabelENG(String alt, String neu);
@@ -25,7 +31,7 @@ public interface VokabelnDao {
     @Query("UPDATE VOKABELN SET vokabelDE = :neu WHERE vokabelDE = :alt")
     void updateVokabelDE(String alt, String neu);
 
-    @Query("UPDATE vokabeln SET markiert = :markiert WHERE id = :id")
+    @Query("UPDATE VOKABELN SET markiert = :markiert WHERE id = :id")
     void updateMarkierung(int id, boolean markiert);
 
     @Query("DELETE FROM VOKABELN WHERE id = :id")
