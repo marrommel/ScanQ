@@ -48,77 +48,62 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/answer1"
+    <LinearLayout
+        android:id="@+id/ll1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:paddingHorizontal="35dp"
-        android:paddingVertical="14dp"
-        android:focusable="true"
-        android:clickable="true"
-        android:textColor="#ffffff"
-        android:textSize="22sp"
-        android:backgroundTint="@color/colorPrimary"
-        app:cornerRadius="6dp"
         app:layout_constraintBottom_toBottomOf="@id/guideline2"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@id/guideline4"
-        app:layout_constraintTop_toTopOf="@id/guideline" />
+        app:layout_constraintTop_toTopOf="@id/guideline"
+        android:orientation="horizontal">
+        <!--<com.google.android.material.button.MaterialButton
+            android:id="@+id/answer1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="35dp"
+            android:paddingVertical="14dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:textColor="#ffffff"
+            android:textSize="22sp"
+            android:backgroundTint="@color/colorPrimary"
+            app:cornerRadius="6dp"
+            />-->
+    </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/answer2"
+    <LinearLayout
+        android:id="@+id/ll2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:paddingHorizontal="35dp"
-        android:paddingVertical="14dp"
-        android:focusable="true"
-        android:clickable="true"
-        android:textColor="#ffffff"
-        android:textSize="22sp"
-        android:backgroundTint="@color/colorPrimary"
-        app:cornerRadius="6dp"
         app:layout_constraintBottom_toBottomOf="@id/guideline2"
         app:layout_constraintLeft_toLeftOf="@id/guideline4"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/answer3"
+        app:layout_constraintTop_toTopOf="@id/guideline">
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="70dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:paddingHorizontal="35dp"
-        android:paddingVertical="14dp"
-        android:focusable="true"
-        android:clickable="true"
-        android:textColor="#ffffff"
-        android:textSize="22sp"
-        app:cornerRadius="6dp"
         app:layout_constraintBottom_toBottomOf="@id/guideline3"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="@id/guideline4"
-        app:layout_constraintTop_toTopOf="@id/guideline2" />
+        app:layout_constraintTop_toTopOf="@id/guideline2">
+    </LinearLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/answer4"
+    <LinearLayout
+        android:id="@+id/ll4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="70dp"
-        android:backgroundTint="@color/colorPrimary"
-        android:paddingHorizontal="35dp"
-        android:paddingVertical="14dp"
-        android:focusable="true"
-        android:clickable="true"
-        android:textColor="#ffffff"
-        android:textSize="22sp"
-        app:cornerRadius="6dp"
         app:layout_constraintBottom_toBottomOf="@id/guideline3"
         app:layout_constraintLeft_toLeftOf="@id/guideline4"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/guideline2" />
+        app:layout_constraintTop_toTopOf="@id/guideline2">
+    </LinearLayout>
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline"
