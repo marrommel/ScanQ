@@ -52,6 +52,12 @@ public interface VokabelnDao {
     @Query("DELETE FROM VOKABELN WHERE id = :id")
     void deleteVokabelWithId(int id);
 
+    @Query("DELETE FROM VOKABELN WHERE vokabelENG = :vokabelENG")
+    void deleteVokabelWithENG(String vokabelENG);
+
+    @Query("DELETE FROM VOKABELN WHERE vokabelDE = :vokabelDE")
+    void deleteVokabelWithDE(String vokabelDE);
+
     @Query("DELETE FROM VOKABELN WHERE kategorie = :kategorie")
     void deleteKategorie(String kategorie);
 
