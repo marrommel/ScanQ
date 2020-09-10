@@ -1,6 +1,7 @@
 package com.example.firstapp;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,19 +19,23 @@ public class home extends AppCompatActivity {
     private Button neu;
     private Button data;
     private CardView help;
+    private Button quiz;
+    private Button settings;
+    private Button logOut;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        up = (FloatingActionButton) findViewById(R.id.up);
-        down = (FloatingActionButton) findViewById(R.id.down);
-        neu = (Button) findViewById(R.id.homeToNew);
-        Button quiz = (Button) findViewById(R.id.homeToQuiz);
-        Button settings = (Button) findViewById(R.id.homeToEinstellungen);
-        data = (Button) findViewById(R.id.homeToData);
-        help = (CardView) findViewById(R.id.help);
+        up = findViewById(R.id.up);
+        down = findViewById(R.id.down);
+        neu = findViewById(R.id.homeToNew);
+        quiz = findViewById(R.id.homeToQuiz);
+        settings = findViewById(R.id.homeToEinstellungen);
+        logOut = findViewById(R.id.logOut);
+        data = findViewById(R.id.homeToData);
+        help = findViewById(R.id.help);
 
         down.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +78,7 @@ public class home extends AppCompatActivity {
         quiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(home.this, quiz_menu.class);
+                Intent myIntent = new Intent(home.this, vokabelSet.class);
                 home.this.startActivity(myIntent);
             }
         });
@@ -85,5 +90,31 @@ public class home extends AppCompatActivity {
                 home.this.startActivity(myIntent);
             }
         });
+
+        logOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences mySPR = getSharedPreferences("login", 0);
+                SharedPreferences.Editor editor = mySPR.edit();
+                editor.putString("myKey1", "false");
+                editor.apply();
+
+                Intent myIntent = new Intent(home.this, login.class);
+                home.this.startActivity(myIntent);
+                finish();
+            }
+        });
+
+
+        //Google Account Info
+        /*GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        if (account != null) {
+            String personName = account.getDisplayName();
+            String personGivenName = account.getGivenName();
+            String personFamilyName = account.getFamilyName();
+            String personEmail = account.getEmail();
+            String personId = account.getId();
+            Uri personPhoto = account.getPhotoUrl();
+        }*/
     }
 }
