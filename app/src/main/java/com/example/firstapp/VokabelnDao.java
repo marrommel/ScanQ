@@ -13,6 +13,9 @@ public interface VokabelnDao {
     @Query("SELECT * FROM VOKABELN")
     List<Vokabel> getAlle();
 
+    @Query("SELECT DISTINCT kategorie FROM VOKABELN")
+    List<String> getAlleKategorie();
+
     @Query("SELECT * FROM VOKABELN WHERE markiert = :markiert")
     List<Vokabel> getMarkierte(boolean markiert);
 
@@ -21,6 +24,9 @@ public interface VokabelnDao {
 
     @Query("SELECT markiert FROM VOKABELN WHERE vokabelDE = :de")
     Boolean isMarkiert(String de);
+
+    @Query("SELECT markiert FROM VOKABELN WHERE vokabelENG = :eng")
+    Boolean isMarkiertEng(String eng);
 
     @Query("SELECT vokabelDE FROM VOKABELN WHERE vokabelENG = :vokabelENG LIMIT 1")
     String getAntwortDE(String vokabelENG);
@@ -37,6 +43,9 @@ public interface VokabelnDao {
     @Query("SELECT id FROM VOKABELN WHERE vokabelDE = :de")
     int getId(String de);
 
+    @Query("SELECT id FROM VOKABELN WHERE vokabelENG = :en")
+    int getIdByEn(String en);
+
     @Query("UPDATE VOKABELN SET vokabelENG = :neu WHERE vokabelENG = :alt")
     void updateVokabelENG(String alt, String neu);
 
@@ -45,6 +54,9 @@ public interface VokabelnDao {
 
     @Query("UPDATE VOKABELN SET markiert = :markiert WHERE vokabelDE = :de")
     void updateMarkierung(String de, boolean markiert);
+
+    @Query("UPDATE VOKABELN SET markiert = :markiert WHERE vokabelENG = :eng")
+    void updateMarkierungEng(String eng, boolean markiert);
 
     @Query("UPDATE VOKABELN SET answered = :answered WHERE id = :id")
     void updateAnswered(int id, int answered);
