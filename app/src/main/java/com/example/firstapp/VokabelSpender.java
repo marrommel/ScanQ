@@ -73,7 +73,6 @@ public class VokabelSpender {
                 });
             }
         });
-
         return this.alleVokabeln;
     }
 

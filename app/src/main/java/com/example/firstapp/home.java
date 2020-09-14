@@ -62,10 +62,11 @@ public class home extends AppCompatActivity {
             }
         });
 
+
         data.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(home.this, dateien.class);
+                Intent myIntent = new Intent(home.this, AlleVokabelnAnzeigen.class);
                 home.this.startActivity(myIntent);
             }
         });
@@ -73,7 +74,7 @@ public class home extends AppCompatActivity {
         quiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(home.this, quiz_menu.class);
+                Intent myIntent = new Intent(home.this, quiz.class);
                 home.this.startActivity(myIntent);
             }
         });

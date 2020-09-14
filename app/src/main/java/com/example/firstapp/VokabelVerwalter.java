@@ -41,6 +41,18 @@ public class VokabelVerwalter {
         });
     }
 
+    public void updateVokabel(@NotNull final String altENG, @NotNull final String neuENG, @NotNull final String altDE, @NotNull final String neuDE) {
+        final VokabelnDao vokabelnDao = this.vokabelnDao;
+
+        new ThreadPerTaskExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                vokabelnDao.updateVokabelDE(altDE, neuDE);
+                vokabelnDao.updateVokabelENG(altENG, neuENG);
+            }
+        });
+    }
+
     public void deleteByENG(@NotNull final String englisch) {
         final VokabelnDao vokabelnDao = this.vokabelnDao;
         new ThreadPerTaskExecutor().execute(new Runnable() {
@@ -57,6 +69,36 @@ public class VokabelVerwalter {
             @Override
             public void run() {
                 vokabelnDao.deleteVokabelWithDE(deutsch);
+            }
+        });
+    }
+
+    public void deleteVokabel(@NotNull final Vokabel vokabel) {
+        final VokabelnDao vokabelnDao = this.vokabelnDao;
+        new ThreadPerTaskExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                vokabelnDao.deleatVokabel(vokabel);
+            }
+        });
+    }
+
+    public void markiere(@NotNull final Vokabel vokabel) {
+        final VokabelnDao vokabelnDao = this.vokabelnDao;
+        new ThreadPerTaskExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                vokabelnDao.updateMarkierung(vokabel.getVokabelDE(), true);
+            }
+        });
+    }
+
+    public void markierungEntfernen(@NotNull final Vokabel vokabel) {
+        final VokabelnDao vokabelnDao = this.vokabelnDao;
+        new ThreadPerTaskExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                vokabelnDao.updateMarkierung(vokabel.getVokabelDE(), false);
             }
         });
     }
