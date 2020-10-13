@@ -1,125 +1,82 @@
 package com.example.firstapp;
 
+import android.app.Application;
+
+import androidx.lifecycle.LiveData;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
-public class VokabelRepository implements VokabelDatenInterface {
+public class VokabelRepository {
 
-    private VokabelDatenInterface dbLocalDataSource;
-    private static VokabelRepository dbInstance;
+    private VokabelnDao repoVokabelnDao;
 
-    public VokabelRepository(VokabelDatenInterface dbLocalDataSource) {
-        this.dbLocalDataSource = dbLocalDataSource;
+    private LiveData<List<Vokabel>> repoAlleVokabeln;
+    private LiveData<List<Vokabel>> repoMarkierteVokabeln;
+    private LiveData<List<Vokabel>> repoKategorieVokabeln;
+    private LiveData<Boolean> repoIsMarkiert;
+    private LiveData<String> repoAntwortDE;
+    private LiveData<String> repoAntwortENG;
+    private LiveData<Integer> repoAnswered;
+    private LiveData<Vokabel> repoAlreadyAnswered;
+    private LiveData<Integer> repoId;
+
+    VokabelRepository(@NotNull Application application) {
+        Datenbank db = Datenbank.getDatenbank(application);
+        repoVokabelnDao = db.vokabelnDao();
+
+        repoAlleVokabeln = repoVokabelnDao.getAlle();
     }
 
-    public static VokabelRepository getInstance(VokabelDatenInterface dbLocalDataSource) {
-        if (dbInstance == null) {
-            dbInstance = new VokabelRepository(dbLocalDataSource);
-        }
-        return dbInstance;
+    LiveData<List<Vokabel>> getAlleVokabeln() {
+        return repoAlleVokabeln;
     }
 
-    @Override
-    public List<Vokabel> getAlle() {
-        return dbLocalDataSource.getAlle();
+    LiveData<List<Vokabel>> getAlleMarkiertenVokabeln(boolean markiert) {
+        return repoVokabelnDao.getMarkierte(markiert);
     }
 
-    @Override
-    public List<Vokabel> getMarkierte(boolean markiert) {
-        return dbLocalDataSource.getMarkierte(markiert);
+    LiveData<List<Vokabel>> getAlleKategorieVokabeln(String kategorie) {
+        return repoVokabelnDao.getKategorieVokabeln(kategorie);
     }
 
-    @Override
-    public List<Vokabel> getKategorieVokabeln(String kategorie) {
-        return dbLocalDataSource.getKategorieVokabeln(kategorie);
+    LiveData<Boolean> isVokabelMarkiert(String de) {
+        return repoVokabelnDao.isMarkiert(de);
     }
 
-    @Override
-    public Boolean isMarkiert(String de) {
-        return dbLocalDataSource.isMarkiert(de);
+    LiveData<String> getAntwortTextDE(String vokabelENG) {
+        return repoVokabelnDao.getAntwortDE(vokabelENG);
     }
 
-    @Override
-    public String getAntwortDE(String vokabelENG) {
-        return dbLocalDataSource.getAntwortDE(vokabelENG);
+    LiveData<String> getAntwortTextENG(String vokabelDE) {
+        return repoVokabelnDao.getAntwortENG(vokabelDE);
     }
 
-    @Override
-    public String getAntwortENG(String vokabelDE) {
-        return dbLocalDataSource.getAntwortENG(vokabelDE);
+    LiveData<Integer> getAnsweredCount(int id) {
+        return repoVokabelnDao.getAnswered(id);
     }
 
-    @Override
-    public int getAnswered(int id) {
-        return dbLocalDataSource.getAnswered(id);
+    LiveData<List<Vokabel>> getAlreadyAnsweredVokabeln(int answers) {
+        return repoVokabelnDao.getAlreadyAnswered(answers);
     }
 
-    @Override
-    public List<Vokabel> getAlreadyAnswered(int answered) {
-        return dbLocalDataSource.getAlreadyAnswered(answered);
+    void insertAlleVokabeln(final Vokabel... vokabeln) {
+        Datenbank.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                repoVokabelnDao.insertAlleVokabeln(vokabeln);
+            }
+        });
     }
 
-    @Override
-    public int getId(String de) {
-        return dbLocalDataSource.getId(de);
+    void insertVokabel(final Vokabel vokabel) {
+        Datenbank.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                repoVokabelnDao.insertVokabel(vokabel);
+            }
+        });
     }
 
-    @Override
-    public void updateVokabelENG(String alt, String neu) {
-        dbLocalDataSource.updateVokabelENG(alt, neu);
-    }
-
-    @Override
-    public void updateVokabelDE(String alt, String neu) {
-        dbLocalDataSource.updateVokabelDE(alt, neu);
-    }
-
-    @Override
-    public void updateMarkierung(String de, boolean markiert) {
-        dbLocalDataSource.updateMarkierung(de, markiert);
-    }
-
-    @Override
-    public void updateAnswered(int id, int answered) {
-        dbLocalDataSource.updateAnswered(id, answered);
-    }
-
-    @Override
-    public void deleteVokabelWithId(int id) {
-        dbLocalDataSource.deleteVokabelWithId(id);
-    }
-
-    @Override
-    public void deleteVokabelWithENG(String vokabelENG) {
-        dbLocalDataSource.deleteVokabelWithENG(vokabelENG);
-    }
-
-    @Override
-    public void deleteVokabelWithDE(String vokabelDE) {
-        dbLocalDataSource.deleteVokabelWithDE(vokabelDE);
-    }
-
-    @Override
-    public void deleteKategorie(String kategorie) {
-        dbLocalDataSource.deleteKategorie(kategorie);
-    }
-
-    @Override
-    public void insertVokabel(Vokabel vokabel) {
-        dbLocalDataSource.insertVokabel(vokabel);
-    }
-
-    @Override
-    public void insertAlleVokabeln(Vokabel... vokabeln) {
-        dbLocalDataSource.insertAlleVokabeln(vokabeln);
-    }
-
-    @Override
-    public void updateVokabel(Vokabel vokabel) {
-        dbLocalDataSource.updateVokabel(vokabel);
-    }
-
-    @Override
-    public void deleatVokabel(Vokabel vokabel) {
-        dbLocalDataSource.deleatVokabel(vokabel);
-    }
 }

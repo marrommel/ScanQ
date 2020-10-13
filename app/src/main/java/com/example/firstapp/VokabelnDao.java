@@ -1,8 +1,10 @@
 package com.example.firstapp;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -11,31 +13,31 @@ import java.util.List;
 @Dao
 public interface VokabelnDao {
     @Query("SELECT * FROM VOKABELN")
-    List<Vokabel> getAlle();
+    LiveData<List<Vokabel>> getAlle();
 
     @Query("SELECT * FROM VOKABELN WHERE markiert = :markiert")
-    List<Vokabel> getMarkierte(boolean markiert);
+    LiveData<List<Vokabel>> getMarkierte(boolean markiert);
 
     @Query("SELECT * FROM VOKABELN WHERE kategorie = :kategorie")
-    List<Vokabel> getKategorieVokabeln(String kategorie);
+    LiveData<List<Vokabel>> getKategorieVokabeln(String kategorie);
 
     @Query("SELECT markiert FROM VOKABELN WHERE vokabelDE = :de")
-    Boolean isMarkiert(String de);
+    LiveData<Boolean> isMarkiert(String de);
 
     @Query("SELECT vokabelDE FROM VOKABELN WHERE vokabelENG = :vokabelENG LIMIT 1")
-    String getAntwortDE(String vokabelENG);
+    LiveData<String> getAntwortDE(String vokabelENG);
 
     @Query("SELECT vokabelENG FROM VOKABELN WHERE vokabelDE = :vokabelDE LIMIT 1")
-    String getAntwortENG(String vokabelDE);
+    LiveData<String> getAntwortENG(String vokabelDE);
 
     @Query("SELECT answered FROM VOKABELN WHERE id = :id")
-    int getAnswered(int id);
+    LiveData<Integer> getAnswered(int id);
 
     @Query("SELECT * FROM VOKABELN WHERE answered = :answered")
-    List<Vokabel> getAlreadyAnswered(int answered);
+    LiveData<List<Vokabel>> getAlreadyAnswered(int answered);
 
     @Query("SELECT id FROM VOKABELN WHERE vokabelDE = :de")
-    int getId(String de);
+    LiveData<Integer> getId(String de);
 
     @Query("UPDATE VOKABELN SET vokabelENG = :neu WHERE vokabelENG = :alt")
     void updateVokabelENG(String alt, String neu);
@@ -61,10 +63,10 @@ public interface VokabelnDao {
     @Query("DELETE FROM VOKABELN WHERE kategorie = :kategorie")
     void deleteKategorie(String kategorie);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertVokabel(Vokabel vokabel);
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertAlleVokabeln(Vokabel... vokabeln);
 
     @Update
