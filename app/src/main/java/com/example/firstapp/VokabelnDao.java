@@ -63,6 +63,9 @@ public interface VokabelnDao {
     @Query("DELETE FROM VOKABELN WHERE kategorie = :kategorie")
     void deleteKategorie(String kategorie);
 
+    @Query("DELETE FROM VOKABELN")
+    void deleteAlles();
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertVokabel(Vokabel vokabel);
 

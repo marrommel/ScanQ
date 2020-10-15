@@ -10,7 +10,7 @@ import java.util.List;
 
 public class VokabelRepository {
 
-    private VokabelnDao repoVokabelnDao;
+    private final VokabelnDao repoVokabelnDao;
 
     private LiveData<List<Vokabel>> repoAlleVokabeln;
     private LiveData<List<Vokabel>> repoMarkierteVokabeln;
@@ -33,6 +33,7 @@ public class VokabelRepository {
         return repoAlleVokabeln;
     }
 
+    /*
     LiveData<List<Vokabel>> getAlleMarkiertenVokabeln(boolean markiert) {
         return repoVokabelnDao.getMarkierte(markiert);
     }
@@ -60,6 +61,7 @@ public class VokabelRepository {
     LiveData<List<Vokabel>> getAlreadyAnsweredVokabeln(int answers) {
         return repoVokabelnDao.getAlreadyAnswered(answers);
     }
+    */
 
     void insertAlleVokabeln(final Vokabel... vokabeln) {
         Datenbank.databaseWriteExecutor.execute(new Runnable() {

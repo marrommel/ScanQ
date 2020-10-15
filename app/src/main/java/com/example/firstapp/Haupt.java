@@ -2,6 +2,7 @@ package com.example.firstapp;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -150,7 +151,11 @@ public class Haupt extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             m_Text = input.getText().toString();
+                            Toast toast = Toast.makeText(Haupt.this, m_Text, Toast.LENGTH_SHORT);
+                            toast.show();
+                            dialog.cancel();
 
+                            /*
                             if (m_Text.trim().length() != 0) {
                                 List<String> vokabelnText = Arrays.asList(ergebnisEt.getText().toString().split(" "));
                                 final VokabelVerwalter vokabelVerwalter = new VokabelVerwalter(Haupt.this);
@@ -181,7 +186,10 @@ public class Haupt extends AppCompatActivity {
                                     }
                                 }
 
+
+
                             }
+                            */
                             /*
                             try {
                                 if(m_Text.trim().length() != 0) {

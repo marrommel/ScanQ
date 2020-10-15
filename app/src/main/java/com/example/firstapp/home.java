@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,8 +75,9 @@ public class home extends AppCompatActivity {
         quiz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(home.this, quiz.class);
-                home.this.startActivity(myIntent);
+                //Intent myIntent = new Intent(home.this, quiz.class);
+                //home.this.startActivity(myIntent);
+                Toast.makeText(home.this, "derzeit nicht verfügbar", Toast.LENGTH_SHORT).show();
             }
         });
 
