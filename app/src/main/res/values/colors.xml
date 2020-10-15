@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#107575</color>
     <color name="colorAccent">#13b5a4</color>
     <color name="colorText">#ffffff</color>
+    <color name="colorMarkierung">#9b59b6</color>
+    <color name="colorMarkierung2">#f39C12</color>
 </resources>
