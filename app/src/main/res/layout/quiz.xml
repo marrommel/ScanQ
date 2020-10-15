@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#efefef">
-    
+
     <androidx.cardview.widget.CardView
         android:id="@+id/resultCard1"
         android:layout_width="match_parent"
@@ -223,16 +223,16 @@
 
 
         c<ImageButton
-            android:id="@+id/quizleft"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:background="@null"
-            android:scaleType="fitXY"
-            android:src="@drawable/quizleft"
-            android:contentDescription="@string/previous_button" />
+        android:id="@+id/quizleft"
+        android:layout_width="60dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/quizleft"
+        android:contentDescription="@string/previous_button" />
 
         <ImageButton
             android:id="@+id/quizright"
