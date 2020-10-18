@@ -10,9 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class quiz_menu extends AppCompatActivity {
 
-    private Button quizMulti;
-    private Button quizEngl;
-    private Button quizGer;
+    private Button quizMulti, quizEngl, quizGer;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -26,7 +24,8 @@ public class quiz_menu extends AppCompatActivity {
         quizMulti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(quiz_menu.this, quiz.class);
+                Intent intent = new Intent(quiz_menu.this, vokabelSet.class);
+                intent.putExtra("quiz", 1);
                 quiz_menu.this.startActivity(intent);
             }
         });
@@ -34,7 +33,8 @@ public class quiz_menu extends AppCompatActivity {
         quizEngl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(quiz_menu.this, quiz2.class);
+                Intent intent = new Intent(quiz_menu.this, vokabelSet.class);
+                intent.putExtra("quiz", 2);
                 quiz_menu.this.startActivity(intent);
             }
         });
@@ -42,7 +42,8 @@ public class quiz_menu extends AppCompatActivity {
         quizGer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(quiz_menu.this, quiz3.class);
+                Intent intent = new Intent(quiz_menu.this, vokabelSet.class);
+                intent.putExtra("quiz", 3);
                 quiz_menu.this.startActivity(intent);
             }
         });

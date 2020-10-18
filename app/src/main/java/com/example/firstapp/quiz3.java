@@ -5,28 +5,38 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.room.Room;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class quiz3 extends AppCompatActivity {
-    private TextView points3;
+   /* private TextView points3, vocD;
     private EditText loesung;
     private TextInputLayout layoutloesung;
     private Button check;
-    private CardView richtig;
-    private CardView falsch;
+    private ImageButton previous, next;
+    private CardView richtig, falsch;
+    private final List<Vokabel> vocabList = new ArrayList<>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.quiz3);
 
-        points3 = (TextView) findViewById(R.id.points3);
+        final Datenbank db = Room.databaseBuilder(this, Datenbank.class, "Vokabeln").allowMainThreadQueries().build();
+        List<Vokabel> list = db.vokabelnDao().getAlle();
+        this.vocabList.addAll(list);
+
+        points3 = findViewById(R.id.points3);
 
         SharedPreferences mSPR = getSharedPreferences("point3", 0);
         final SharedPreferences.Editor editor = mSPR.edit();
@@ -37,20 +47,30 @@ public class quiz3 extends AppCompatActivity {
         assert currPoints != null;
         final int currentPoints = Integer.parseInt(currPoints);
 
-        layoutloesung = (TextInputLayout) findViewById(R.id.loesungEBox);
-        loesung = (EditText)findViewById(R.id.loesungE);
-        check = (Button)findViewById(R.id.check);
-        richtig = (CardView)findViewById(R.id.richtig);
-        falsch = (CardView)findViewById(R.id.falsch);
+        layoutloesung = findViewById(R.id.loesungEBox);
+        loesung = findViewById(R.id.loesungE);
+        check = findViewById(R.id.check);
+        richtig = findViewById(R.id.richtig);
+        falsch = findViewById(R.id.falsch);
+        previous = findViewById(R.id.quiz3left);
+        next = findViewById(R.id.quiz3right);
+        vocD = findViewById(R.id.vocD);
 
         richtig.setVisibility(View.GONE);
         falsch.setVisibility(View.GONE);
+
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                    vocD.setText(vocabList.get(1).getVokabelDE());
+            }
+        });
 
         check.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int newPoint = currentPoints+1;
-                if(loesung.getText().toString().toLowerCase().equals("food")){
+                if(loesung.getText().toString().toLowerCase().trim().equals(vocabList.get(1).getVokabelENG())){
                     layoutloesung.setVisibility(View.GONE);
                     check.setVisibility(View.GONE);
                     richtig.setVisibility(View.VISIBLE);
@@ -81,6 +101,6 @@ public class quiz3 extends AppCompatActivity {
         final SharedPreferences.Editor editor = mySPR.edit();
         editor.putString("myKey1", "0");
         editor.apply();
-    }
+    }*/
 }
 

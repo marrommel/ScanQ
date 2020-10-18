@@ -1,7 +1,5 @@
 package com.example.firstapp;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -36,7 +34,7 @@ public class vokabelSet extends AppCompatActivity implements AdapterView.OnItemC
 
         this.listView = findViewById(R.id.listViewSet);
 
-        List<String> list = db.vokabelnDao().getAlleKategorie();
+        List<String> list = db.vokabelnDao().getKategorie();
         this.vocabList.addAll(list);
 
         this.listViewAdapter = new ArrayAdapter<String>(this,
@@ -66,9 +64,13 @@ public class vokabelSet extends AppCompatActivity implements AdapterView.OnItemC
     public void onItemClick(AdapterView<?> l, View v, int position, long id) {
         // Toast.makeText(getBaseContext(), id+1 + ". " + vocabList.get(position).getKategorie(),
         //       Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(this, quiz_menu.class);
-        intent.putExtra("position", position);
-        startActivity(intent);
+        Intent intent = getIntent();
+        int quizId = intent.getIntExtra("quiz", 0);
+        Class[] quizes = {null, quiz.class, quiz2.class, quiz3.class, AlleVokabelnAnzeigen.class};
+
+        Intent intent1 = new Intent(this, quizes[quizId]);
+        intent1.putExtra("set", position);
+        startActivity(intent1);
     }
 
     @Override
