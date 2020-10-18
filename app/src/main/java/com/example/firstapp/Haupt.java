@@ -2,6 +2,7 @@ package com.example.firstapp;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.AndroidRuntimeException;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +28,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.room.Room;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
@@ -39,13 +43,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Haupt extends AppCompatActivity {
+    //final Datenbank db = Room.databaseBuilder(getApplicationContext(), Datenbank.class, "Vokabeln").build();
 
     private static String FILE_NAME;
-    private Datei datei;
+    //private Datei datei;
     private int mode;
+    //private VokabelVerwalter vokabelVerwalter = new VokabelVerwalter(this);
 
     EditText ergebnisEt;
     ImageView bildVorschau;
@@ -66,6 +73,8 @@ public class Haupt extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstaceState){
+
+
         super.onCreate(savedInstaceState);
         setContentView(R.layout.activity_haupt);
 
@@ -85,13 +94,13 @@ public class Haupt extends AppCompatActivity {
         cameraPermission = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermission = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-        ImageView home = (ImageView) findViewById(R.id.homeButton);
-        ImageView aufgabe = (ImageView) findViewById(R.id.aufgabeButton);
+        ImageView home = findViewById(R.id.homeButton);
+        ImageView aufgabe = findViewById(R.id.aufgabeButton);
         /*ImageButton neu = (ImageButton) findViewById(R.id.neuButton);
         ImageButton neuClicked = (ImageButton) findViewById(R.id.neuClicked);*/
-        Button anzeigen = (Button) findViewById(R.id.anzeigen);
-        Button speichern = (Button) findViewById(R.id.speichern);
-        Button loeschen = (Button) findViewById(R.id.loeschen);
+        Button anzeigen = findViewById(R.id.anzeigen);
+        Button speichern = findViewById(R.id.speichern);
+        Button loeschen = findViewById(R.id.loeschen);
 
         loeschen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -99,6 +108,7 @@ public class Haupt extends AppCompatActivity {
             }
         });
 
+        /*
         Intent intent = this.getIntent();
         this.datei = (Datei) intent.getSerializableExtra("Datei");
         if(datei== null)  {
@@ -107,6 +117,7 @@ public class Haupt extends AppCompatActivity {
             this.mode = MODE_EDIT;
             this.ergebnisEt.setText(datei.getDateiTitel());
         }
+         */
 
         home.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -118,7 +129,7 @@ public class Haupt extends AppCompatActivity {
 
         aufgabe.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent myIntent = new Intent(Haupt.this, dateien.class);
+                Intent myIntent = new Intent(Haupt.this, AlleVokabelnAnzeigen.class);
                 myIntent.putExtra("datei_name", m_Text);
                 Haupt.this.startActivity(myIntent);
             }
@@ -128,7 +139,7 @@ public class Haupt extends AppCompatActivity {
             public void onClick(View view) {
                 if(ergebnisEt.getText().toString().trim().length() != 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(Haupt.this);
-                    builder.setTitle("Dateiname: ");
+                    builder.setTitle("Kategorie: ");
 
                     final EditText input = new EditText(Haupt.this);
                     final TextInputLayout textInputLayout = new TextInputLayout(Haupt.this);
@@ -140,9 +151,46 @@ public class Haupt extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             m_Text = input.getText().toString();
-                            FileOutputStream fos = null;
-                            FILE_NAME = m_Text;
+                            Toast toast = Toast.makeText(Haupt.this, m_Text, Toast.LENGTH_SHORT);
+                            toast.show();
+                            dialog.cancel();
 
+                            /*
+                            if (m_Text.trim().length() != 0) {
+                                List<String> vokabelnText = Arrays.asList(ergebnisEt.getText().toString().split(" "));
+                                final VokabelVerwalter vokabelVerwalter = new VokabelVerwalter(Haupt.this);
+                                //Diese Vorgehensweise muss überarbeitet werden!
+                                for (int i = 0; i < vokabelnText.size(); i+= 2) {
+                                    final String vokabelENG = vokabelnText.get(i);
+                                    try {
+                                        final String vokabelDE = vokabelnText.get(i + 1);
+                                        vokabelVerwalter.speichern(vokabelENG, vokabelDE, m_Text);
+                                    } catch (java.lang.ArrayIndexOutOfBoundsException e) {
+                                        Log.i("Speicherfehler", e.toString());
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(Haupt.this);
+                                        builder.setTitle(vokabelENG + " bedeutet: ");
+
+                                        final EditText inputDE = new EditText(Haupt.this);
+                                        final TextInputLayout textInputLayout = new TextInputLayout(Haupt.this);
+                                        textInputLayout.setPadding(75, 0, 75, 20);
+                                        builder.setView(textInputLayout);
+                                        textInputLayout.addView(inputDE);
+
+                                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                String vocDE = inputDE.getText().toString();
+                                                vokabelVerwalter.speichern(vokabelENG, vocDE, m_Text);
+                                            }
+                                        });
+                                    }
+                                }
+
+
+
+                            }
+                            */
+                            /*
                             try {
                                 if(m_Text.trim().length() != 0) {
                                     fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
@@ -167,7 +215,7 @@ public class Haupt extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
                                 }
-                            }
+                            }*/
                         }
                     });
                     builder.setNegativeButton("abbrechen", new DialogInterface.OnClickListener() {
@@ -238,7 +286,7 @@ public class Haupt extends AppCompatActivity {
             }
         });
     }
-
+/*
     public void speichernClicked(){
         datenbank db = new datenbank(this);
         String title = this.m_Text;
@@ -260,6 +308,8 @@ public class Haupt extends AppCompatActivity {
                 "erfolgreich gespeichert", Toast.LENGTH_LONG).show();
     }
 
+ */
+/*
     public void insertVocabE(){
         datenbank db = new datenbank(this);
 
@@ -288,6 +338,8 @@ public class Haupt extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+ */
 
     /*public void insertVocabD(){
         datenbank db = new datenbank(this);

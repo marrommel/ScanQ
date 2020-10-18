@@ -30,7 +30,7 @@ public class startbildschirm extends AppCompatActivity {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    Intent myIntent = new Intent(startbildschirm.this, login.class);
+                    Intent myIntent = new Intent(startbildschirm.this, home.class);
                     startbildschirm.this.startActivity(myIntent);
                     finish();
                 }

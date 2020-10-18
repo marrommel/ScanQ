@@ -43,6 +43,8 @@ public class quiz extends AppCompatActivity {
     private LinearLayout ll4;
     private MaterialButton restart;
     private CardView questionCard, resultCard;
+    private VokabelSpender vokabelSpender;
+    private List<QuizFrage> quizFragen;
 
     private List<String> wrongVoc = new ArrayList<>();
     private final List<Vokabel> vocabList = new ArrayList<>();
@@ -79,9 +81,19 @@ public class quiz extends AppCompatActivity {
 
         final TextView question = findViewById(R.id.question);
         question.setText("Welche Übersetzung passt?");
+        /*
         final Datenbank db = Room.databaseBuilder(this, Datenbank.class, "Vokabeln").allowMainThreadQueries().addMigrations(MIGRATION_1_2).build();
         List<Vokabel> list = db.vokabelnDao().getAlle();
         this.vocabList.addAll(list);
+         */
+
+        String kategorie = "alle";
+        String modus = "E";
+
+        this.vokabelSpender = new VokabelSpender(getApplicationContext());
+        this.vocabList.addAll(this.vokabelSpender.getAlleVokabeln());
+        this.quizFragen = this.vokabelSpender.generateQuiz(kategorie, modus);
+
 
         final MaterialButton answer1 = new MaterialButton(this);
         final MaterialButton answer2 = new MaterialButton(this);
@@ -127,12 +139,13 @@ public class quiz extends AppCompatActivity {
 
                 final int currentvoc = sharedPref.getInt("vocKey1", 0);
                 int newVoc = currentvoc + 1;
-                if(newVoc >= vocabList.size()) {
+                if(newVoc >= quizFragen.size()) {
                     newVoc = 0;
                 }
                 edit.putInt("vocKey1", newVoc);
                 edit.apply();
 
+                /*
                 final int vocId = db.vokabelnDao().getId(String.valueOf(vocabList.get(newVoc).getVokabelDE()));
                 final int answered = db.vokabelnDao().getAnswered(vocId);
                 List<Vokabel> list = db.vokabelnDao().getAlle();
@@ -142,15 +155,20 @@ public class quiz extends AppCompatActivity {
                 for (int i = 0; i < 3; i++) {
                     wrongVoc.add(getFalscheAntwortEn(rightVoc));
                 }
+                 */
+                QuizFrage quizFrage = quizFragen.get(newVoc);
 
-                voc.setText(vocabList.get(newVoc).getVokabelDE());
-                answer3.setTag(id);
-                answer1.setText(wrongVoc.get(0));
-                answer2.setText(wrongVoc.get(1));
-                answer3.setText(rightVoc);
-                answer4.setText(wrongVoc.get(2));
+                final int answered = quizFrage.isBeantwortet();
+                final List<String> antworten = quizFrage.getAntworten();
 
-                final boolean markiert = db.vokabelnDao().isMarkiert(voc.getText().toString());
+                voc.setText(quizFrage.getFrage());
+                //answer3.setTag(antworten.get(1));
+                answer1.setText(antworten.get(2));
+                answer2.setText(antworten.get(3));
+                answer3.setText(antworten.get(0)); //richtige Antwort
+                answer4.setText(antworten.get(4));
+
+                final boolean markiert = quizFrage.getFrageVokabel().isMarkiert();
                 if(markiert) {
                     voc.setTextColor(Color.parseColor("#FF00FF"));
                 } else {
@@ -204,8 +222,13 @@ public class quiz extends AppCompatActivity {
                     answer4.setClickable(false);
                 }
 
-                final List<Vokabel> alreadyAnswered = db.vokabelnDao().getAlreadyAnswered(0);
-                if (alreadyAnswered.size() == 0) {
+                boolean solved = true;
+                for (int i = 0; i < quizFragen.size(); i++) {
+                    if (!quizFrage.isAlreadyAnswered()) {
+                        solved = false;
+                    }
+                }
+                if (solved) {
                     quizResult();
                     for (int i = 0; i < 4; i++) {
                         answers[i].setVisibility(View.GONE);
@@ -242,6 +265,7 @@ public class quiz extends AppCompatActivity {
                 edit.putInt("vocKey1", newVoc);
                 edit.apply();
 
+                /*
                 final int vocId = db.vokabelnDao().getId(String.valueOf(vocabList.get(newVoc).getVokabelDE()));
                 final int answered = db.vokabelnDao().getAnswered(vocId);
 
@@ -261,6 +285,22 @@ public class quiz extends AppCompatActivity {
                 answer4.setText(wrongVoc.get(2));
 
                 final boolean markiert = db.vokabelnDao().isMarkiert(voc.getText().toString());
+                 */
+
+                QuizFrage quizFrage = quizFragen.get(newVoc);
+
+                final int answered = quizFrage.isBeantwortet();
+                final List<String> antworten = quizFrage.getAntworten();
+
+                voc.setText(quizFrage.getFrage());
+                //answer3.setTag(antworten.get(1));
+                answer1.setText(antworten.get(2));
+                answer2.setText(antworten.get(3));
+                answer3.setText(antworten.get(0)); //richtige Antwort
+                answer4.setText(antworten.get(4));
+
+                final boolean markiert = quizFrage.getFrageVokabel().isMarkiert();
+
                 if(markiert) {
                     voc.setTextColor(Color.parseColor("#FF00FF"));
                 } else {
@@ -314,8 +354,13 @@ public class quiz extends AppCompatActivity {
                     answer4.setClickable(false);
                 }
 
-                final List<Vokabel> alreadyAnswered = db.vokabelnDao().getAlreadyAnswered(0);
-                if (alreadyAnswered.size() == 0) {
+                boolean solved = true;
+                for (int i = 0; i < quizFragen.size(); i++) {
+                    if (!quizFrage.isAlreadyAnswered()) {
+                        solved = false;
+                    }
+                }
+                if (solved) {
                     quizResult();
                     for (int i = 0; i < 4; i++) {
                         answers[i].setVisibility(View.GONE);
@@ -324,20 +369,20 @@ public class quiz extends AppCompatActivity {
             }
         });
 
-       answer1.setOnClickListener(new View.OnClickListener() {
+        answer1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    answer1.setBackgroundColor(Color.parseColor("#990000"));
-                    answer2.setBackgroundColor(Color.parseColor("#999999"));
-                    answer3.setBackgroundColor(Color.parseColor("#009900"));
-                    answer4.setBackgroundColor(Color.parseColor("#999999"));
-                    answer1.setClickable(false);
-                    answer2.setClickable(false);
-                    answer3.setClickable(false);
-                    answer4.setClickable(false);
+                answer1.setBackgroundColor(Color.parseColor("#990000"));
+                answer2.setBackgroundColor(Color.parseColor("#999999"));
+                answer3.setBackgroundColor(Color.parseColor("#009900"));
+                answer4.setBackgroundColor(Color.parseColor("#999999"));
+                answer1.setClickable(false);
+                answer2.setClickable(false);
+                answer3.setClickable(false);
+                answer4.setClickable(false);
 
-                final int vocId = db.vokabelnDao().getId(voc.getText().toString());
-                insert(vocId, 1);
+                //final int vocId = db.vokabelnDao().getId(voc.getText().toString());
+                //insert(vocId, 1);
             }
         });
 
@@ -353,8 +398,8 @@ public class quiz extends AppCompatActivity {
                 answer3.setClickable(false);
                 answer4.setClickable(false);
 
-                final int vocId = db.vokabelnDao().getId(voc.getText().toString());
-                insert(vocId, 2);
+                //final int vocId = db.vokabelnDao().getId(voc.getText().toString());
+                //insert(vocId, 2);
             }
         });
 
@@ -375,8 +420,8 @@ public class quiz extends AppCompatActivity {
                 editor.putInt("myKey1", newPoint);
                 editor.apply();
 
-                final int vocId = db.vokabelnDao().getId(voc.getText().toString());
-                insert(vocId, 3);
+                //final int vocId = db.vokabelnDao().getId(voc.getText().toString());
+                //insert(vocId, 3);
             }
         });
 
@@ -392,11 +437,12 @@ public class quiz extends AppCompatActivity {
                 answer3.setClickable(false);
                 answer4.setClickable(false);
 
-                final int vocId = db.vokabelnDao().getId(voc.getText().toString());
-                insert(vocId, 4);
+                //final int vocId = db.vokabelnDao().getId(voc.getText().toString());
+                //insert(vocId, 4);
             }
         });
 
+        /*
         voc.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -404,7 +450,7 @@ public class quiz extends AppCompatActivity {
                 if(!db.vokabelnDao().isMarkiert(voc.getText().toString())) {
                     items = new String[]{" Vokabel markieren", " Vokabel bearbeiten"};
                 } else {
-                     items = new String[]{" Markierung aufheben", " Vokabel bearbeiten"};
+                    items = new String[]{" Markierung aufheben", " Vokabel bearbeiten"};
                 }
                 AlertDialog.Builder dialog = new AlertDialog.Builder(quiz.this);
                 dialog.setItems(items, new DialogInterface.OnClickListener() {
@@ -432,6 +478,7 @@ public class quiz extends AppCompatActivity {
                 return false;
             }
         });
+         */
 
         restart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -451,6 +498,7 @@ public class quiz extends AppCompatActivity {
         });
     }
 
+    /*
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -480,16 +528,18 @@ public class quiz extends AppCompatActivity {
             db.vokabelnDao().updateMarkierung(vocabList.get(i).getVokabelDE(), false);
         }
     }
-
+     */
+    /*
     private String getFalscheAntwortEn(String richtigeAntwort) {
         String antwort;
         do {
             int index = new Random().nextInt(vocabList.size());
             antwort = vocabList.get(index).getVokabelENG();
-        } while (antwort.equals(richtigeAntwort) /*|| wrongVoc.contains(antwort)*/);
+        } while (antwort.equals(richtigeAntwort) || wrongVoc.contains(antwort));
 
         return antwort;
     }
+    */
 
     static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
