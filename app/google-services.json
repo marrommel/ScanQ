@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "555237997246",
+    "firebase_url": "https://scanq-1597142004279.firebaseio.com",
+    "project_id": "scanq-1597142004279",
+    "storage_bucket": "scanq-1597142004279.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555237997246:android:5039a774ca9a82931b3cef",
+        "android_client_info": {
+          "package_name": "com.rommelbendel.scanQ"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555237997246-e0gdar06hed0e3ri08j884d17r72ro87.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD9g6p_7wH0Y0pG6Y0yvoFMAaJughBGHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555237997246-e0gdar06hed0e3ri08j884d17r72ro87.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
