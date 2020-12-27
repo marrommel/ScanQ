@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
-                android:text="Gratualtion!"
+                android:text="@string/gratualtion"
                 android:textAlignment="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="55sp" />
@@ -31,9 +31,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="Du hast..."
+                android:text="@string/du_hast"
                 android:textAlignment="center"
-                android:textSize="38dp" />
+                android:textSize="38sp" />
 
             <TextView
                 android:id="@+id/countRight"
@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/colorPrimary"
-                android:text="2 Fragen richtig"
+                android:text="@string/_2_fragen_richtig"
                 android:textAlignment="center"
                 android:textSize="32sp" />
 
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/colorPrimary"
-                android:text="0 Fragen falsch"
+                android:text="@string/_0_fragen_falsch"
                 android:textAlignment="center"
                 android:textSize="32sp" />
 
@@ -59,9 +59,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="gelöst!"
+                android:text="@string/gel_st"
                 android:textAlignment="center"
-                android:textSize="38dp" />
+                android:textSize="38sp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,9 +77,8 @@
                     android:textSize="30sp"
                     android:clickable="true"
                     android:focusable="true"
-                    android:text="wiederholen"
-                    android:textColor="#ffffff"
-                    />
+                    android:text="@string/wiederholen"
+                    android:textColor="#ffffff" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
@@ -222,7 +221,7 @@
         app:layout_constraintTop_toTopOf="@id/guideline3">
 
 
-        c<ImageButton
+        <ImageButton
         android:id="@+id/quizleft"
         android:layout_width="60dp"
         android:layout_height="match_parent"
@@ -268,6 +267,6 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="8dp"
             android:drawablePadding="5dp"
-            android:drawableEnd="@drawable/quizpoints"/>
+            app:drawableEndCompat="@drawable/quizpoints" />
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
