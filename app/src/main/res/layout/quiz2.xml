@@ -216,6 +216,6 @@
             android:paddingHorizontal="15dp"
             android:paddingVertical="8dp"
             android:drawablePadding="5dp"
-            android:drawableEnd="@drawable/quizpoints"/>
+            app:drawableEndCompat="@drawable/quizpoints" />
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
