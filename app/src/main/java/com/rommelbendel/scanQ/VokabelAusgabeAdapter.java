@@ -1,4 +1,4 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -20,6 +20,16 @@ public class VokabelAusgabeAdapter extends RecyclerView.Adapter<VokabelAusgabeAd
         private VokabelViewHolder(View itemView) {
             super(itemView);
             vokabelItemView = itemView.findViewById(R.id.zeile);
+
+            /*
+            vokabelItemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int id = (int) v.getTag(1);
+                    Vokabel clickedVokabel =
+                }
+            });
+             */
         }
     }
 
@@ -46,6 +56,7 @@ public class VokabelAusgabeAdapter extends RecyclerView.Adapter<VokabelAusgabeAd
             String text = nextVokabel.getVokabelENG() + " | " + nextVokabel.getVokabelDE();
             Log.d("Ausgabe", text);
             vokabelViewHolder.vokabelItemView.setText(text);
+            //vokabelViewHolder.vokabelItemView.setTag(1, nextVokabel.getId());
         }
         else {
             vokabelViewHolder.vokabelItemView.setText(R.string.leere_datenbank_fehlermeldung);

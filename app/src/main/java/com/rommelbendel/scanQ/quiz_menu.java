@@ -1,4 +1,4 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +24,7 @@ public class quiz_menu extends AppCompatActivity {
         quizMulti.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(quiz_menu.this, vokabelSet.class);
+                Intent intent = new Intent(quiz_menu.this, quiz.class);
                 intent.putExtra("quiz", 1);
                 quiz_menu.this.startActivity(intent);
             }
@@ -33,7 +33,7 @@ public class quiz_menu extends AppCompatActivity {
         quizEngl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(quiz_menu.this, vokabelSet.class);
+                Intent intent = new Intent(quiz_menu.this, quiz.class);
                 intent.putExtra("quiz", 2);
                 quiz_menu.this.startActivity(intent);
             }
@@ -42,7 +42,7 @@ public class quiz_menu extends AppCompatActivity {
         quizGer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(quiz_menu.this, vokabelSet.class);
+                Intent intent = new Intent(quiz_menu.this, quiz_voice.class);
                 intent.putExtra("quiz", 3);
                 quiz_menu.this.startActivity(intent);
             }

@@ -1,4 +1,4 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import android.content.Context;
 
@@ -30,6 +30,7 @@ public abstract class Datenbank extends RoomDatabase {
             databaseWriteExecutor.execute(new Runnable() {
                 @Override
                 public void run() {
+                    /*
                     VokabelnDao vokabelnDao = INSTANCE.vokabelnDao();
                     vokabelnDao.deleteAlles();
 
@@ -41,6 +42,7 @@ public abstract class Datenbank extends RoomDatabase {
                     voc1.setMarkiert(true);
 
                     vokabelnDao.insertAlleVokabeln(voc1, voc2, voc3, voc4);
+                     */
                 }
             });
         }

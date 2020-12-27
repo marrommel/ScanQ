@@ -1,4 +1,4 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import android.app.Application;
 
@@ -32,5 +32,17 @@ public class VokabelViewModel extends AndroidViewModel {
 
     public void insertAlleVokabeln(@NotNull Vokabel... vokabeln) {
         vokabelRepository.insertAlleVokabeln(vokabeln);
+    }
+
+    public void deleteVokabelWithDE(@NotNull String deutsch) {
+        vokabelRepository.deleteVokabelWithDE(deutsch);
+    }
+
+    public void deleteVokabelWithENG(@NotNull String englisch) {
+        vokabelRepository.deleteVokabelWithENG(englisch);
+    }
+
+    public void deleteVokabel(@NotNull Vokabel vokabel) {
+        vokabelRepository.deleteVokabel(vokabel);
     }
 }

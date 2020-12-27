@@ -1,6 +1,8 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 /*import com.r0adkll.slidr.Slidr;
 import com.r0adkll.slidr.model.SlidrInterface;*/
 
-public class einstellung extends AppCompatActivity {
+public class einstellung extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class einstellung extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -33,5 +36,10 @@ public class einstellung extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
         }
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.d("SharedPref changed", key);
     }
 }

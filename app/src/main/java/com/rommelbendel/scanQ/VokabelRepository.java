@@ -1,4 +1,4 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import android.app.Application;
 
@@ -63,6 +63,15 @@ public class VokabelRepository {
     }
     */
 
+    void changeMarking() {
+        Datenbank.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        });
+    }
+
     void insertAlleVokabeln(final Vokabel... vokabeln) {
         Datenbank.databaseWriteExecutor.execute(new Runnable() {
             @Override
@@ -77,6 +86,33 @@ public class VokabelRepository {
             @Override
             public void run() {
                 repoVokabelnDao.insertVokabel(vokabel);
+            }
+        });
+    }
+
+    void deleteVokabelWithDE(final String deutsch) {
+        Datenbank.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                repoVokabelnDao.deleteVokabelWithDE(deutsch);
+            }
+        });
+    }
+
+    void deleteVokabelWithENG(final String englisch) {
+        Datenbank.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                repoVokabelnDao.deleteVokabelWithENG(englisch);
+            }
+        });
+    }
+
+    void deleteVokabel(final Vokabel vokabel) {
+        Datenbank.databaseWriteExecutor.execute(new Runnable() {
+            @Override
+            public void run() {
+                repoVokabelnDao.deleatVokabel(vokabel);
             }
         });
     }

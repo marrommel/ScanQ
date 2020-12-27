@@ -1,4 +1,4 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -39,9 +39,9 @@ public class VokabelManuell extends AppCompatActivity {
         buttonOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String englisch = inputEnglisch.getText().toString();
-                final String deutsch = inputDeutsch.getText().toString();
-                final String kategorie = inputKategorie.getText().toString();
+                final String englisch = inputEnglisch.getText().toString().trim();
+                final String deutsch = inputDeutsch.getText().toString().trim();
+                final String kategorie = inputKategorie.getText().toString().trim();
                 final boolean markiert = radioButtonMarkierung.isChecked();
 
                 if (!englisch.isEmpty()) {

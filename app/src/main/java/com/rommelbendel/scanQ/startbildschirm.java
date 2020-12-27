@@ -1,4 +1,4 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.rommelbendel.scanQ.impaired.visually.ReadOut;
 
 import java.util.Objects;
 
@@ -21,11 +23,12 @@ public class startbildschirm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.startbildschirm);
 
-        TextView text3 = (TextView) findViewById(R.id.text3);
+        @ReadOut(position = 0) TextView text3 = (TextView) findViewById(R.id.text3);
 
         SharedPreferences mySPR = getSharedPreferences("MySPFILE", 0);
         if(!Objects.equals(mySPR.getString("myKey1", ""), "")) {
             text3.setText("Hey " + mySPR.getString("myKey1", "") + "!");
+            //@ReadOut(position = 0) String greetingText = text3.getText().toString();
 
             new Handler().postDelayed(new Runnable() {
                 @Override

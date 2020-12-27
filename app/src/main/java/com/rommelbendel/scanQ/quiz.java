@@ -1,7 +1,10 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -15,6 +18,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.room.Room;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
@@ -34,11 +40,12 @@ public class quiz extends AppCompatActivity {
     private LinearLayout ll4;
     private MaterialButton restart;
     private CardView questionCard, resultCard;
-    private VokabelSpender vokabelSpender;
-    private List<QuizFrage> quizFragen;
 
     private List<String> wrongVoc = new ArrayList<>();
     private final List<Vokabel> vocabList = new ArrayList<>();
+    private VokabelViewModel vokabelViewModel;
+    private LiveData<List<Vokabel>> alleVokabelnLiveData;
+    private List<Vokabel> quizFrageVokabeln;
 
     float convertDpToPixels(Context context, int dp) {
         return (int) (dp * context.getResources().getDisplayMetrics().density);
@@ -72,18 +79,37 @@ public class quiz extends AppCompatActivity {
 
         final TextView question = findViewById(R.id.question);
         question.setText("Welche Übersetzung passt?");
-        /*
-        final Datenbank db = Room.databaseBuilder(this, Datenbank.class, "Vokabeln").allowMainThreadQueries().addMigrations(MIGRATION_1_2).build();
-        List<Vokabel> list = db.vokabelnDao().getAlle();
-        this.vocabList.addAll(list);
-         */
 
-        String kategorie = "alle";
-        String modus = "E";
+        vokabelViewModel = new ViewModelProvider(this).get(VokabelViewModel.class);
+        alleVokabelnLiveData = vokabelViewModel.getAlleVokabeln();
 
-        this.vokabelSpender = new VokabelSpender(getApplicationContext());
-        this.vocabList.addAll(this.vokabelSpender.getAlleVokabeln());
-        this.quizFragen = this.vokabelSpender.generateQuiz(kategorie, modus);
+        alleVokabelnLiveData.observe(this, new Observer<List<Vokabel>>() {
+            @Override
+            public void onChanged(List<Vokabel> vokabeln) {
+                if (vokabeln != null) {
+                    if (vokabeln.size() != 0) {
+                        quizFrageVokabeln = alleVokabelnLiveData.getValue();
+                        assert quizFrageVokabeln != null;
+                        Collections.shuffle(quizFrageVokabeln);
+                        //startQuiz();
+                    } else {
+                        AlertDialog.Builder warnung = new AlertDialog.Builder(quiz.this);
+                        warnung.setTitle("Quiz kann nicht gestartet werden");
+                        warnung.setMessage("Es sind keine Vokabeln vorhanden.");
+                        warnung.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                                Intent backIntent = new Intent(quiz.this, home.class);
+                                quiz.this.startActivity(backIntent);
+                                finish();
+                            }
+                        });
+                        warnung.show();
+                    }
+                }
+            }
+        });
 
 
         final MaterialButton answer1 = new MaterialButton(this);
@@ -130,7 +156,7 @@ public class quiz extends AppCompatActivity {
 
                 final int currentvoc = sharedPref.getInt("vocKey1", 0);
                 int newVoc = currentvoc + 1;
-                if(newVoc >= quizFragen.size()) {
+                if(newVoc >= quizFrageVokabeln.size()) {
                     newVoc = 0;
                 }
                 edit.putInt("vocKey1", newVoc);
@@ -259,7 +285,6 @@ public class quiz extends AppCompatActivity {
                 /*
                 final int vocId = db.vokabelnDao().getId(String.valueOf(vocabList.get(newVoc).getVokabelDE()));
                 final int answered = db.vokabelnDao().getAnswered(vocId);
-
                 List<Vokabel> list = db.vokabelnDao().getAlle();
                 List<Vokabel> vocabList = new ArrayList<>(list);
                 String rightVoc = vocabList.get(newVoc).getVokabelENG();
@@ -267,14 +292,12 @@ public class quiz extends AppCompatActivity {
                 for (int i = 0; i < 3; i++) {
                     wrongVoc.add(getFalscheAntwortEn(rightVoc));
                 }
-
                 voc.setText(vocabList.get(newVoc).getVokabelDE());
                 answer3.setTag(id);
                 answer1.setText(wrongVoc.get(0));
                 answer2.setText(wrongVoc.get(1));
                 answer3.setText(rightVoc);
                 answer4.setText(wrongVoc.get(2));
-
                 final boolean markiert = db.vokabelnDao().isMarkiert(voc.getText().toString());
                  */
 
@@ -461,7 +484,6 @@ public class quiz extends AppCompatActivity {
                             }
                         }
                         if( i == 1){
-
                         }
                     }
                 });
@@ -497,14 +519,12 @@ public class quiz extends AppCompatActivity {
         final SharedPreferences.Editor editor = mySPR.edit();
         editor.putInt("myKey1", 0);
         editor.apply();
-
         final Datenbank db = Room.databaseBuilder(this, Datenbank.class, "Vokabeln").allowMainThreadQueries().addMigrations(MIGRATION_1_2).build();
         for(int i=0; i<vocabList.size(); i++) {
             db.vokabelnDao().updateAnswered(vocabList.get(i).getId(), 0);
             db.vokabelnDao().updateMarkierung(vocabList.get(i).getVokabelDE(), false);
         }
     }
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -512,7 +532,6 @@ public class quiz extends AppCompatActivity {
         final SharedPreferences.Editor editor = mySPR.edit();
         editor.putInt("myKey1", 0);
         editor.apply();
-
         final Datenbank db = Room.databaseBuilder(this, Datenbank.class, "Vokabeln").allowMainThreadQueries().addMigrations(MIGRATION_1_2).build();
         for(int i=0; i<vocabList.size(); i++) {
             db.vokabelnDao().updateAnswered(vocabList.get(i).getId(), 0);
@@ -527,7 +546,6 @@ public class quiz extends AppCompatActivity {
             int index = new Random().nextInt(vocabList.size());
             antwort = vocabList.get(index).getVokabelENG();
         } while (antwort.equals(richtigeAntwort) || wrongVoc.contains(antwort));
-
         return antwort;
     }
     */

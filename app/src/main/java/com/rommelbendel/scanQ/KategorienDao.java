@@ -1,4 +1,4 @@
-package com.rommelbendel.firstapp;
+package com.rommelbendel.scanQ;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
