@@ -1,0 +1,43 @@
+CREATE TABLE IF NOT EXISTS weekdays(
+    day_of_week INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    name_of_day VARCHAR(9) NOT NULL,
+    last_date_occurred DATETIME NOT NULL,
+    right_answers INTEGER NOT NULL DEFAULT 0,
+    wrong_answers INTEGER NOT NULL DEFAULT 0
+);
+
+-- Logs for all INSERT, UPDATE and DELETE Statements against 'weekdays'
+CREATE TABLE IF NOT EXISTS weekdays_log(
+    log_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    action_name VARCHAR(6) NOT NULL,
+    action_timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    affected_id INTEGER NOT NULL,
+    name_of_day_new VARCHAR(9),
+    last_date_occurred_new DATETIME,
+    right_answers_new INTEGER,
+    wrong_answers_new INTEGER,
+    name_of_day_old VARCHAR(9),
+    last_date_occurred_old DATETIME,
+    right_answers_old INTEGER,
+    wrong_answers_old INTEGER
+);
+
+CREATE TRIGGER after_weekdays_insert AFTER INSERT ON weekdays FOR EACH ROW
+    BEGIN
+        INSERT INTO weekdays_log(action_name, affected_id, name_of_day_new, last_date_occurred_new, right_answers_new, wrong_answers_new)
+        VALUES ('INSERT', NEW.day_of_week, NEW.name_of_day, NEW.last_date_occurred, NEW.right_answers, NEW.wrong_answers);
+    END;
+
+CREATE TRIGGER after_weekdays_update AFTER UPDATE ON weekdays FOR EACH ROW
+    BEGIN
+        INSERT INTO weekdays_log(action_name, affected_id, name_of_day_new, last_date_occurred_new, right_answers_new, wrong_answers_new, name_of_day_old, last_date_occurred_old, right_answers_old, wrong_answers_old)
+        VALUES ('UPDATE', NEW.day_of_week, NEW.name_of_day, NEW.last_date_occurred, NEW.right_answers, NEW.wrong_answers, OLD.name_of_day, OLD.last_date_occurred, OLD.right_answers, OLD.wrong_answers);
+    END;
+
+CREATE TRIGGER after_weekdays_delete AFTER DELETE ON weekdays FOR EACH ROW
+    BEGIN
+        INSERT INTO weekdays_log(action_name, affected_id, name_of_day_old, last_date_occurred_old, right_answers_old, wrong_answers_old)
+        VALUES ('DELETE', OLD.day_of_week, OLD.name_of_day, OLD.last_date_occurred, OLD.right_answers, OLD.wrong_answers);
+    END;
+
+-- common SQL queries against 'weekdays'

@@ -1,0 +1,76 @@
+{
+  "addCategory": "Kategorie hinzufügen",
+
+  "categoryName": "Name der Kategorie",
+
+  "english": "Englisch",
+
+  "latin": "Lateinisch",
+
+  "french": "Französisch",
+
+  "italian": "Italienisch",
+
+  "spanish": "Spanisch",
+
+  "pleaseEnterAName": "Bitte gib einen Namen ein.",
+
+  "language": "Sprache",
+
+  "categoryCreatedText": "Die Kategorie \"{categoryName}\" wurde erfolgreich erstellt.",
+
+  "save": "Speichern",
+
+
+  "savedCategories": "Gespeicherte Kategorien",
+
+  "noDataFound": "Keine Daten gefunden.",
+
+
+  "addVocabulary": "Vokabel hinzufügen",
+
+  "scanVocabulary": "Vokabeln einscannen",
+
+  "category": "Kategorie",
+
+  "sourceLanguage": "Ausgangssprache",
+
+  "targetLanguage": "Zielsprache",
+
+  "fieldMustntBeEmpty": "Dieses Feld darf nicht leer sein.",
+
+  "vocabSaved": "Vokabel gespeichert",
+
+
+  "edit": "Bearbeiten",
+
+  "delete": "Löschen",
+
+  "markAsFavourite": "Als Favorit markieren",
+
+  "unmarkAsFavourite": "Als Favorit entfernen",
+
+  "readOut": "Vorlesen",
+
+  "xOfXVocabsLearned": "{vocabsTotal,plural, =1{{vocabsLearned} von {vocabsTotal} Vokabel gelernt} other{{vocabsLearned} von {vocabsTotal} Vokabeln gelernt}}",
+
+  "noVocabulariesYet": "Noch keine Vokabeln",
+
+
+  "quizSettings": "Quiz-Einstellungen",
+
+  "quizSeedOptionRandom": "zufällig",
+
+  "quizSeedOptionOnlyUnlearned": "nur ungelernte",
+
+  "quizSeedOptionSmart": "intelligent",
+
+
+  "editVocabulary": "Vokabel bearbeiten",
+
+  "readOutVocabularyBook": "Vokabelbuch vorlesen",
+
+  "stopReadingOut": "Vorlesen beenden",
+
+  "means": "bedeutet"
+}

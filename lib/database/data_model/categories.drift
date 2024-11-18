@@ -1,0 +1,58 @@
+import 'vocabularies.drift';
+
+CREATE TABLE IF NOT EXISTS categories(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    category_name TEXT NOT NULL,
+    category_language VARCHAR(2) NOT NULL,
+    date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_favourite BOOL NOT NULL DEFAULT FALSE
+) AS Category;
+
+CREATE INDEX IF NOT EXISTS cat_lang ON categories(category_language);
+
+-- Logs for all INSERT, UPDATE and DELETE Statements against 'categories'
+CREATE TABLE IF NOT EXISTS categories_log(
+    log_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    action_name VARCHAR(10) NOT NULL,
+    action_timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    affected_id INTEGER NOT NULL,
+    category_name_new TEXT,
+    category_language_new VARCHAR(2),
+    date_created_new DATETIME,
+    is_favourite_new BOOL,
+    category_name_old TEXT,
+    category_language_old VARCHAR(2),
+    date_created_old DATETIME,
+    is_favourite_old BOOL
+);
+
+CREATE TRIGGER after_category_insert AFTER INSERT ON categories FOR EACH ROW
+    BEGIN
+        INSERT INTO categories_log(action_name, affected_id, category_name_new, category_language_new, date_created_new, is_favourite_new)
+        VALUES ('INSERT', NEW.id, NEW.category_name, NEW.category_language, NEW.date_created, NEW.is_favourite);
+    END;
+
+CREATE TRIGGER after_category_update AFTER UPDATE ON categories FOR EACH ROW
+    BEGIN
+        INSERT INTO categories_log(action_name, affected_id, category_name_new, category_language_new, date_created_new, is_favourite_new, category_name_old, category_language_old, date_created_old, is_favourite_old)
+        VALUES ('UPDATE', NEW.id, NEW.category_name, NEW.category_language, NEW.date_created, NEW.is_favourite, OLD.category_name, OLD.category_language, OLD.date_created, OLD.is_favourite);
+    END;
+
+CREATE TRIGGER after_category_delete AFTER DELETE ON categories FOR EACH ROW
+    BEGIN
+        INSERT INTO categories_log(action_name, affected_id, category_name_old, category_language_old, date_created_old, is_favourite_old)
+        VALUES ('DELETE', OLD.id, OLD.category_name, OLD.category_language, OLD.date_created, OLD.is_favourite);
+
+        DELETE FROM vocabularies WHERE vocabularies.category_id = OLD.id;
+    END;
+
+-- common SQL queries against 'categories'
+allCategories: SELECT * FROM categories;
+allCategoriesWithLang: SELECT * FROM categories WHERE category_language = :target_language;
+allCategoryData: SELECT id, category_name, category_language, is_favourite FROM categories;
+categoryWithId: SELECT * FROM categories WHERE id = :target_id;
+lastlyInsertedCategory: SELECT * FROM categories ORDER BY id DESC LIMIT 1;
+createCategory: INSERT INTO categories(category_name, category_language) VALUES (:category_name, :language);
+renameCategory: UPDATE categories SET category_name = :new_category_name WHERE id = :id;
+deleteCategory: DELETE FROM categories WHERE id = :target_id;
+fullLog: SELECT * FROM categories_log;

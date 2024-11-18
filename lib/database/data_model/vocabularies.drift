@@ -1,0 +1,79 @@
+import 'categories.drift';
+
+CREATE TABLE IF NOT EXISTS vocabularies(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    voc_local TEXT NOT NULL,
+    voc_foreign TEXT NOT NULL,
+    category_id INTEGER NOT NULL REFERENCES categories(id),
+    date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_favourite BOOL NOT NULL DEFAULT FALSE,
+    date_last_answered DATETIME,
+    right_answers INTEGER NOT NULL DEFAULT 0,
+    wrong_answers INTEGER NOT NULL DEFAULT 0
+) AS Vocabulary;
+
+-- Logs for all INSERT, UPDATE and DELETE Statements against 'vocabularies'
+CREATE TABLE IF NOT EXISTS vocabularies_log(
+    log_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    action_name VARCHAR(10) NOT NULL,
+    action_timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    affected_id INTEGER NOT NULL,
+    voc_local_new TEXT,
+    voc_foreign_new TEXT,
+    category_id_new INTEGER REFERENCES categories(id),
+    date_created_new DATETIME,
+    is_favourite_new BOOL,
+    date_last_answered_new DATETIME,
+    right_answers_new INTEGER,
+    wrong_answers_new INTEGER,
+    voc_local_old TEXT,
+    voc_foreign_old TEXT,
+    category_id_old INTEGER REFERENCES categories(id),
+    date_created_old DATETIME,
+    is_favourite_old BOOL,
+    date_last_answered_old DATETIME,
+    right_answers_old INTEGER,
+    wrong_answers_old INTEGER
+);
+
+CREATE TRIGGER after_vocabularies_insert AFTER INSERT ON vocabularies FOR EACH ROW
+    BEGIN
+        INSERT INTO vocabularies_log(action_name, affected_id, voc_local_new, voc_foreign_new, category_id_new, date_created_new, is_favourite_new, date_last_answered_new, right_answers_new, wrong_answers_new)
+        VALUES ('INSERT', NEW.id, NEW.voc_local, NEW.voc_foreign, NEW.category_id, NEW.date_created, NEW.is_favourite, NEW.date_last_answered, NEW.right_answers, NEW.wrong_answers);
+    END;
+
+CREATE TRIGGER after_vocabularies_update AFTER UPDATE ON vocabularies FOR EACH ROW
+    BEGIN
+        INSERT INTO vocabularies_log(action_name, affected_id, voc_local_new, voc_foreign_new, category_id_new, date_created_new, is_favourite_new, date_last_answered_new, right_answers_new, wrong_answers_new, voc_local_old, voc_foreign_old, category_id_old, date_created_old, is_favourite_old, date_last_answered_old, right_answers_old, wrong_answers_old)
+        VALUES ('UPDATE', NEW.id, NEW.voc_local, NEW.voc_foreign, NEW.category_id, NEW.date_created, NEW.is_favourite, NEW.date_last_answered, NEW.right_answers, NEW.wrong_answers, OLD.voc_local, OLD.voc_foreign, OLD.category_id, OLD.date_created, OLD.is_favourite, OLD.date_last_answered, OLD.right_answers, OLD.wrong_answers);
+    END;
+
+CREATE TRIGGER after_vocabularies_delete AFTER DELETE ON vocabularies FOR EACH ROW
+    BEGIN
+        INSERT INTO vocabularies_log(action_name, affected_id, voc_local_old, voc_foreign_old, category_id_old, date_created_old, is_favourite_old, date_last_answered_old, right_answers_old, wrong_answers_old)
+        VALUES ('DELETE', OLD.id, OLD.voc_local, OLD.voc_foreign, OLD.category_id, OLD.date_created, OLD.is_favourite, OLD.date_last_answered, OLD.right_answers, OLD.wrong_answers);
+    END;
+
+-- common SQL queries against 'vocabularies'
+allVocabularies: SELECT v.*, c.category_name, c.category_language,
+    CASE
+        WHEN v.right_answers > v.wrong_answers THEN TRUE
+        ELSE FALSE
+    END AS is_learned
+    FROM vocabularies AS v INNER JOIN categories AS c ON v.category_id = c.id;
+allCategoryVocabularies: SELECT * FROM vocabularies AS v WHERE v.category_id = :target_category_id;
+categoryLearnInfo: SELECT COUNT(is_learned) AS category_vocabs_total, SUM(is_learned) AS amount_learned
+    FROM (SELECT
+        CASE
+            WHEN right_answers > wrong_answers THEN 1
+            ELSE 0
+        END AS is_learned
+        FROM vocabularies WHERE category_id = :target_category_id
+    ) LIMIT 1;
+createVocabulary: INSERT INTO vocabularies(voc_local, voc_foreign, category_id, is_favourite) VALUES (:voc_local, :voc_foreign, :category_id, :is_favourite);
+addRightAnswer: UPDATE vocabularies SET right_answers = right_answers + 1, date_last_answered = CURRENT_TIMESTAMP WHERE id = :target_id;
+addWrongAnswer: UPDATE vocabularies SET wrong_answers = wrong_answers + 1, date_last_answered = CURRENT_TIMESTAMP WHERE id = :target_id;
+changeVocLocal: UPDATE vocabularies SET voc_local = :voc_local_new WHERE id = :target_id;
+changeVocForeign: UPDATE vocabularies SET voc_foreign = :voc_foreign_new WHERE id = :target_id;
+toggleFavouriteStatus: UPDATE vocabularies SET is_favourite = NOT is_favourite WHERE id = :target_id;
+deleteVocabulary: DELETE FROM vocabularies WHERE id = :target_id;

@@ -1,0 +1,107 @@
+{
+  "addCategory": "Add category",
+  "@addCategory": {
+    "description": "The heading of the 'Add category' section"
+  },
+
+  "categoryName": "Category name",
+  "@categoryName": {
+    "description": "Hint for filling out the corresponding form field"
+  },
+
+  "english": "English",
+
+  "latin": "Latin",
+
+  "french": "French",
+
+  "italian": "Italian",
+
+  "spanish": "Spanish",
+
+  "pleaseEnterAName": "Please enter a name.",
+  "@pleaseEnterAName": {
+    "description": "This text is displayed if the 'Category name' field validation fails"
+  },
+
+  "language": "language",
+
+  "categoryCreatedText": "Category \"{categoryName}\" has been created successfully.",
+  "@categoryCreatedText": {
+    "description": "This is the text for the SnackBar shown when a new category has been created",
+    "placeholders": {
+      "categoryName": {
+        "type": "String",
+        "example": "Unit 1"
+      }
+    }
+  },
+
+  "save": "Save",
+
+
+  "savedCategories": "Saved categories",
+
+  "noDataFound": "No data found.",
+
+
+  "addVocabulary": "Add vocabulary",
+  "scanVocabulary": "Scan vocabulary",
+  "@addVocabulary": {
+    "description": "The heading of the sectiont to add a vocab manually"
+  },
+
+  "category": "Category",
+
+  "sourceLanguage": "Source language",
+
+  "targetLanguage": "Target language",
+
+  "fieldMustntBeEmpty": "This field mustn't be Empty.",
+
+  "vocabSaved": "Vocabulary saved",
+
+
+  "edit": "Edit",
+
+  "delete": "Delete",
+
+  "markAsFavourite": "Mark as favourite",
+
+  "unmarkAsFavourite": "Unmark as favourite",
+
+  "readOut": "Read out",
+
+  "xOfXVocabsLearned": "{vocabsTotal,plural, =1{{vocabsLearned} of {vocabsTotal} vocabulary learned} other{{vocabsLearned} of {vocabsTotal} vocabularies learned}} ",
+  "@xOfXVocabsLearned": {
+    "description": "This text is to be shown below the name of a category in the category overview",
+    "placeholders": {
+      "vocabsLearned": {
+        "type": "int"
+      },
+      "vocabsTotal": {
+        "type": "int"
+      }
+    }
+  },
+
+  "noVocabulariesYet": "No vocabularies yet",
+
+
+  "quizSettings": "Quiz settings",
+
+  "quizSeedOptionRandom": "random",
+
+  "quizSeedOptionOnlyUnlearned": "only unlearned",
+
+  "quizSeedOptionSmart": "smart",
+
+
+  "editVocabulary": "Edit vocabulary",
+
+  "readOutVocabularyBook": "Read out vocabulary book",
+
+  "stopReadingOut": "Stop reading out",
+
+  "means": "means"
+}
