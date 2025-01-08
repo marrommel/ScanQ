@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../ocr/scan_result.dart';
+import '../ocr/data/scan_result.dart';
 
 class VocabularyTable extends StatefulWidget {
   final List<ScanResult> data; // Vocabulary data

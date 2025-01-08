@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/widgets/widget_vocabulary_table.dart';
 
-import 'database/database.dart';
-import 'ocr/scan_result.dart';
+import '../../database/database.dart';
+import '../data/scan_result.dart';
 
 class ActivityScanResult extends StatefulWidget {
   final List<ScanResult> vocabularyData;
@@ -36,7 +36,7 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
   }
 
   void _saveVocabs() {
-    final Database db = Provider.of<Database>(context, listen: false);
+    final Database db = Modular.get<Database>();
 
     for (ScanResult voc in widget.vocabularyData) {
       db.createVocabulary(voc.translation, voc.vocabulary, 1, false);

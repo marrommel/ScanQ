@@ -1,7 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/database/database.dart';
 
 import '../common/brand_colors.dart';
@@ -40,7 +40,7 @@ class _VocabManually extends State<VocabManually> {
       ),
     );
 
-    final Database db = Provider.of<Database>(context);
+    final Database db = Modular.get<Database>();
 
     return StreamBuilder(
         stream: getCategoryOptions(db),

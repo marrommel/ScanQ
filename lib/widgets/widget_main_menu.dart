@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:scanq_multiplatform/activity_scan.dart';
+import 'package:scanq_multiplatform/ocr/ui/activity_image_select.dart';
 
-import '../activity_category_overview.dart';
-import '../activity_create_category.dart';
-import '../activity_vocabulary_manually.dart';
+import '../layouts/activity_category_overview.dart';
+import '../layouts/activity_create_category.dart';
+import '../layouts/activity_vocabulary_manually.dart';
 
 class MainMenu extends StatelessWidget {
   const MainMenu({super.key});
@@ -32,7 +32,7 @@ class MainMenu extends StatelessWidget {
           label: Text(AppLocalizations.of(context)!.addVocabulary)),
       TextButton.icon(
           onPressed: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ActivityVocabularyScan()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ActivityImageSelect()));
           },
           icon: const Icon(Icons.abc),
           label: Text(AppLocalizations.of(context)!.scanVocabulary)),

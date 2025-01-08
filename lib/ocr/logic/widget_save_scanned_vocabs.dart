@@ -1,10 +1,10 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/common/brand_colors.dart';
 
-import '../database/database.dart';
+import '../../database/database.dart';
 
 class SaveScannedVocabs extends StatefulWidget {
   const SaveScannedVocabs({super.key});
@@ -31,7 +31,7 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
 
   @override
   Widget build(BuildContext context) {
-    final Database db = Provider.of<Database>(context);
+    final Database db = Modular.get<Database>();
 
     return StreamBuilder(
         stream: getCategoryOptions(db),
@@ -85,7 +85,7 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                           onPressed: () async {
                             if (_createCategoryFormKey.currentState!.validate()) {
                               if (categoryName.isNotEmpty) {
-                                final db = Provider.of<Database>(context, listen: false);
+                                final db = Modular.get<Database>();
                                 await db.createCategory(categoryName, "en");
 
                                 if (mounted) {

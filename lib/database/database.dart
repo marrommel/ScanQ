@@ -2,8 +2,8 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 
 part 'database.g.dart';
 
@@ -15,11 +15,16 @@ class Database extends _$Database {
   int get schemaVersion => 1;
 
   static String categoryToString(final Category category) {
-    return "Category{id: ${category.id}, category_name: ${category.categoryName}, date_created: ${category.dateCreated}, category_language: ${category.categoryLanguage}, is_favourite: ${category.isFavourite}}";
+    return "Category{id: ${category.id}, category_name: ${category.categoryName}, date_created: ${category.dateCreated}, "
+        "category_language: ${category.categoryLanguage}, is_favourite: ${category.isFavourite}}";
   }
 
   static String categoryLogToString(final CategoriesLogData log) {
-    return "CategoriesLogData{logId: ${log.logId}, actionName: ${log.actionName}, actionTimestamp: ${log.actionTimestamp}, affectedId: ${log.affectedId}, categoryNameNew: ${log.categoryNameNew}, categoryLanguageNew: ${log.categoryLanguageNew}, dateCreatedNew: ${log.dateCreatedNew}, isFavouriteNew: ${log.isFavouriteNew}, categoryNameOld: ${log.categoryNameOld}, categoryLanguageOld: ${log.categoryLanguageOld}, dateCreatedOld: ${log.dateCreatedOld}, isFavouriteOld: ${log.isFavouriteOld}}";
+    return "CategoriesLogData{logId: ${log.logId}, actionName: ${log.actionName}, actionTimestamp: ${log.actionTimestamp}, "
+        "affectedId: ${log.affectedId}, categoryNameNew: ${log.categoryNameNew}, categoryLanguageNew: ${log.categoryLanguageNew},"
+        " dateCreatedNew: ${log.dateCreatedNew}, isFavouriteNew: ${log.isFavouriteNew}, categoryNameOld: ${log.categoryNameOld},"
+        " categoryLanguageOld: ${log.categoryLanguageOld}, dateCreatedOld: ${log.dateCreatedOld}, "
+        "isFavouriteOld: ${log.isFavouriteOld}}";
   }
 }
 

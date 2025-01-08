@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/speech/voice_output.dart';
 import 'package:scanq_multiplatform/widgets/widget_vocabularies_table.dart';
 
-import 'common/brand_colors.dart';
-import 'database/database.dart';
+import '../common/brand_colors.dart';
+import '../database/database.dart';
 
 class VocabularyBook extends StatefulWidget {
   final Category category;
@@ -56,7 +56,7 @@ class _VocabularyBook extends State<VocabularyBook> {
             setState(() {
               isReadingOut = true;
             });
-            final Database db = Provider.of<Database>(context, listen: false);
+            final Database db = Modular.get<Database>();
             final List<Vocabulary> vocabularies = await db.allCategoryVocabularies(widget.category.id).get();
 
             readOutNextVocabulary(context, vocabularies, 0);
