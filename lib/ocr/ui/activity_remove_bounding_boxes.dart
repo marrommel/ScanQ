@@ -1,6 +1,8 @@
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:scanq_multiplatform/ocr/logic/widget_bounding_box_image.dart';
 
 import '../data/recognized_word.dart';
@@ -26,6 +28,8 @@ class _ActivityRemoveBoundingBoxesState extends State<ActivityRemoveBoundingBoxe
   Uint8List? _imageBytes;
   Set<int> _removedWordIndexes = {};
 
+  final GlobalKey _repaintBoundaryKey = GlobalKey();
+
   @override
   void initState() {
     super.initState();
@@ -40,6 +44,22 @@ class _ActivityRemoveBoundingBoxesState extends State<ActivityRemoveBoundingBoxe
     // TODO: add check if scanResult is empty
   }
 
+  Future<Uint8List> _capturePngBytes() async {
+    RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+
+    // TODO: check if this can be removed
+    // if (boundary.debugNeedsPaint) {
+    //   print("Boundary needs paint; delaying...");
+    //   await Future.delayed(Duration(milliseconds: 100));
+    //   return _capturePngBytes(); // Retry
+    // }
+
+    ui.Image image = await boundary.toImage();
+    ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+
+    return byteData!.buffer.asUint8List();
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Rect> boundingBoxes = widget.scanResult.map((word) => word.getBoundingBox()).toList();
@@ -48,7 +68,9 @@ class _ActivityRemoveBoundingBoxesState extends State<ActivityRemoveBoundingBoxe
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (didPop) return;
-        Navigator.of(context).pop(_removedWordIndexes);
+
+        Uint8List updatedImageBytes = await _capturePngBytes();
+        Navigator.pop(context, {"box_selections": _removedWordIndexes, "updated_image": updatedImageBytes});
       },
       child: Scaffold(
         appBar: null,
@@ -64,18 +86,24 @@ class _ActivityRemoveBoundingBoxesState extends State<ActivityRemoveBoundingBoxe
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 30),
-              WidgetBoundingBoxImage(
-                imageBytes: _imageBytes!,
-                boundingBoxes: boundingBoxes,
-                selectedBoxes: _removedWordIndexes,
-                onBoxSelect: (selectedBoxes) {
-                  _removedWordIndexes = selectedBoxes;
-                },
+              RepaintBoundary(
+                key: _repaintBoundaryKey,
+                child: WidgetBoundingBoxImage(
+                  imageBytes: _imageBytes!,
+                  boundingBoxes: boundingBoxes,
+                  selectedBoxes: _removedWordIndexes,
+                  onBoxSelect: (result) {
+                    setState(() {
+                      _removedWordIndexes = result;
+                    });
+                  },
+                ),
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, _removedWordIndexes);
+                onPressed: () async {
+                  Uint8List updatedImageBytes = await _capturePngBytes();
+                  Navigator.pop(context, {"box_selections": _removedWordIndexes, "updated_image": updatedImageBytes});
                 },
                 child: const Text("schließen"),
               ),

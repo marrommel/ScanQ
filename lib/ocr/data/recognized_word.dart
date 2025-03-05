@@ -44,9 +44,14 @@ class RecognizedWord {
     return _isSelected;
   }
 
-  /// Invert the current selection state to perform a (de)selection.
-  void toggleSelection() {
-    _isSelected = !_isSelected;
+  /// Select the word.
+  void selectWord() {
+    _isSelected = true;
+  }
+
+  /// Unselect the word to reset it to its default state.
+  void resetSelection() {
+    _isSelected = false;
   }
 
   /// Append a provided string at the beginning of the current text.

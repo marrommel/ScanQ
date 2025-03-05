@@ -1,10 +1,8 @@
 import 'dart:developer' as developer;
-
 import 'dart:io' show Platform;
+
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_tts/flutter_tts.dart';
-
-enum TtsState { playing, stopped, paused, continued }
 
 class VoiceOutput {
   late FlutterTts tts;
@@ -16,13 +14,19 @@ class VoiceOutput {
   TtsState ttsState = TtsState.stopped;
 
   bool get isPlaying => ttsState == TtsState.playing;
+
   bool get isStopped => ttsState == TtsState.stopped;
+
   bool get isPaused => ttsState == TtsState.paused;
+
   bool get isContinued => ttsState == TtsState.continued;
 
   bool get isIOS => !kIsWeb && Platform.isIOS;
+
   bool get isAndroid => !kIsWeb && Platform.isAndroid;
+
   bool get isWindows => !kIsWeb && Platform.isWindows;
+
   bool get isWeb => kIsWeb;
 
   VoiceOutput({required this.language});
@@ -63,7 +67,6 @@ class VoiceOutput {
       developer.log(message, name: "com.rommelbendel.scanq_multiplatform.speech");
       ttsState = TtsState.stopped;
     });
-
   }
 
   Future speak(final String text, final Function? onComplete) async {
@@ -80,10 +83,7 @@ class VoiceOutput {
     }
   }
 
-  Future speakInLanguage(
-      final String text,
-      final String language,
-      final Function? onComplete) async {
+  Future speakInLanguage(final String text, final String language, final Function? onComplete) async {
     this.language = language;
     speak(text, onComplete);
   }
@@ -91,5 +91,6 @@ class VoiceOutput {
   // Future<dynamic> getLanguages() => tts.getLanguages;
 
   setLanguage(final String language) => this.language = language;
-
 }
+
+enum TtsState { playing, stopped, paused, continued }

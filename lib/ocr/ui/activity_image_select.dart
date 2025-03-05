@@ -3,10 +3,9 @@ import 'dart:typed_data';
 
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
+import '../../common/vocabulary_type.dart';
 import '../data/recognized_word.dart';
-import '../data/scan_result.dart';
 import '../logic/ocr_engine.dart';
 import 'activity_remove_bounding_boxes.dart';
 import 'activity_scan_result.dart';
@@ -27,13 +26,15 @@ enum ScanLanguages {
   portuguese,
 }
 
-enum ImageTarget { vocabulary, translation }
+enum ImageTarget { vocabulary, translation, both }
 
 class _ActivityImageSelectState extends State<ActivityImageSelect> {
   Uint8List? _vocabImageBytes, _translationImageBytes;
   List<RecognizedWord> _rawVocabs = [], _rawTranslations = [];
   Set<int> _removedVocabs = {}, _removedTranslations = {};
 
+  //TODO refactor
+  Uint8List? _vocabUpdatedImage, _translationUpdatedImage;
   late final Image placeholderImage;
 
   @override
@@ -41,7 +42,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     super.initState();
 
     // load the placeholder image once at the beginning
-    placeholderImage = Image.asset("assets/images/placeholder.png", fit: BoxFit.cover, height: 200);
+    placeholderImage = Image.asset("assets/image/placeholder.png", fit: BoxFit.cover, height: 200);
   }
 
   @override
@@ -75,21 +76,15 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     String heading;
     ImageTarget target;
     Uint8List? imageBytes;
-    List<RecognizedWord> scanRes;
-    Set<int> removedWords;
 
     if (language == ScanLanguages.german) {
       heading = 'Übersetzungen:';
       target = ImageTarget.translation;
       imageBytes = _translationImageBytes;
-      scanRes = _rawTranslations;
-      removedWords = _removedTranslations;
     } else {
       heading = 'Vokabeln:';
       target = ImageTarget.vocabulary;
       imageBytes = _vocabImageBytes;
-      scanRes = _rawVocabs;
-      removedWords = _removedVocabs;
     }
 
     return Container(
@@ -99,32 +94,22 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
           borderRadius: const BorderRadius.all(Radius.circular(15)),
           child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
             Expanded(
-                flex: 3,
-                child: GestureDetector(
-                    onTap: () async {
-                      if (imageBytes != null) {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ActivityRemoveBoundingBoxes(
-                              originalImageBytes: imageBytes!,
-                              scanResult: scanRes,
-                              removedWordIndexes: removedWords,
-                            ),
-                          ),
-                        );
-
-                        removedWords = result;
-
-                        // update the image according to the removed words
-                        for (int id in removedWords) {
-                          scanRes[id].toggleSelection();
-                        }
-                      }
-                    },
-                    child: ClipRRect(
-                        borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
-                        child: createImageWidget(imageBytes)))),
+              flex: 3,
+              child: GestureDetector(
+                onTap: () async {
+                  if (imageBytes != null) {
+                    _callBoundingBoxActivity(imageBytes, target);
+                  } else {
+                    _pickImage(target: target);
+                  }
+                },
+                child: ClipRRect(
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+                    child: loadCorrectImage(target)
+                    //createImageWidget(language == ScanLanguages.german ? _translationUpdatedImage ?? imageBytes : _vocabUpdatedImage ?? imageBytes,),
+                    ),
+              ),
+            ),
             Expanded(
                 flex: 5,
                 child: Padding(
@@ -140,55 +125,121 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                           ),
                           SizedBox(height: 30),
                           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                            ElevatedButton(
-                                onPressed: () => _pickImage(source: ImageSource.camera, target: target),
-                                child: Text("Bild wählen")),
+                            ElevatedButton(onPressed: () => _pickImage(target: target), child: Text("Bild wählen")),
                           ]),
                         ]))),
           ]),
         ));
   }
 
-  Image createImageWidget(Uint8List? imageBytes) {
-    // display a placeholder if no image has been selected
+  Image loadCorrectImage(ImageTarget target) {
+    Uint8List? imageBytes;
+
+    // display the updated image for vocabulary or translation (Note: if there is no update display the initial image)
+    if (target == ImageTarget.vocabulary) {
+      imageBytes = _vocabUpdatedImage ?? _vocabImageBytes;
+    } else if (target == ImageTarget.translation) {
+      imageBytes = _translationUpdatedImage ?? _translationImageBytes;
+    } else {
+      throw Exception("INVALID IMAGE TARGET HAS BEEN PASSED!");
+    }
+
+    // display a placeholder if no image has been selected yet
     if (imageBytes == null) return placeholderImage;
 
     // display the selected image
     return Image.memory(imageBytes, fit: BoxFit.cover, height: 200);
   }
 
-  Future<void> _pickImage({required ImageSource source, required ImageTarget target}) async {
+  Future<void> _pickImage({required ImageTarget target}) async {
     // load the image using the cunning document scanner
     final imagePath = await CunningDocumentScanner.getPictures(noOfPages: 1, isGalleryImportAllowed: true);
 
     // check if an image has been loaded correctly
     if (imagePath != null) {
+      // initialise the OCR engine for the selected image
+      final OcrEngine ocrEngine = OcrEngine(imagePath: imagePath.first);
+
+      // reset the according state variables of a new image has been loaded
+      resetState(target);
+
       // check if a vocabulary image is provided
       if (target == ImageTarget.vocabulary) {
         // update the vocabulary image view once the image is loaded
         _vocabImageBytes = await File(imagePath.first).readAsBytes();
 
         // call the OCR Engine to extract vocabulary form the image
-        final OcrEngine ocrEngineVocabs = OcrEngine(imagePath: imagePath.first);
-        _rawVocabs = await ocrEngineVocabs.extractWords();
+        _rawVocabs = await ocrEngine.extractWords();
 
+        // TODO: check if this is sufficiently replaced by function call above
         // reset the set for manually removed vocabs
-        _removedVocabs = {};
-      } else {
+        //_removedVocabs = {};
+      } else if (target == ImageTarget.translation) {
         // if no vocabulary image has been provided, assume it is a translation image
         // update the translations image view once the image is loaded
         _translationImageBytes = await File(imagePath.first).readAsBytes();
 
         // call the OCR Engine to extract translation form the image
-        final OcrEngine ocrEngineTranslations = OcrEngine(imagePath: imagePath.first);
-        _rawTranslations = await ocrEngineTranslations.extractWords();
+        _rawTranslations = await ocrEngine.extractWords();
 
+        // TODO: check if this is sufficiently replaced by function call above
         //reset the set for manually removed translations
-        _removedTranslations = {};
+        //_removedTranslations = {};
+      } else {
+        throw Exception("INVALID IMAGE TARGET HAS BEEN PASSED!");
       }
 
       // refresh the ui
-      setState(() {});
+      setState(() => {});
+    }
+  }
+
+  Future<void> _callBoundingBoxActivity(Uint8List imageBytes, ImageTarget target) async {
+    List<RecognizedWord> scanRes;
+    Set<int> removedWords;
+
+    if (target == ImageTarget.vocabulary) {
+      scanRes = _rawVocabs;
+      removedWords = _removedVocabs;
+    } else if (target == ImageTarget.translation) {
+      scanRes = _rawTranslations;
+      removedWords = _removedTranslations;
+    } else {
+      throw Exception("INVALID IMAGE TARGET HAS BEEN PASSED!");
+    }
+
+    final result = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ActivityRemoveBoundingBoxes(
+          originalImageBytes: imageBytes,
+          scanResult: scanRes,
+          removedWordIndexes: removedWords,
+        ),
+      ),
+    );
+
+    // update the selected (=removed) words
+    removedWords = result["box_selections"];
+
+    // update the image preview
+    setState(() {
+      if (target == ImageTarget.vocabulary) {
+        _vocabUpdatedImage = result["updated_image"];
+      } else if (target == ImageTarget.translation) {
+        _translationUpdatedImage = result["updated_image"];
+      }
+    });
+
+    // unselect all word in the scan result
+    for (RecognizedWord word in scanRes) {
+      word.resetSelection();
+    }
+
+    // TODO: removedWords is always one behind, maybe last selected word is not in list.  [BUG]
+    // TODO: Two separate problems or related? Check if approach using call by reference is wrong
+    // select only those words that are selected in the current scan result
+    for (int id in removedWords) {
+      scanRes[id].selectWord();
     }
   }
 
@@ -199,19 +250,49 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
       _rawTranslations = OcrEngine.mergeWordsIntoLine(_rawTranslations);
 
       if (_rawVocabs.length != _rawTranslations.length) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Fehler beim Einscannen der Vokabeln!")));
-      } else {
-        List<ScanResult> recognizedVocabs = [];
-        for (int i = 0; i < _rawVocabs.length; i++) {
-          String vocab = OcrEngine.correctRecognizedString(_rawVocabs[i].getText());
-          String translation = OcrEngine.correctRecognizedString(_rawTranslations[i].getText());
-
-          recognizedVocabs.add(ScanResult(vocabulary: vocab, translation: translation));
-        }
-
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (context) => ActivityScanResult(vocabularyData: recognizedVocabs)));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Unterschiedliche Anzahl von Vokabeln und Übersetzungen!")));
+        resetState(ImageTarget.both);
+        return;
       }
+
+      if (_rawVocabs.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Es konnten keine Wörter im Bild erkannt werden.")));
+        resetState(ImageTarget.both);
+        return;
+      }
+
+      List<VocabularyType> recognizedVocabs = [];
+      for (int i = 0; i < _rawVocabs.length; i++) {
+        String vocab = OcrEngine.correctRecognizedString(_rawVocabs[i].getText());
+        String translation = OcrEngine.correctRecognizedString(_rawTranslations[i].getText());
+
+        recognizedVocabs.add(VocabularyType(vocabulary: vocab, translation: translation));
+      }
+
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => ActivityScanResult(vocabularyData: recognizedVocabs)));
     }
+  }
+
+  void resetState(ImageTarget target) {
+    // reset all state variables for vocabularies
+    if (target == ImageTarget.vocabulary || target == ImageTarget.both) {
+      _vocabImageBytes = null;
+      _vocabUpdatedImage = null;
+      _rawVocabs = [];
+      _removedVocabs = {};
+    }
+
+    // reset all state variables for translations
+    if (target == ImageTarget.translation || target == ImageTarget.both) {
+      _translationImageBytes = null;
+      _translationUpdatedImage = null;
+      _rawTranslations = [];
+      _removedTranslations = {};
+    }
+
+    // refresh the ui
+    setState(() => {});
   }
 }

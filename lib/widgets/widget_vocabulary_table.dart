@@ -1,11 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../ocr/data/scan_result.dart';
+import '../common/vocabulary_type.dart';
 
 class VocabularyTable extends StatefulWidget {
-  final List<ScanResult> data; // Vocabulary data
-  final bool editable; // Whether the table is editable
+  final List<VocabularyType> data;
+  final bool editable;
 
   const VocabularyTable({
     super.key,

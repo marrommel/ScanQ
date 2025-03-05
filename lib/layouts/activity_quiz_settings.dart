@@ -8,15 +8,6 @@ import 'package:scanq_multiplatform/database/database.dart';
 
 import '../common/brand_colors.dart';
 
-enum QuizSeed {
-  // Select random vocabs
-  random,
-  // Select only unlearned vocabs (random)
-  onlyUnlearned,
-  // Select via smart algorithm (considering 'is_learned' and 'date_last_learned')
-  smart
-}
-
 class ActivityQuizSettings extends StatefulWidget {
   final String? language;
 
@@ -24,6 +15,15 @@ class ActivityQuizSettings extends StatefulWidget {
 
   @override
   State<ActivityQuizSettings> createState() => _ActivityQuizSettings();
+}
+
+enum QuizSeed {
+  // Select random vocabs
+  random,
+  // Select only unlearned vocabs (random)
+  onlyUnlearned,
+  // Select via smart algorithm (considering 'is_learned' and 'date_last_learned')
+  smart
 }
 
 class _ActivityQuizSettings extends State<ActivityQuizSettings> {

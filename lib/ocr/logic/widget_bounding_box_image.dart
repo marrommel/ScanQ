@@ -7,7 +7,7 @@ class WidgetBoundingBoxImage extends StatefulWidget {
   final Uint8List imageBytes;
   final List<Rect> boundingBoxes;
   final Set<int> selectedBoxes;
-  final void Function(Set<int> selectedBoxes)? onBoxSelect;
+  final void Function(Set<int> eventResult)? onBoxSelect;
 
   const WidgetBoundingBoxImage(
       {super.key, required this.imageBytes, required this.boundingBoxes, required this.selectedBoxes, required this.onBoxSelect});
@@ -50,11 +50,9 @@ class _WidgetBoundingBoxImageState extends State<WidgetBoundingBoxImage> {
           _selectedBoxes.remove(boxIndex);
         }
 
-        // notify the parent about the updated selected boxes
-        final Set<int> updatedBoxSelections = Set<int>.of(_selectedBoxes);
-        widget.onBoxSelect?.call(updatedBoxSelections);
+        // final Set<int> updatedBoxSelections = Set<int>.of(_selectedBoxes);
+        widget.onBoxSelect?.call(_selectedBoxes);
 
-        //_drawBoundingBoxes();
         setState(() {});
         break;
       }

@@ -13,16 +13,16 @@ void main() {
   final MockTextElement demoWord = MockTextElement(text: "test", boundingBox: Rect.fromLTWH(0, 0, 50, 20));
   final RecognizedWord recognizedWord = RecognizedWord(demoWord, 0);
 
-  test("toggleSelection", () {
+  test("test word selection", () {
     // selection should be false by default
     expect(recognizedWord.isSelected(), isFalse);
 
     // after first toggle it should be true
-    recognizedWord.toggleSelection();
+    recognizedWord.selectWord();
     expect(recognizedWord.isSelected(), isTrue);
 
     // after second toggle it should be false again
-    recognizedWord.toggleSelection();
+    recognizedWord.resetSelection();
     expect(recognizedWord.isSelected(), isFalse);
   });
 
