@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:scanq_multiplatform/common/brand_colors.dart';
 import 'package:scanq_multiplatform/widgets/widget_category_entry.dart';
 
 import '../database/database.dart';
 
 class CategoriesOverview extends StatelessWidget {
-  const CategoriesOverview({super.key});
+  CategoriesOverview({super.key});
 
   Stream<List<CategoryEntry>> getcategoryEntries(final Database db) =>
       db.allCategories().map((Category category) => CategoryEntry(category: category)).watch();
+
+  bool _isDialogShown = false;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,7 @@ class CategoriesOverview extends StatelessWidget {
         stream: getcategoryEntries(db),
         builder: (context, AsyncSnapshot<List<CategoryEntry>> snapshot) {
           if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
                 header,
                 Container(
@@ -33,9 +37,23 @@ class CategoriesOverview extends StatelessWidget {
                     child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: snapshot.data!))
               ]);
             } else {
-              return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [header, Text(AppLocalizations.of(context)!.noDataFound)]);
+              Future.microtask(() {
+                QuickAlert.show(
+                    context: context,
+                    type: QuickAlertType.info,
+                    barrierColor: BrandColors.colorPrimary,
+                    text:
+                        "Du hast noch keine Vokabeln gespeichert. Scanne oder tippe neue Vokabeln ein, um die Übersicht zu öffnen.",
+                    confirmBtnColor: Color(0xFFFFC847),
+                    confirmBtnText: "OK",
+                    title: "Vokabeln hinzufügen");
+              });
+
+              _isDialogShown = true;
+
+              // close the underlying activity
+              Navigator.pop(context);
+              return const SizedBox(height: 1);
             }
           } else {
             return Column(

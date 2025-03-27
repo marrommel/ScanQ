@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/transparent_app_bar.dart';
 import '../../common/vocabulary_type.dart';
 import '../data/recognized_word.dart';
 import '../logic/ocr_engine.dart';
@@ -50,7 +51,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     bool allImagesProvided = (_translationImageBytes == null) || (_vocabImageBytes == null);
 
     return Scaffold(
-      appBar: null,
+      appBar: TransparentAppBar(),
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         SizedBox(height: 50),
         createScanCard(ScanLanguages.english),

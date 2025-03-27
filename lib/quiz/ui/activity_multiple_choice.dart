@@ -102,7 +102,9 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
   Widget build(BuildContext context) {
     // show loading screen while data is being fetched
     if (!_isDataLoaded) {
-      return Center(child: CircularProgressIndicator());
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
     }
 
     if (!_isVocabulariesEnough) {

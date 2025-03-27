@@ -13,5 +13,7 @@ import 'app_widget.dart';
 Future<void> main() async {
   await SentryFlutter.init((options) {
     options.dsn = 'https://4264f8f510f73a0b9e8fb47552c0e19a@o4508443303477248.ingest.de.sentry.io/4508443306950736';
+    options.experimental.replay.sessionSampleRate = 1.0;
+    options.experimental.replay.onErrorSampleRate = 1.0;
   }, appRunner: () => runApp(ModularApp(module: AppModule(), child: AppWidget())));
 }
