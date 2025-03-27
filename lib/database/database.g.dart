@@ -2,11 +2,128 @@
 
 part of 'database.dart';
 
-// **************************************************************************
-// DriftDatabaseGenerator
-// **************************************************************************
-
 // ignore_for_file: type=lint
+class Weekdays extends Table with TableInfo<Weekdays, Weekday> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Weekdays(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _dayOfWeekMeta =
+      const VerificationMeta('dayOfWeek');
+  late final GeneratedColumn<int> dayOfWeek = GeneratedColumn<int>(
+      'day_of_week', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT');
+  static const VerificationMeta _nameOfDayMeta =
+      const VerificationMeta('nameOfDay');
+  late final GeneratedColumn<String> nameOfDay = GeneratedColumn<String>(
+      'name_of_day', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _lastDateOccurredMeta =
+      const VerificationMeta('lastDateOccurred');
+  late final GeneratedColumn<DateTime> lastDateOccurred =
+      GeneratedColumn<DateTime>('last_date_occurred', aliasedName, false,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: true,
+          $customConstraints: 'NOT NULL');
+  static const VerificationMeta _rightAnswersMeta =
+      const VerificationMeta('rightAnswers');
+  late final GeneratedColumn<int> rightAnswers = GeneratedColumn<int>(
+      'right_answers', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const CustomExpression('0'));
+  static const VerificationMeta _wrongAnswersMeta =
+      const VerificationMeta('wrongAnswers');
+  late final GeneratedColumn<int> wrongAnswers = GeneratedColumn<int>(
+      'wrong_answers', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const CustomExpression('0'));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [dayOfWeek, nameOfDay, lastDateOccurred, rightAnswers, wrongAnswers];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'weekdays';
+  @override
+  VerificationContext validateIntegrity(Insertable<Weekday> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('day_of_week')) {
+      context.handle(
+          _dayOfWeekMeta,
+          dayOfWeek.isAcceptableOrUnknown(
+              data['day_of_week']!, _dayOfWeekMeta));
+    }
+    if (data.containsKey('name_of_day')) {
+      context.handle(
+          _nameOfDayMeta,
+          nameOfDay.isAcceptableOrUnknown(
+              data['name_of_day']!, _nameOfDayMeta));
+    } else if (isInserting) {
+      context.missing(_nameOfDayMeta);
+    }
+    if (data.containsKey('last_date_occurred')) {
+      context.handle(
+          _lastDateOccurredMeta,
+          lastDateOccurred.isAcceptableOrUnknown(
+              data['last_date_occurred']!, _lastDateOccurredMeta));
+    } else if (isInserting) {
+      context.missing(_lastDateOccurredMeta);
+    }
+    if (data.containsKey('right_answers')) {
+      context.handle(
+          _rightAnswersMeta,
+          rightAnswers.isAcceptableOrUnknown(
+              data['right_answers']!, _rightAnswersMeta));
+    }
+    if (data.containsKey('wrong_answers')) {
+      context.handle(
+          _wrongAnswersMeta,
+          wrongAnswers.isAcceptableOrUnknown(
+              data['wrong_answers']!, _wrongAnswersMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {dayOfWeek};
+  @override
+  Weekday map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Weekday(
+      dayOfWeek: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}day_of_week'])!,
+      nameOfDay: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name_of_day'])!,
+      lastDateOccurred: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}last_date_occurred'])!,
+      rightAnswers: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}right_answers'])!,
+      wrongAnswers: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers'])!,
+    );
+  }
+
+  @override
+  Weekdays createAlias(String alias) {
+    return Weekdays(attachedDatabase, alias);
+  }
+
+  @override
+  bool get dontWriteConstraints => true;
+}
+
 class Weekday extends DataClass implements Insertable<Weekday> {
   final int dayOfWeek;
   final String nameOfDay;
@@ -77,6 +194,22 @@ class Weekday extends DataClass implements Insertable<Weekday> {
         rightAnswers: rightAnswers ?? this.rightAnswers,
         wrongAnswers: wrongAnswers ?? this.wrongAnswers,
       );
+  Weekday copyWithCompanion(WeekdaysCompanion data) {
+    return Weekday(
+      dayOfWeek: data.dayOfWeek.present ? data.dayOfWeek.value : this.dayOfWeek,
+      nameOfDay: data.nameOfDay.present ? data.nameOfDay.value : this.nameOfDay,
+      lastDateOccurred: data.lastDateOccurred.present
+          ? data.lastDateOccurred.value
+          : this.lastDateOccurred,
+      rightAnswers: data.rightAnswers.present
+          ? data.rightAnswers.value
+          : this.rightAnswers,
+      wrongAnswers: data.wrongAnswers.present
+          ? data.wrongAnswers.value
+          : this.wrongAnswers,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('Weekday(')
@@ -189,117 +322,236 @@ class WeekdaysCompanion extends UpdateCompanion<Weekday> {
   }
 }
 
-class Weekdays extends Table with TableInfo<Weekdays, Weekday> {
+class WeekdaysLog extends Table with TableInfo<WeekdaysLog, WeekdaysLogData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  Weekdays(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _dayOfWeekMeta = const VerificationMeta('dayOfWeek');
-  late final GeneratedColumn<int> dayOfWeek = GeneratedColumn<int>(
-      'day_of_week', aliasedName, false,
+  WeekdaysLog(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _logIdMeta = const VerificationMeta('logId');
+  late final GeneratedColumn<int> logId = GeneratedColumn<int>(
+      'log_id', aliasedName, false,
+      hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _nameOfDayMeta = const VerificationMeta('nameOfDay');
-  late final GeneratedColumn<String> nameOfDay = GeneratedColumn<String>(
-      'name_of_day', aliasedName, false,
+  static const VerificationMeta _actionNameMeta =
+      const VerificationMeta('actionName');
+  late final GeneratedColumn<String> actionName = GeneratedColumn<String>(
+      'action_name', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  final VerificationMeta _lastDateOccurredMeta =
-      const VerificationMeta('lastDateOccurred');
-  late final GeneratedColumn<DateTime> lastDateOccurred =
-      GeneratedColumn<DateTime>('last_date_occurred', aliasedName, false,
+  static const VerificationMeta _actionTimestampMeta =
+      const VerificationMeta('actionTimestamp');
+  late final GeneratedColumn<DateTime> actionTimestamp =
+      GeneratedColumn<DateTime>('action_timestamp', aliasedName, false,
           type: DriftSqlType.dateTime,
-          requiredDuringInsert: true,
-          $customConstraints: 'NOT NULL');
-  final VerificationMeta _rightAnswersMeta =
-      const VerificationMeta('rightAnswers');
-  late final GeneratedColumn<int> rightAnswers = GeneratedColumn<int>(
-      'right_answers', aliasedName, false,
+          requiredDuringInsert: false,
+          $customConstraints: 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+          defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
+  static const VerificationMeta _affectedIdMeta =
+      const VerificationMeta('affectedId');
+  late final GeneratedColumn<int> affectedId = GeneratedColumn<int>(
+      'affected_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _nameOfDayNewMeta =
+      const VerificationMeta('nameOfDayNew');
+  late final GeneratedColumn<String> nameOfDayNew = GeneratedColumn<String>(
+      'name_of_day_new', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _lastDateOccurredNewMeta =
+      const VerificationMeta('lastDateOccurredNew');
+  late final GeneratedColumn<DateTime> lastDateOccurredNew =
+      GeneratedColumn<DateTime>('last_date_occurred_new', aliasedName, true,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _rightAnswersNewMeta =
+      const VerificationMeta('rightAnswersNew');
+  late final GeneratedColumn<int> rightAnswersNew = GeneratedColumn<int>(
+      'right_answers_new', aliasedName, true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL DEFAULT 0',
-      defaultValue: const CustomExpression<int>('0'));
-  final VerificationMeta _wrongAnswersMeta =
-      const VerificationMeta('wrongAnswers');
-  late final GeneratedColumn<int> wrongAnswers = GeneratedColumn<int>(
-      'wrong_answers', aliasedName, false,
+      $customConstraints: '');
+  static const VerificationMeta _wrongAnswersNewMeta =
+      const VerificationMeta('wrongAnswersNew');
+  late final GeneratedColumn<int> wrongAnswersNew = GeneratedColumn<int>(
+      'wrong_answers_new', aliasedName, true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL DEFAULT 0',
-      defaultValue: const CustomExpression<int>('0'));
+      $customConstraints: '');
+  static const VerificationMeta _nameOfDayOldMeta =
+      const VerificationMeta('nameOfDayOld');
+  late final GeneratedColumn<String> nameOfDayOld = GeneratedColumn<String>(
+      'name_of_day_old', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _lastDateOccurredOldMeta =
+      const VerificationMeta('lastDateOccurredOld');
+  late final GeneratedColumn<DateTime> lastDateOccurredOld =
+      GeneratedColumn<DateTime>('last_date_occurred_old', aliasedName, true,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _rightAnswersOldMeta =
+      const VerificationMeta('rightAnswersOld');
+  late final GeneratedColumn<int> rightAnswersOld = GeneratedColumn<int>(
+      'right_answers_old', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _wrongAnswersOldMeta =
+      const VerificationMeta('wrongAnswersOld');
+  late final GeneratedColumn<int> wrongAnswersOld = GeneratedColumn<int>(
+      'wrong_answers_old', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: '');
   @override
-  List<GeneratedColumn> get $columns =>
-      [dayOfWeek, nameOfDay, lastDateOccurred, rightAnswers, wrongAnswers];
+  List<GeneratedColumn> get $columns => [
+        logId,
+        actionName,
+        actionTimestamp,
+        affectedId,
+        nameOfDayNew,
+        lastDateOccurredNew,
+        rightAnswersNew,
+        wrongAnswersNew,
+        nameOfDayOld,
+        lastDateOccurredOld,
+        rightAnswersOld,
+        wrongAnswersOld
+      ];
   @override
-  String get aliasedName => _alias ?? 'weekdays';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'weekdays';
+  String get actualTableName => $name;
+  static const String $name = 'weekdays_log';
   @override
-  VerificationContext validateIntegrity(Insertable<Weekday> instance,
+  VerificationContext validateIntegrity(Insertable<WeekdaysLogData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('day_of_week')) {
+    if (data.containsKey('log_id')) {
       context.handle(
-          _dayOfWeekMeta,
-          dayOfWeek.isAcceptableOrUnknown(
-              data['day_of_week']!, _dayOfWeekMeta));
+          _logIdMeta, logId.isAcceptableOrUnknown(data['log_id']!, _logIdMeta));
     }
-    if (data.containsKey('name_of_day')) {
+    if (data.containsKey('action_name')) {
       context.handle(
-          _nameOfDayMeta,
-          nameOfDay.isAcceptableOrUnknown(
-              data['name_of_day']!, _nameOfDayMeta));
+          _actionNameMeta,
+          actionName.isAcceptableOrUnknown(
+              data['action_name']!, _actionNameMeta));
     } else if (isInserting) {
-      context.missing(_nameOfDayMeta);
+      context.missing(_actionNameMeta);
     }
-    if (data.containsKey('last_date_occurred')) {
+    if (data.containsKey('action_timestamp')) {
       context.handle(
-          _lastDateOccurredMeta,
-          lastDateOccurred.isAcceptableOrUnknown(
-              data['last_date_occurred']!, _lastDateOccurredMeta));
+          _actionTimestampMeta,
+          actionTimestamp.isAcceptableOrUnknown(
+              data['action_timestamp']!, _actionTimestampMeta));
+    }
+    if (data.containsKey('affected_id')) {
+      context.handle(
+          _affectedIdMeta,
+          affectedId.isAcceptableOrUnknown(
+              data['affected_id']!, _affectedIdMeta));
     } else if (isInserting) {
-      context.missing(_lastDateOccurredMeta);
+      context.missing(_affectedIdMeta);
     }
-    if (data.containsKey('right_answers')) {
+    if (data.containsKey('name_of_day_new')) {
       context.handle(
-          _rightAnswersMeta,
-          rightAnswers.isAcceptableOrUnknown(
-              data['right_answers']!, _rightAnswersMeta));
+          _nameOfDayNewMeta,
+          nameOfDayNew.isAcceptableOrUnknown(
+              data['name_of_day_new']!, _nameOfDayNewMeta));
     }
-    if (data.containsKey('wrong_answers')) {
+    if (data.containsKey('last_date_occurred_new')) {
       context.handle(
-          _wrongAnswersMeta,
-          wrongAnswers.isAcceptableOrUnknown(
-              data['wrong_answers']!, _wrongAnswersMeta));
+          _lastDateOccurredNewMeta,
+          lastDateOccurredNew.isAcceptableOrUnknown(
+              data['last_date_occurred_new']!, _lastDateOccurredNewMeta));
+    }
+    if (data.containsKey('right_answers_new')) {
+      context.handle(
+          _rightAnswersNewMeta,
+          rightAnswersNew.isAcceptableOrUnknown(
+              data['right_answers_new']!, _rightAnswersNewMeta));
+    }
+    if (data.containsKey('wrong_answers_new')) {
+      context.handle(
+          _wrongAnswersNewMeta,
+          wrongAnswersNew.isAcceptableOrUnknown(
+              data['wrong_answers_new']!, _wrongAnswersNewMeta));
+    }
+    if (data.containsKey('name_of_day_old')) {
+      context.handle(
+          _nameOfDayOldMeta,
+          nameOfDayOld.isAcceptableOrUnknown(
+              data['name_of_day_old']!, _nameOfDayOldMeta));
+    }
+    if (data.containsKey('last_date_occurred_old')) {
+      context.handle(
+          _lastDateOccurredOldMeta,
+          lastDateOccurredOld.isAcceptableOrUnknown(
+              data['last_date_occurred_old']!, _lastDateOccurredOldMeta));
+    }
+    if (data.containsKey('right_answers_old')) {
+      context.handle(
+          _rightAnswersOldMeta,
+          rightAnswersOld.isAcceptableOrUnknown(
+              data['right_answers_old']!, _rightAnswersOldMeta));
+    }
+    if (data.containsKey('wrong_answers_old')) {
+      context.handle(
+          _wrongAnswersOldMeta,
+          wrongAnswersOld.isAcceptableOrUnknown(
+              data['wrong_answers_old']!, _wrongAnswersOldMeta));
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {dayOfWeek};
+  Set<GeneratedColumn> get $primaryKey => {logId};
   @override
-  Weekday map(Map<String, dynamic> data, {String? tablePrefix}) {
+  WeekdaysLogData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Weekday(
-      dayOfWeek: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}day_of_week'])!,
-      nameOfDay: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}name_of_day'])!,
-      lastDateOccurred: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}last_date_occurred'])!,
-      rightAnswers: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}right_answers'])!,
-      wrongAnswers: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers'])!,
+    return WeekdaysLogData(
+      logId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
+      actionName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action_name'])!,
+      actionTimestamp: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}action_timestamp'])!,
+      affectedId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}affected_id'])!,
+      nameOfDayNew: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name_of_day_new']),
+      lastDateOccurredNew: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}last_date_occurred_new']),
+      rightAnswersNew: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}right_answers_new']),
+      wrongAnswersNew: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers_new']),
+      nameOfDayOld: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name_of_day_old']),
+      lastDateOccurredOld: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}last_date_occurred_old']),
+      rightAnswersOld: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}right_answers_old']),
+      wrongAnswersOld: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers_old']),
     );
   }
 
   @override
-  Weekdays createAlias(String alias) {
-    return Weekdays(attachedDatabase, alias);
+  WeekdaysLog createAlias(String alias) {
+    return WeekdaysLog(attachedDatabase, alias);
   }
 
   @override
@@ -481,6 +733,43 @@ class WeekdaysLogData extends DataClass implements Insertable<WeekdaysLogData> {
             ? wrongAnswersOld.value
             : this.wrongAnswersOld,
       );
+  WeekdaysLogData copyWithCompanion(WeekdaysLogCompanion data) {
+    return WeekdaysLogData(
+      logId: data.logId.present ? data.logId.value : this.logId,
+      actionName:
+          data.actionName.present ? data.actionName.value : this.actionName,
+      actionTimestamp: data.actionTimestamp.present
+          ? data.actionTimestamp.value
+          : this.actionTimestamp,
+      affectedId:
+          data.affectedId.present ? data.affectedId.value : this.affectedId,
+      nameOfDayNew: data.nameOfDayNew.present
+          ? data.nameOfDayNew.value
+          : this.nameOfDayNew,
+      lastDateOccurredNew: data.lastDateOccurredNew.present
+          ? data.lastDateOccurredNew.value
+          : this.lastDateOccurredNew,
+      rightAnswersNew: data.rightAnswersNew.present
+          ? data.rightAnswersNew.value
+          : this.rightAnswersNew,
+      wrongAnswersNew: data.wrongAnswersNew.present
+          ? data.wrongAnswersNew.value
+          : this.wrongAnswersNew,
+      nameOfDayOld: data.nameOfDayOld.present
+          ? data.nameOfDayOld.value
+          : this.nameOfDayOld,
+      lastDateOccurredOld: data.lastDateOccurredOld.present
+          ? data.lastDateOccurredOld.value
+          : this.lastDateOccurredOld,
+      rightAnswersOld: data.rightAnswersOld.present
+          ? data.rightAnswersOld.value
+          : this.rightAnswersOld,
+      wrongAnswersOld: data.wrongAnswersOld.present
+          ? data.wrongAnswersOld.value
+          : this.wrongAnswersOld,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('WeekdaysLogData(')
@@ -699,232 +988,117 @@ class WeekdaysLogCompanion extends UpdateCompanion<WeekdaysLogData> {
   }
 }
 
-class WeekdaysLog extends Table with TableInfo<WeekdaysLog, WeekdaysLogData> {
+class Categories extends Table with TableInfo<Categories, Category> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  WeekdaysLog(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _logIdMeta = const VerificationMeta('logId');
-  late final GeneratedColumn<int> logId = GeneratedColumn<int>(
-      'log_id', aliasedName, false,
+  Categories(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _actionNameMeta = const VerificationMeta('actionName');
-  late final GeneratedColumn<String> actionName = GeneratedColumn<String>(
-      'action_name', aliasedName, false,
+  static const VerificationMeta _categoryNameMeta =
+      const VerificationMeta('categoryName');
+  late final GeneratedColumn<String> categoryName = GeneratedColumn<String>(
+      'category_name', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  final VerificationMeta _actionTimestampMeta =
-      const VerificationMeta('actionTimestamp');
-  late final GeneratedColumn<DateTime> actionTimestamp =
-      GeneratedColumn<DateTime>('action_timestamp', aliasedName, false,
-          type: DriftSqlType.dateTime,
-          requiredDuringInsert: false,
-          $customConstraints: 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
-          defaultValue: const CustomExpression<DateTime>('CURRENT_TIMESTAMP'));
-  final VerificationMeta _affectedIdMeta = const VerificationMeta('affectedId');
-  late final GeneratedColumn<int> affectedId = GeneratedColumn<int>(
-      'affected_id', aliasedName, false,
-      type: DriftSqlType.int,
+  static const VerificationMeta _categoryLanguageMeta =
+      const VerificationMeta('categoryLanguage');
+  late final GeneratedColumn<String> categoryLanguage = GeneratedColumn<String>(
+      'category_language', aliasedName, false,
+      type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  final VerificationMeta _nameOfDayNewMeta =
-      const VerificationMeta('nameOfDayNew');
-  late final GeneratedColumn<String> nameOfDayNew = GeneratedColumn<String>(
-      'name_of_day_new', aliasedName, true,
-      type: DriftSqlType.string,
+  static const VerificationMeta _dateCreatedMeta =
+      const VerificationMeta('dateCreated');
+  late final GeneratedColumn<DateTime> dateCreated = GeneratedColumn<DateTime>(
+      'date_created', aliasedName, false,
+      type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _lastDateOccurredNewMeta =
-      const VerificationMeta('lastDateOccurredNew');
-  late final GeneratedColumn<DateTime> lastDateOccurredNew =
-      GeneratedColumn<DateTime>('last_date_occurred_new', aliasedName, true,
-          type: DriftSqlType.dateTime,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  final VerificationMeta _rightAnswersNewMeta =
-      const VerificationMeta('rightAnswersNew');
-  late final GeneratedColumn<int> rightAnswersNew = GeneratedColumn<int>(
-      'right_answers_new', aliasedName, true,
-      type: DriftSqlType.int,
+      $customConstraints: 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
+  static const VerificationMeta _isFavouriteMeta =
+      const VerificationMeta('isFavourite');
+  late final GeneratedColumn<bool> isFavourite = GeneratedColumn<bool>(
+      'is_favourite', aliasedName, false,
+      type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _wrongAnswersNewMeta =
-      const VerificationMeta('wrongAnswersNew');
-  late final GeneratedColumn<int> wrongAnswersNew = GeneratedColumn<int>(
-      'wrong_answers_new', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _nameOfDayOldMeta =
-      const VerificationMeta('nameOfDayOld');
-  late final GeneratedColumn<String> nameOfDayOld = GeneratedColumn<String>(
-      'name_of_day_old', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _lastDateOccurredOldMeta =
-      const VerificationMeta('lastDateOccurredOld');
-  late final GeneratedColumn<DateTime> lastDateOccurredOld =
-      GeneratedColumn<DateTime>('last_date_occurred_old', aliasedName, true,
-          type: DriftSqlType.dateTime,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  final VerificationMeta _rightAnswersOldMeta =
-      const VerificationMeta('rightAnswersOld');
-  late final GeneratedColumn<int> rightAnswersOld = GeneratedColumn<int>(
-      'right_answers_old', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _wrongAnswersOldMeta =
-      const VerificationMeta('wrongAnswersOld');
-  late final GeneratedColumn<int> wrongAnswersOld = GeneratedColumn<int>(
-      'wrong_answers_old', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: '');
+      $customConstraints: 'NOT NULL DEFAULT FALSE',
+      defaultValue: const CustomExpression('FALSE'));
   @override
-  List<GeneratedColumn> get $columns => [
-        logId,
-        actionName,
-        actionTimestamp,
-        affectedId,
-        nameOfDayNew,
-        lastDateOccurredNew,
-        rightAnswersNew,
-        wrongAnswersNew,
-        nameOfDayOld,
-        lastDateOccurredOld,
-        rightAnswersOld,
-        wrongAnswersOld
-      ];
+  List<GeneratedColumn> get $columns =>
+      [id, categoryName, categoryLanguage, dateCreated, isFavourite];
   @override
-  String get aliasedName => _alias ?? 'weekdays_log';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'weekdays_log';
+  String get actualTableName => $name;
+  static const String $name = 'categories';
   @override
-  VerificationContext validateIntegrity(Insertable<WeekdaysLogData> instance,
+  VerificationContext validateIntegrity(Insertable<Category> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('log_id')) {
-      context.handle(
-          _logIdMeta, logId.isAcceptableOrUnknown(data['log_id']!, _logIdMeta));
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('action_name')) {
+    if (data.containsKey('category_name')) {
       context.handle(
-          _actionNameMeta,
-          actionName.isAcceptableOrUnknown(
-              data['action_name']!, _actionNameMeta));
+          _categoryNameMeta,
+          categoryName.isAcceptableOrUnknown(
+              data['category_name']!, _categoryNameMeta));
     } else if (isInserting) {
-      context.missing(_actionNameMeta);
+      context.missing(_categoryNameMeta);
     }
-    if (data.containsKey('action_timestamp')) {
+    if (data.containsKey('category_language')) {
       context.handle(
-          _actionTimestampMeta,
-          actionTimestamp.isAcceptableOrUnknown(
-              data['action_timestamp']!, _actionTimestampMeta));
-    }
-    if (data.containsKey('affected_id')) {
-      context.handle(
-          _affectedIdMeta,
-          affectedId.isAcceptableOrUnknown(
-              data['affected_id']!, _affectedIdMeta));
+          _categoryLanguageMeta,
+          categoryLanguage.isAcceptableOrUnknown(
+              data['category_language']!, _categoryLanguageMeta));
     } else if (isInserting) {
-      context.missing(_affectedIdMeta);
+      context.missing(_categoryLanguageMeta);
     }
-    if (data.containsKey('name_of_day_new')) {
+    if (data.containsKey('date_created')) {
       context.handle(
-          _nameOfDayNewMeta,
-          nameOfDayNew.isAcceptableOrUnknown(
-              data['name_of_day_new']!, _nameOfDayNewMeta));
+          _dateCreatedMeta,
+          dateCreated.isAcceptableOrUnknown(
+              data['date_created']!, _dateCreatedMeta));
     }
-    if (data.containsKey('last_date_occurred_new')) {
+    if (data.containsKey('is_favourite')) {
       context.handle(
-          _lastDateOccurredNewMeta,
-          lastDateOccurredNew.isAcceptableOrUnknown(
-              data['last_date_occurred_new']!, _lastDateOccurredNewMeta));
-    }
-    if (data.containsKey('right_answers_new')) {
-      context.handle(
-          _rightAnswersNewMeta,
-          rightAnswersNew.isAcceptableOrUnknown(
-              data['right_answers_new']!, _rightAnswersNewMeta));
-    }
-    if (data.containsKey('wrong_answers_new')) {
-      context.handle(
-          _wrongAnswersNewMeta,
-          wrongAnswersNew.isAcceptableOrUnknown(
-              data['wrong_answers_new']!, _wrongAnswersNewMeta));
-    }
-    if (data.containsKey('name_of_day_old')) {
-      context.handle(
-          _nameOfDayOldMeta,
-          nameOfDayOld.isAcceptableOrUnknown(
-              data['name_of_day_old']!, _nameOfDayOldMeta));
-    }
-    if (data.containsKey('last_date_occurred_old')) {
-      context.handle(
-          _lastDateOccurredOldMeta,
-          lastDateOccurredOld.isAcceptableOrUnknown(
-              data['last_date_occurred_old']!, _lastDateOccurredOldMeta));
-    }
-    if (data.containsKey('right_answers_old')) {
-      context.handle(
-          _rightAnswersOldMeta,
-          rightAnswersOld.isAcceptableOrUnknown(
-              data['right_answers_old']!, _rightAnswersOldMeta));
-    }
-    if (data.containsKey('wrong_answers_old')) {
-      context.handle(
-          _wrongAnswersOldMeta,
-          wrongAnswersOld.isAcceptableOrUnknown(
-              data['wrong_answers_old']!, _wrongAnswersOldMeta));
+          _isFavouriteMeta,
+          isFavourite.isAcceptableOrUnknown(
+              data['is_favourite']!, _isFavouriteMeta));
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {logId};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  WeekdaysLogData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Category map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return WeekdaysLogData(
-      logId: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
-      actionName: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}action_name'])!,
-      actionTimestamp: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}action_timestamp'])!,
-      affectedId: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}affected_id'])!,
-      nameOfDayNew: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}name_of_day_new']),
-      lastDateOccurredNew: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime,
-          data['${effectivePrefix}last_date_occurred_new']),
-      rightAnswersNew: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}right_answers_new']),
-      wrongAnswersNew: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers_new']),
-      nameOfDayOld: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}name_of_day_old']),
-      lastDateOccurredOld: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime,
-          data['${effectivePrefix}last_date_occurred_old']),
-      rightAnswersOld: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}right_answers_old']),
-      wrongAnswersOld: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers_old']),
+    return Category(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      categoryName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}category_name'])!,
+      categoryLanguage: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}category_language'])!,
+      dateCreated: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date_created'])!,
+      isFavourite: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_favourite'])!,
     );
   }
 
   @override
-  WeekdaysLog createAlias(String alias) {
-    return WeekdaysLog(attachedDatabase, alias);
+  Categories createAlias(String alias) {
+    return Categories(attachedDatabase, alias);
   }
 
   @override
@@ -1000,6 +1174,22 @@ class Category extends DataClass implements Insertable<Category> {
         dateCreated: dateCreated ?? this.dateCreated,
         isFavourite: isFavourite ?? this.isFavourite,
       );
+  Category copyWithCompanion(CategoriesCompanion data) {
+    return Category(
+      id: data.id.present ? data.id.value : this.id,
+      categoryName: data.categoryName.present
+          ? data.categoryName.value
+          : this.categoryName,
+      categoryLanguage: data.categoryLanguage.present
+          ? data.categoryLanguage.value
+          : this.categoryLanguage,
+      dateCreated:
+          data.dateCreated.present ? data.dateCreated.value : this.dateCreated,
+      isFavourite:
+          data.isFavourite.present ? data.isFavourite.value : this.isFavourite,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('Category(')
@@ -1112,77 +1302,124 @@ class CategoriesCompanion extends UpdateCompanion<Category> {
   }
 }
 
-class Categories extends Table with TableInfo<Categories, Category> {
+class Vocabularies extends Table with TableInfo<Vocabularies, Vocabulary> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  Categories(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
+  Vocabularies(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
+      hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _categoryNameMeta =
-      const VerificationMeta('categoryName');
-  late final GeneratedColumn<String> categoryName = GeneratedColumn<String>(
-      'category_name', aliasedName, false,
+  static const VerificationMeta _vocLocalMeta =
+      const VerificationMeta('vocLocal');
+  late final GeneratedColumn<String> vocLocal = GeneratedColumn<String>(
+      'voc_local', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  final VerificationMeta _categoryLanguageMeta =
-      const VerificationMeta('categoryLanguage');
-  late final GeneratedColumn<String> categoryLanguage = GeneratedColumn<String>(
-      'category_language', aliasedName, false,
+  static const VerificationMeta _vocForeignMeta =
+      const VerificationMeta('vocForeign');
+  late final GeneratedColumn<String> vocForeign = GeneratedColumn<String>(
+      'voc_foreign', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  final VerificationMeta _dateCreatedMeta =
+  static const VerificationMeta _categoryIdMeta =
+      const VerificationMeta('categoryId');
+  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
+      'category_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      $customConstraints: 'NOT NULL REFERENCES categories(id)');
+  static const VerificationMeta _dateCreatedMeta =
       const VerificationMeta('dateCreated');
   late final GeneratedColumn<DateTime> dateCreated = GeneratedColumn<DateTime>(
       'date_created', aliasedName, false,
       type: DriftSqlType.dateTime,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
-      defaultValue: const CustomExpression<DateTime>('CURRENT_TIMESTAMP'));
-  final VerificationMeta _isFavouriteMeta =
+      defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
+  static const VerificationMeta _isFavouriteMeta =
       const VerificationMeta('isFavourite');
   late final GeneratedColumn<bool> isFavourite = GeneratedColumn<bool>(
       'is_favourite', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL DEFAULT FALSE',
-      defaultValue: const CustomExpression<bool>('FALSE'));
+      defaultValue: const CustomExpression('FALSE'));
+  static const VerificationMeta _dateLastAnsweredMeta =
+      const VerificationMeta('dateLastAnswered');
+  late final GeneratedColumn<DateTime> dateLastAnswered =
+      GeneratedColumn<DateTime>('date_last_answered', aliasedName, true,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _rightAnswersMeta =
+      const VerificationMeta('rightAnswers');
+  late final GeneratedColumn<int> rightAnswers = GeneratedColumn<int>(
+      'right_answers', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const CustomExpression('0'));
+  static const VerificationMeta _wrongAnswersMeta =
+      const VerificationMeta('wrongAnswers');
+  late final GeneratedColumn<int> wrongAnswers = GeneratedColumn<int>(
+      'wrong_answers', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'NOT NULL DEFAULT 0',
+      defaultValue: const CustomExpression('0'));
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, categoryName, categoryLanguage, dateCreated, isFavourite];
+  List<GeneratedColumn> get $columns => [
+        id,
+        vocLocal,
+        vocForeign,
+        categoryId,
+        dateCreated,
+        isFavourite,
+        dateLastAnswered,
+        rightAnswers,
+        wrongAnswers
+      ];
   @override
-  String get aliasedName => _alias ?? 'categories';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'categories';
+  String get actualTableName => $name;
+  static const String $name = 'vocabularies';
   @override
-  VerificationContext validateIntegrity(Insertable<Category> instance,
+  VerificationContext validateIntegrity(Insertable<Vocabulary> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('category_name')) {
-      context.handle(
-          _categoryNameMeta,
-          categoryName.isAcceptableOrUnknown(
-              data['category_name']!, _categoryNameMeta));
+    if (data.containsKey('voc_local')) {
+      context.handle(_vocLocalMeta,
+          vocLocal.isAcceptableOrUnknown(data['voc_local']!, _vocLocalMeta));
     } else if (isInserting) {
-      context.missing(_categoryNameMeta);
+      context.missing(_vocLocalMeta);
     }
-    if (data.containsKey('category_language')) {
+    if (data.containsKey('voc_foreign')) {
       context.handle(
-          _categoryLanguageMeta,
-          categoryLanguage.isAcceptableOrUnknown(
-              data['category_language']!, _categoryLanguageMeta));
+          _vocForeignMeta,
+          vocForeign.isAcceptableOrUnknown(
+              data['voc_foreign']!, _vocForeignMeta));
     } else if (isInserting) {
-      context.missing(_categoryLanguageMeta);
+      context.missing(_vocForeignMeta);
+    }
+    if (data.containsKey('category_id')) {
+      context.handle(
+          _categoryIdMeta,
+          categoryId.isAcceptableOrUnknown(
+              data['category_id']!, _categoryIdMeta));
+    } else if (isInserting) {
+      context.missing(_categoryIdMeta);
     }
     if (data.containsKey('date_created')) {
       context.handle(
@@ -1196,31 +1433,57 @@ class Categories extends Table with TableInfo<Categories, Category> {
           isFavourite.isAcceptableOrUnknown(
               data['is_favourite']!, _isFavouriteMeta));
     }
+    if (data.containsKey('date_last_answered')) {
+      context.handle(
+          _dateLastAnsweredMeta,
+          dateLastAnswered.isAcceptableOrUnknown(
+              data['date_last_answered']!, _dateLastAnsweredMeta));
+    }
+    if (data.containsKey('right_answers')) {
+      context.handle(
+          _rightAnswersMeta,
+          rightAnswers.isAcceptableOrUnknown(
+              data['right_answers']!, _rightAnswersMeta));
+    }
+    if (data.containsKey('wrong_answers')) {
+      context.handle(
+          _wrongAnswersMeta,
+          wrongAnswers.isAcceptableOrUnknown(
+              data['wrong_answers']!, _wrongAnswersMeta));
+    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Category map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Vocabulary map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Category(
-      id: attachedDatabase.options.types
+    return Vocabulary(
+      id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      categoryName: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}category_name'])!,
-      categoryLanguage: attachedDatabase.options.types.read(
-          DriftSqlType.string, data['${effectivePrefix}category_language'])!,
-      dateCreated: attachedDatabase.options.types
+      vocLocal: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}voc_local'])!,
+      vocForeign: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}voc_foreign'])!,
+      categoryId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}category_id'])!,
+      dateCreated: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}date_created'])!,
-      isFavourite: attachedDatabase.options.types
+      isFavourite: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_favourite'])!,
+      dateLastAnswered: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}date_last_answered']),
+      rightAnswers: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}right_answers'])!,
+      wrongAnswers: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers'])!,
     );
   }
 
   @override
-  Categories createAlias(String alias) {
-    return Categories(attachedDatabase, alias);
+  Vocabularies createAlias(String alias) {
+    return Vocabularies(attachedDatabase, alias);
   }
 
   @override
@@ -1335,6 +1598,30 @@ class Vocabulary extends DataClass implements Insertable<Vocabulary> {
         rightAnswers: rightAnswers ?? this.rightAnswers,
         wrongAnswers: wrongAnswers ?? this.wrongAnswers,
       );
+  Vocabulary copyWithCompanion(VocabulariesCompanion data) {
+    return Vocabulary(
+      id: data.id.present ? data.id.value : this.id,
+      vocLocal: data.vocLocal.present ? data.vocLocal.value : this.vocLocal,
+      vocForeign:
+          data.vocForeign.present ? data.vocForeign.value : this.vocForeign,
+      categoryId:
+          data.categoryId.present ? data.categoryId.value : this.categoryId,
+      dateCreated:
+          data.dateCreated.present ? data.dateCreated.value : this.dateCreated,
+      isFavourite:
+          data.isFavourite.present ? data.isFavourite.value : this.isFavourite,
+      dateLastAnswered: data.dateLastAnswered.present
+          ? data.dateLastAnswered.value
+          : this.dateLastAnswered,
+      rightAnswers: data.rightAnswers.present
+          ? data.rightAnswers.value
+          : this.rightAnswers,
+      wrongAnswers: data.wrongAnswers.present
+          ? data.wrongAnswers.value
+          : this.wrongAnswers,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('Vocabulary(')
@@ -1500,183 +1787,366 @@ class VocabulariesCompanion extends UpdateCompanion<Vocabulary> {
   }
 }
 
-class Vocabularies extends Table with TableInfo<Vocabularies, Vocabulary> {
+class VocabulariesLog extends Table
+    with TableInfo<VocabulariesLog, VocabulariesLogData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  Vocabularies(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
+  VocabulariesLog(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _logIdMeta = const VerificationMeta('logId');
+  late final GeneratedColumn<int> logId = GeneratedColumn<int>(
+      'log_id', aliasedName, false,
+      hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _vocLocalMeta = const VerificationMeta('vocLocal');
-  late final GeneratedColumn<String> vocLocal = GeneratedColumn<String>(
-      'voc_local', aliasedName, false,
+  static const VerificationMeta _actionNameMeta =
+      const VerificationMeta('actionName');
+  late final GeneratedColumn<String> actionName = GeneratedColumn<String>(
+      'action_name', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  final VerificationMeta _vocForeignMeta = const VerificationMeta('vocForeign');
-  late final GeneratedColumn<String> vocForeign = GeneratedColumn<String>(
-      'voc_foreign', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  final VerificationMeta _categoryIdMeta = const VerificationMeta('categoryId');
-  late final GeneratedColumn<int> categoryId = GeneratedColumn<int>(
-      'category_id', aliasedName, false,
+  static const VerificationMeta _actionTimestampMeta =
+      const VerificationMeta('actionTimestamp');
+  late final GeneratedColumn<DateTime> actionTimestamp =
+      GeneratedColumn<DateTime>('action_timestamp', aliasedName, false,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          $customConstraints: 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
+          defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
+  static const VerificationMeta _affectedIdMeta =
+      const VerificationMeta('affectedId');
+  late final GeneratedColumn<int> affectedId = GeneratedColumn<int>(
+      'affected_id', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL REFERENCES categories(id)');
-  final VerificationMeta _dateCreatedMeta =
-      const VerificationMeta('dateCreated');
-  late final GeneratedColumn<DateTime> dateCreated = GeneratedColumn<DateTime>(
-      'date_created', aliasedName, false,
-      type: DriftSqlType.dateTime,
+      $customConstraints: 'NOT NULL');
+  static const VerificationMeta _vocLocalNewMeta =
+      const VerificationMeta('vocLocalNew');
+  late final GeneratedColumn<String> vocLocalNew = GeneratedColumn<String>(
+      'voc_local_new', aliasedName, true,
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
-      defaultValue: const CustomExpression<DateTime>('CURRENT_TIMESTAMP'));
-  final VerificationMeta _isFavouriteMeta =
-      const VerificationMeta('isFavourite');
-  late final GeneratedColumn<bool> isFavourite = GeneratedColumn<bool>(
-      'is_favourite', aliasedName, false,
-      type: DriftSqlType.bool,
+      $customConstraints: '');
+  static const VerificationMeta _vocForeignNewMeta =
+      const VerificationMeta('vocForeignNew');
+  late final GeneratedColumn<String> vocForeignNew = GeneratedColumn<String>(
+      'voc_foreign_new', aliasedName, true,
+      type: DriftSqlType.string,
       requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL DEFAULT FALSE',
-      defaultValue: const CustomExpression<bool>('FALSE'));
-  final VerificationMeta _dateLastAnsweredMeta =
-      const VerificationMeta('dateLastAnswered');
-  late final GeneratedColumn<DateTime> dateLastAnswered =
-      GeneratedColumn<DateTime>('date_last_answered', aliasedName, true,
+      $customConstraints: '');
+  static const VerificationMeta _categoryIdNewMeta =
+      const VerificationMeta('categoryIdNew');
+  late final GeneratedColumn<int> categoryIdNew = GeneratedColumn<int>(
+      'category_id_new', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'REFERENCES categories(id)');
+  static const VerificationMeta _dateCreatedNewMeta =
+      const VerificationMeta('dateCreatedNew');
+  late final GeneratedColumn<DateTime> dateCreatedNew =
+      GeneratedColumn<DateTime>('date_created_new', aliasedName, true,
           type: DriftSqlType.dateTime,
           requiredDuringInsert: false,
           $customConstraints: '');
-  final VerificationMeta _rightAnswersMeta =
-      const VerificationMeta('rightAnswers');
-  late final GeneratedColumn<int> rightAnswers = GeneratedColumn<int>(
-      'right_answers', aliasedName, false,
+  static const VerificationMeta _isFavouriteNewMeta =
+      const VerificationMeta('isFavouriteNew');
+  late final GeneratedColumn<bool> isFavouriteNew = GeneratedColumn<bool>(
+      'is_favourite_new', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _dateLastAnsweredNewMeta =
+      const VerificationMeta('dateLastAnsweredNew');
+  late final GeneratedColumn<DateTime> dateLastAnsweredNew =
+      GeneratedColumn<DateTime>('date_last_answered_new', aliasedName, true,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _rightAnswersNewMeta =
+      const VerificationMeta('rightAnswersNew');
+  late final GeneratedColumn<int> rightAnswersNew = GeneratedColumn<int>(
+      'right_answers_new', aliasedName, true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL DEFAULT 0',
-      defaultValue: const CustomExpression<int>('0'));
-  final VerificationMeta _wrongAnswersMeta =
-      const VerificationMeta('wrongAnswers');
-  late final GeneratedColumn<int> wrongAnswers = GeneratedColumn<int>(
-      'wrong_answers', aliasedName, false,
+      $customConstraints: '');
+  static const VerificationMeta _wrongAnswersNewMeta =
+      const VerificationMeta('wrongAnswersNew');
+  late final GeneratedColumn<int> wrongAnswersNew = GeneratedColumn<int>(
+      'wrong_answers_new', aliasedName, true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL DEFAULT 0',
-      defaultValue: const CustomExpression<int>('0'));
+      $customConstraints: '');
+  static const VerificationMeta _vocLocalOldMeta =
+      const VerificationMeta('vocLocalOld');
+  late final GeneratedColumn<String> vocLocalOld = GeneratedColumn<String>(
+      'voc_local_old', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _vocForeignOldMeta =
+      const VerificationMeta('vocForeignOld');
+  late final GeneratedColumn<String> vocForeignOld = GeneratedColumn<String>(
+      'voc_foreign_old', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _categoryIdOldMeta =
+      const VerificationMeta('categoryIdOld');
+  late final GeneratedColumn<int> categoryIdOld = GeneratedColumn<int>(
+      'category_id_old', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: 'REFERENCES categories(id)');
+  static const VerificationMeta _dateCreatedOldMeta =
+      const VerificationMeta('dateCreatedOld');
+  late final GeneratedColumn<DateTime> dateCreatedOld =
+      GeneratedColumn<DateTime>('date_created_old', aliasedName, true,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _isFavouriteOldMeta =
+      const VerificationMeta('isFavouriteOld');
+  late final GeneratedColumn<bool> isFavouriteOld = GeneratedColumn<bool>(
+      'is_favourite_old', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _dateLastAnsweredOldMeta =
+      const VerificationMeta('dateLastAnsweredOld');
+  late final GeneratedColumn<DateTime> dateLastAnsweredOld =
+      GeneratedColumn<DateTime>('date_last_answered_old', aliasedName, true,
+          type: DriftSqlType.dateTime,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _rightAnswersOldMeta =
+      const VerificationMeta('rightAnswersOld');
+  late final GeneratedColumn<int> rightAnswersOld = GeneratedColumn<int>(
+      'right_answers_old', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _wrongAnswersOldMeta =
+      const VerificationMeta('wrongAnswersOld');
+  late final GeneratedColumn<int> wrongAnswersOld = GeneratedColumn<int>(
+      'wrong_answers_old', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      $customConstraints: '');
   @override
   List<GeneratedColumn> get $columns => [
-        id,
-        vocLocal,
-        vocForeign,
-        categoryId,
-        dateCreated,
-        isFavourite,
-        dateLastAnswered,
-        rightAnswers,
-        wrongAnswers
+        logId,
+        actionName,
+        actionTimestamp,
+        affectedId,
+        vocLocalNew,
+        vocForeignNew,
+        categoryIdNew,
+        dateCreatedNew,
+        isFavouriteNew,
+        dateLastAnsweredNew,
+        rightAnswersNew,
+        wrongAnswersNew,
+        vocLocalOld,
+        vocForeignOld,
+        categoryIdOld,
+        dateCreatedOld,
+        isFavouriteOld,
+        dateLastAnsweredOld,
+        rightAnswersOld,
+        wrongAnswersOld
       ];
   @override
-  String get aliasedName => _alias ?? 'vocabularies';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'vocabularies';
+  String get actualTableName => $name;
+  static const String $name = 'vocabularies_log';
   @override
-  VerificationContext validateIntegrity(Insertable<Vocabulary> instance,
+  VerificationContext validateIntegrity(
+      Insertable<VocabulariesLogData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    if (data.containsKey('log_id')) {
+      context.handle(
+          _logIdMeta, logId.isAcceptableOrUnknown(data['log_id']!, _logIdMeta));
     }
-    if (data.containsKey('voc_local')) {
-      context.handle(_vocLocalMeta,
-          vocLocal.isAcceptableOrUnknown(data['voc_local']!, _vocLocalMeta));
+    if (data.containsKey('action_name')) {
+      context.handle(
+          _actionNameMeta,
+          actionName.isAcceptableOrUnknown(
+              data['action_name']!, _actionNameMeta));
     } else if (isInserting) {
-      context.missing(_vocLocalMeta);
+      context.missing(_actionNameMeta);
     }
-    if (data.containsKey('voc_foreign')) {
+    if (data.containsKey('action_timestamp')) {
       context.handle(
-          _vocForeignMeta,
-          vocForeign.isAcceptableOrUnknown(
-              data['voc_foreign']!, _vocForeignMeta));
+          _actionTimestampMeta,
+          actionTimestamp.isAcceptableOrUnknown(
+              data['action_timestamp']!, _actionTimestampMeta));
+    }
+    if (data.containsKey('affected_id')) {
+      context.handle(
+          _affectedIdMeta,
+          affectedId.isAcceptableOrUnknown(
+              data['affected_id']!, _affectedIdMeta));
     } else if (isInserting) {
-      context.missing(_vocForeignMeta);
+      context.missing(_affectedIdMeta);
     }
-    if (data.containsKey('category_id')) {
+    if (data.containsKey('voc_local_new')) {
       context.handle(
-          _categoryIdMeta,
-          categoryId.isAcceptableOrUnknown(
-              data['category_id']!, _categoryIdMeta));
-    } else if (isInserting) {
-      context.missing(_categoryIdMeta);
+          _vocLocalNewMeta,
+          vocLocalNew.isAcceptableOrUnknown(
+              data['voc_local_new']!, _vocLocalNewMeta));
     }
-    if (data.containsKey('date_created')) {
+    if (data.containsKey('voc_foreign_new')) {
       context.handle(
-          _dateCreatedMeta,
-          dateCreated.isAcceptableOrUnknown(
-              data['date_created']!, _dateCreatedMeta));
+          _vocForeignNewMeta,
+          vocForeignNew.isAcceptableOrUnknown(
+              data['voc_foreign_new']!, _vocForeignNewMeta));
     }
-    if (data.containsKey('is_favourite')) {
+    if (data.containsKey('category_id_new')) {
       context.handle(
-          _isFavouriteMeta,
-          isFavourite.isAcceptableOrUnknown(
-              data['is_favourite']!, _isFavouriteMeta));
+          _categoryIdNewMeta,
+          categoryIdNew.isAcceptableOrUnknown(
+              data['category_id_new']!, _categoryIdNewMeta));
     }
-    if (data.containsKey('date_last_answered')) {
+    if (data.containsKey('date_created_new')) {
       context.handle(
-          _dateLastAnsweredMeta,
-          dateLastAnswered.isAcceptableOrUnknown(
-              data['date_last_answered']!, _dateLastAnsweredMeta));
+          _dateCreatedNewMeta,
+          dateCreatedNew.isAcceptableOrUnknown(
+              data['date_created_new']!, _dateCreatedNewMeta));
     }
-    if (data.containsKey('right_answers')) {
+    if (data.containsKey('is_favourite_new')) {
       context.handle(
-          _rightAnswersMeta,
-          rightAnswers.isAcceptableOrUnknown(
-              data['right_answers']!, _rightAnswersMeta));
+          _isFavouriteNewMeta,
+          isFavouriteNew.isAcceptableOrUnknown(
+              data['is_favourite_new']!, _isFavouriteNewMeta));
     }
-    if (data.containsKey('wrong_answers')) {
+    if (data.containsKey('date_last_answered_new')) {
       context.handle(
-          _wrongAnswersMeta,
-          wrongAnswers.isAcceptableOrUnknown(
-              data['wrong_answers']!, _wrongAnswersMeta));
+          _dateLastAnsweredNewMeta,
+          dateLastAnsweredNew.isAcceptableOrUnknown(
+              data['date_last_answered_new']!, _dateLastAnsweredNewMeta));
+    }
+    if (data.containsKey('right_answers_new')) {
+      context.handle(
+          _rightAnswersNewMeta,
+          rightAnswersNew.isAcceptableOrUnknown(
+              data['right_answers_new']!, _rightAnswersNewMeta));
+    }
+    if (data.containsKey('wrong_answers_new')) {
+      context.handle(
+          _wrongAnswersNewMeta,
+          wrongAnswersNew.isAcceptableOrUnknown(
+              data['wrong_answers_new']!, _wrongAnswersNewMeta));
+    }
+    if (data.containsKey('voc_local_old')) {
+      context.handle(
+          _vocLocalOldMeta,
+          vocLocalOld.isAcceptableOrUnknown(
+              data['voc_local_old']!, _vocLocalOldMeta));
+    }
+    if (data.containsKey('voc_foreign_old')) {
+      context.handle(
+          _vocForeignOldMeta,
+          vocForeignOld.isAcceptableOrUnknown(
+              data['voc_foreign_old']!, _vocForeignOldMeta));
+    }
+    if (data.containsKey('category_id_old')) {
+      context.handle(
+          _categoryIdOldMeta,
+          categoryIdOld.isAcceptableOrUnknown(
+              data['category_id_old']!, _categoryIdOldMeta));
+    }
+    if (data.containsKey('date_created_old')) {
+      context.handle(
+          _dateCreatedOldMeta,
+          dateCreatedOld.isAcceptableOrUnknown(
+              data['date_created_old']!, _dateCreatedOldMeta));
+    }
+    if (data.containsKey('is_favourite_old')) {
+      context.handle(
+          _isFavouriteOldMeta,
+          isFavouriteOld.isAcceptableOrUnknown(
+              data['is_favourite_old']!, _isFavouriteOldMeta));
+    }
+    if (data.containsKey('date_last_answered_old')) {
+      context.handle(
+          _dateLastAnsweredOldMeta,
+          dateLastAnsweredOld.isAcceptableOrUnknown(
+              data['date_last_answered_old']!, _dateLastAnsweredOldMeta));
+    }
+    if (data.containsKey('right_answers_old')) {
+      context.handle(
+          _rightAnswersOldMeta,
+          rightAnswersOld.isAcceptableOrUnknown(
+              data['right_answers_old']!, _rightAnswersOldMeta));
+    }
+    if (data.containsKey('wrong_answers_old')) {
+      context.handle(
+          _wrongAnswersOldMeta,
+          wrongAnswersOld.isAcceptableOrUnknown(
+              data['wrong_answers_old']!, _wrongAnswersOldMeta));
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {logId};
   @override
-  Vocabulary map(Map<String, dynamic> data, {String? tablePrefix}) {
+  VocabulariesLogData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Vocabulary(
-      id: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      vocLocal: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}voc_local'])!,
-      vocForeign: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}voc_foreign'])!,
-      categoryId: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}category_id'])!,
-      dateCreated: attachedDatabase.options.types
-          .read(DriftSqlType.dateTime, data['${effectivePrefix}date_created'])!,
-      isFavourite: attachedDatabase.options.types
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_favourite'])!,
-      dateLastAnswered: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}date_last_answered']),
-      rightAnswers: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}right_answers'])!,
-      wrongAnswers: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers'])!,
+    return VocabulariesLogData(
+      logId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
+      actionName: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action_name'])!,
+      actionTimestamp: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}action_timestamp'])!,
+      affectedId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}affected_id'])!,
+      vocLocalNew: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}voc_local_new']),
+      vocForeignNew: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}voc_foreign_new']),
+      categoryIdNew: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}category_id_new']),
+      dateCreatedNew: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}date_created_new']),
+      isFavouriteNew: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_favourite_new']),
+      dateLastAnsweredNew: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}date_last_answered_new']),
+      rightAnswersNew: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}right_answers_new']),
+      wrongAnswersNew: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers_new']),
+      vocLocalOld: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}voc_local_old']),
+      vocForeignOld: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}voc_foreign_old']),
+      categoryIdOld: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}category_id_old']),
+      dateCreatedOld: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime, data['${effectivePrefix}date_created_old']),
+      isFavouriteOld: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_favourite_old']),
+      dateLastAnsweredOld: attachedDatabase.typeMapping.read(
+          DriftSqlType.dateTime,
+          data['${effectivePrefix}date_last_answered_old']),
+      rightAnswersOld: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}right_answers_old']),
+      wrongAnswersOld: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers_old']),
     );
   }
 
   @override
-  Vocabularies createAlias(String alias) {
-    return Vocabularies(attachedDatabase, alias);
+  VocabulariesLog createAlias(String alias) {
+    return VocabulariesLog(attachedDatabase, alias);
   }
 
   @override
@@ -1961,6 +2431,65 @@ class VocabulariesLogData extends DataClass
             ? wrongAnswersOld.value
             : this.wrongAnswersOld,
       );
+  VocabulariesLogData copyWithCompanion(VocabulariesLogCompanion data) {
+    return VocabulariesLogData(
+      logId: data.logId.present ? data.logId.value : this.logId,
+      actionName:
+          data.actionName.present ? data.actionName.value : this.actionName,
+      actionTimestamp: data.actionTimestamp.present
+          ? data.actionTimestamp.value
+          : this.actionTimestamp,
+      affectedId:
+          data.affectedId.present ? data.affectedId.value : this.affectedId,
+      vocLocalNew:
+          data.vocLocalNew.present ? data.vocLocalNew.value : this.vocLocalNew,
+      vocForeignNew: data.vocForeignNew.present
+          ? data.vocForeignNew.value
+          : this.vocForeignNew,
+      categoryIdNew: data.categoryIdNew.present
+          ? data.categoryIdNew.value
+          : this.categoryIdNew,
+      dateCreatedNew: data.dateCreatedNew.present
+          ? data.dateCreatedNew.value
+          : this.dateCreatedNew,
+      isFavouriteNew: data.isFavouriteNew.present
+          ? data.isFavouriteNew.value
+          : this.isFavouriteNew,
+      dateLastAnsweredNew: data.dateLastAnsweredNew.present
+          ? data.dateLastAnsweredNew.value
+          : this.dateLastAnsweredNew,
+      rightAnswersNew: data.rightAnswersNew.present
+          ? data.rightAnswersNew.value
+          : this.rightAnswersNew,
+      wrongAnswersNew: data.wrongAnswersNew.present
+          ? data.wrongAnswersNew.value
+          : this.wrongAnswersNew,
+      vocLocalOld:
+          data.vocLocalOld.present ? data.vocLocalOld.value : this.vocLocalOld,
+      vocForeignOld: data.vocForeignOld.present
+          ? data.vocForeignOld.value
+          : this.vocForeignOld,
+      categoryIdOld: data.categoryIdOld.present
+          ? data.categoryIdOld.value
+          : this.categoryIdOld,
+      dateCreatedOld: data.dateCreatedOld.present
+          ? data.dateCreatedOld.value
+          : this.dateCreatedOld,
+      isFavouriteOld: data.isFavouriteOld.present
+          ? data.isFavouriteOld.value
+          : this.isFavouriteOld,
+      dateLastAnsweredOld: data.dateLastAnsweredOld.present
+          ? data.dateLastAnsweredOld.value
+          : this.dateLastAnsweredOld,
+      rightAnswersOld: data.rightAnswersOld.present
+          ? data.rightAnswersOld.value
+          : this.rightAnswersOld,
+      wrongAnswersOld: data.wrongAnswersOld.present
+          ? data.wrongAnswersOld.value
+          : this.wrongAnswersOld,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('VocabulariesLogData(')
@@ -2291,148 +2820,95 @@ class VocabulariesLogCompanion extends UpdateCompanion<VocabulariesLogData> {
   }
 }
 
-class VocabulariesLog extends Table
-    with TableInfo<VocabulariesLog, VocabulariesLogData> {
+class CategoriesLog extends Table
+    with TableInfo<CategoriesLog, CategoriesLogData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  VocabulariesLog(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _logIdMeta = const VerificationMeta('logId');
+  CategoriesLog(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _logIdMeta = const VerificationMeta('logId');
   late final GeneratedColumn<int> logId = GeneratedColumn<int>(
       'log_id', aliasedName, false,
+      hasAutoIncrement: true,
       type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _actionNameMeta = const VerificationMeta('actionName');
+  static const VerificationMeta _actionNameMeta =
+      const VerificationMeta('actionName');
   late final GeneratedColumn<String> actionName = GeneratedColumn<String>(
       'action_name', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  final VerificationMeta _actionTimestampMeta =
+  static const VerificationMeta _actionTimestampMeta =
       const VerificationMeta('actionTimestamp');
   late final GeneratedColumn<DateTime> actionTimestamp =
       GeneratedColumn<DateTime>('action_timestamp', aliasedName, false,
           type: DriftSqlType.dateTime,
           requiredDuringInsert: false,
           $customConstraints: 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
-          defaultValue: const CustomExpression<DateTime>('CURRENT_TIMESTAMP'));
-  final VerificationMeta _affectedIdMeta = const VerificationMeta('affectedId');
+          defaultValue: const CustomExpression('CURRENT_TIMESTAMP'));
+  static const VerificationMeta _affectedIdMeta =
+      const VerificationMeta('affectedId');
   late final GeneratedColumn<int> affectedId = GeneratedColumn<int>(
       'affected_id', aliasedName, false,
       type: DriftSqlType.int,
       requiredDuringInsert: true,
       $customConstraints: 'NOT NULL');
-  final VerificationMeta _vocLocalNewMeta =
-      const VerificationMeta('vocLocalNew');
-  late final GeneratedColumn<String> vocLocalNew = GeneratedColumn<String>(
-      'voc_local_new', aliasedName, true,
+  static const VerificationMeta _categoryNameNewMeta =
+      const VerificationMeta('categoryNameNew');
+  late final GeneratedColumn<String> categoryNameNew = GeneratedColumn<String>(
+      'category_name_new', aliasedName, true,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       $customConstraints: '');
-  final VerificationMeta _vocForeignNewMeta =
-      const VerificationMeta('vocForeignNew');
-  late final GeneratedColumn<String> vocForeignNew = GeneratedColumn<String>(
-      'voc_foreign_new', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _categoryIdNewMeta =
-      const VerificationMeta('categoryIdNew');
-  late final GeneratedColumn<int> categoryIdNew = GeneratedColumn<int>(
-      'category_id_new', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: 'REFERENCES categories(id)');
-  final VerificationMeta _dateCreatedNewMeta =
+  static const VerificationMeta _categoryLanguageNewMeta =
+      const VerificationMeta('categoryLanguageNew');
+  late final GeneratedColumn<String> categoryLanguageNew =
+      GeneratedColumn<String>('category_language_new', aliasedName, true,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          $customConstraints: '');
+  static const VerificationMeta _dateCreatedNewMeta =
       const VerificationMeta('dateCreatedNew');
   late final GeneratedColumn<DateTime> dateCreatedNew =
       GeneratedColumn<DateTime>('date_created_new', aliasedName, true,
           type: DriftSqlType.dateTime,
           requiredDuringInsert: false,
           $customConstraints: '');
-  final VerificationMeta _isFavouriteNewMeta =
+  static const VerificationMeta _isFavouriteNewMeta =
       const VerificationMeta('isFavouriteNew');
   late final GeneratedColumn<bool> isFavouriteNew = GeneratedColumn<bool>(
       'is_favourite_new', aliasedName, true,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
       $customConstraints: '');
-  final VerificationMeta _dateLastAnsweredNewMeta =
-      const VerificationMeta('dateLastAnsweredNew');
-  late final GeneratedColumn<DateTime> dateLastAnsweredNew =
-      GeneratedColumn<DateTime>('date_last_answered_new', aliasedName, true,
-          type: DriftSqlType.dateTime,
+  static const VerificationMeta _categoryNameOldMeta =
+      const VerificationMeta('categoryNameOld');
+  late final GeneratedColumn<String> categoryNameOld = GeneratedColumn<String>(
+      'category_name_old', aliasedName, true,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      $customConstraints: '');
+  static const VerificationMeta _categoryLanguageOldMeta =
+      const VerificationMeta('categoryLanguageOld');
+  late final GeneratedColumn<String> categoryLanguageOld =
+      GeneratedColumn<String>('category_language_old', aliasedName, true,
+          type: DriftSqlType.string,
           requiredDuringInsert: false,
           $customConstraints: '');
-  final VerificationMeta _rightAnswersNewMeta =
-      const VerificationMeta('rightAnswersNew');
-  late final GeneratedColumn<int> rightAnswersNew = GeneratedColumn<int>(
-      'right_answers_new', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _wrongAnswersNewMeta =
-      const VerificationMeta('wrongAnswersNew');
-  late final GeneratedColumn<int> wrongAnswersNew = GeneratedColumn<int>(
-      'wrong_answers_new', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _vocLocalOldMeta =
-      const VerificationMeta('vocLocalOld');
-  late final GeneratedColumn<String> vocLocalOld = GeneratedColumn<String>(
-      'voc_local_old', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _vocForeignOldMeta =
-      const VerificationMeta('vocForeignOld');
-  late final GeneratedColumn<String> vocForeignOld = GeneratedColumn<String>(
-      'voc_foreign_old', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _categoryIdOldMeta =
-      const VerificationMeta('categoryIdOld');
-  late final GeneratedColumn<int> categoryIdOld = GeneratedColumn<int>(
-      'category_id_old', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: 'REFERENCES categories(id)');
-  final VerificationMeta _dateCreatedOldMeta =
+  static const VerificationMeta _dateCreatedOldMeta =
       const VerificationMeta('dateCreatedOld');
   late final GeneratedColumn<DateTime> dateCreatedOld =
       GeneratedColumn<DateTime>('date_created_old', aliasedName, true,
           type: DriftSqlType.dateTime,
           requiredDuringInsert: false,
           $customConstraints: '');
-  final VerificationMeta _isFavouriteOldMeta =
+  static const VerificationMeta _isFavouriteOldMeta =
       const VerificationMeta('isFavouriteOld');
   late final GeneratedColumn<bool> isFavouriteOld = GeneratedColumn<bool>(
       'is_favourite_old', aliasedName, true,
       type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _dateLastAnsweredOldMeta =
-      const VerificationMeta('dateLastAnsweredOld');
-  late final GeneratedColumn<DateTime> dateLastAnsweredOld =
-      GeneratedColumn<DateTime>('date_last_answered_old', aliasedName, true,
-          type: DriftSqlType.dateTime,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  final VerificationMeta _rightAnswersOldMeta =
-      const VerificationMeta('rightAnswersOld');
-  late final GeneratedColumn<int> rightAnswersOld = GeneratedColumn<int>(
-      'right_answers_old', aliasedName, true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _wrongAnswersOldMeta =
-      const VerificationMeta('wrongAnswersOld');
-  late final GeneratedColumn<int> wrongAnswersOld = GeneratedColumn<int>(
-      'wrong_answers_old', aliasedName, true,
-      type: DriftSqlType.int,
       requiredDuringInsert: false,
       $customConstraints: '');
   @override
@@ -2441,30 +2917,22 @@ class VocabulariesLog extends Table
         actionName,
         actionTimestamp,
         affectedId,
-        vocLocalNew,
-        vocForeignNew,
-        categoryIdNew,
+        categoryNameNew,
+        categoryLanguageNew,
         dateCreatedNew,
         isFavouriteNew,
-        dateLastAnsweredNew,
-        rightAnswersNew,
-        wrongAnswersNew,
-        vocLocalOld,
-        vocForeignOld,
-        categoryIdOld,
+        categoryNameOld,
+        categoryLanguageOld,
         dateCreatedOld,
-        isFavouriteOld,
-        dateLastAnsweredOld,
-        rightAnswersOld,
-        wrongAnswersOld
+        isFavouriteOld
       ];
   @override
-  String get aliasedName => _alias ?? 'vocabularies_log';
+  String get aliasedName => _alias ?? actualTableName;
   @override
-  String get actualTableName => 'vocabularies_log';
+  String get actualTableName => $name;
+  static const String $name = 'categories_log';
   @override
-  VerificationContext validateIntegrity(
-      Insertable<VocabulariesLogData> instance,
+  VerificationContext validateIntegrity(Insertable<CategoriesLogData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -2494,23 +2962,17 @@ class VocabulariesLog extends Table
     } else if (isInserting) {
       context.missing(_affectedIdMeta);
     }
-    if (data.containsKey('voc_local_new')) {
+    if (data.containsKey('category_name_new')) {
       context.handle(
-          _vocLocalNewMeta,
-          vocLocalNew.isAcceptableOrUnknown(
-              data['voc_local_new']!, _vocLocalNewMeta));
+          _categoryNameNewMeta,
+          categoryNameNew.isAcceptableOrUnknown(
+              data['category_name_new']!, _categoryNameNewMeta));
     }
-    if (data.containsKey('voc_foreign_new')) {
+    if (data.containsKey('category_language_new')) {
       context.handle(
-          _vocForeignNewMeta,
-          vocForeignNew.isAcceptableOrUnknown(
-              data['voc_foreign_new']!, _vocForeignNewMeta));
-    }
-    if (data.containsKey('category_id_new')) {
-      context.handle(
-          _categoryIdNewMeta,
-          categoryIdNew.isAcceptableOrUnknown(
-              data['category_id_new']!, _categoryIdNewMeta));
+          _categoryLanguageNewMeta,
+          categoryLanguageNew.isAcceptableOrUnknown(
+              data['category_language_new']!, _categoryLanguageNewMeta));
     }
     if (data.containsKey('date_created_new')) {
       context.handle(
@@ -2524,41 +2986,17 @@ class VocabulariesLog extends Table
           isFavouriteNew.isAcceptableOrUnknown(
               data['is_favourite_new']!, _isFavouriteNewMeta));
     }
-    if (data.containsKey('date_last_answered_new')) {
+    if (data.containsKey('category_name_old')) {
       context.handle(
-          _dateLastAnsweredNewMeta,
-          dateLastAnsweredNew.isAcceptableOrUnknown(
-              data['date_last_answered_new']!, _dateLastAnsweredNewMeta));
+          _categoryNameOldMeta,
+          categoryNameOld.isAcceptableOrUnknown(
+              data['category_name_old']!, _categoryNameOldMeta));
     }
-    if (data.containsKey('right_answers_new')) {
+    if (data.containsKey('category_language_old')) {
       context.handle(
-          _rightAnswersNewMeta,
-          rightAnswersNew.isAcceptableOrUnknown(
-              data['right_answers_new']!, _rightAnswersNewMeta));
-    }
-    if (data.containsKey('wrong_answers_new')) {
-      context.handle(
-          _wrongAnswersNewMeta,
-          wrongAnswersNew.isAcceptableOrUnknown(
-              data['wrong_answers_new']!, _wrongAnswersNewMeta));
-    }
-    if (data.containsKey('voc_local_old')) {
-      context.handle(
-          _vocLocalOldMeta,
-          vocLocalOld.isAcceptableOrUnknown(
-              data['voc_local_old']!, _vocLocalOldMeta));
-    }
-    if (data.containsKey('voc_foreign_old')) {
-      context.handle(
-          _vocForeignOldMeta,
-          vocForeignOld.isAcceptableOrUnknown(
-              data['voc_foreign_old']!, _vocForeignOldMeta));
-    }
-    if (data.containsKey('category_id_old')) {
-      context.handle(
-          _categoryIdOldMeta,
-          categoryIdOld.isAcceptableOrUnknown(
-              data['category_id_old']!, _categoryIdOldMeta));
+          _categoryLanguageOldMeta,
+          categoryLanguageOld.isAcceptableOrUnknown(
+              data['category_language_old']!, _categoryLanguageOldMeta));
     }
     if (data.containsKey('date_created_old')) {
       context.handle(
@@ -2572,81 +3010,45 @@ class VocabulariesLog extends Table
           isFavouriteOld.isAcceptableOrUnknown(
               data['is_favourite_old']!, _isFavouriteOldMeta));
     }
-    if (data.containsKey('date_last_answered_old')) {
-      context.handle(
-          _dateLastAnsweredOldMeta,
-          dateLastAnsweredOld.isAcceptableOrUnknown(
-              data['date_last_answered_old']!, _dateLastAnsweredOldMeta));
-    }
-    if (data.containsKey('right_answers_old')) {
-      context.handle(
-          _rightAnswersOldMeta,
-          rightAnswersOld.isAcceptableOrUnknown(
-              data['right_answers_old']!, _rightAnswersOldMeta));
-    }
-    if (data.containsKey('wrong_answers_old')) {
-      context.handle(
-          _wrongAnswersOldMeta,
-          wrongAnswersOld.isAcceptableOrUnknown(
-              data['wrong_answers_old']!, _wrongAnswersOldMeta));
-    }
     return context;
   }
 
   @override
   Set<GeneratedColumn> get $primaryKey => {logId};
   @override
-  VocabulariesLogData map(Map<String, dynamic> data, {String? tablePrefix}) {
+  CategoriesLogData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return VocabulariesLogData(
-      logId: attachedDatabase.options.types
+    return CategoriesLogData(
+      logId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
-      actionName: attachedDatabase.options.types
+      actionName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}action_name'])!,
-      actionTimestamp: attachedDatabase.options.types.read(
+      actionTimestamp: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}action_timestamp'])!,
-      affectedId: attachedDatabase.options.types
+      affectedId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}affected_id'])!,
-      vocLocalNew: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}voc_local_new']),
-      vocForeignNew: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}voc_foreign_new']),
-      categoryIdNew: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}category_id_new']),
-      dateCreatedNew: attachedDatabase.options.types.read(
+      categoryNameNew: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}category_name_new']),
+      categoryLanguageNew: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}category_language_new']),
+      dateCreatedNew: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}date_created_new']),
-      isFavouriteNew: attachedDatabase.options.types
+      isFavouriteNew: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_favourite_new']),
-      dateLastAnsweredNew: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime,
-          data['${effectivePrefix}date_last_answered_new']),
-      rightAnswersNew: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}right_answers_new']),
-      wrongAnswersNew: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers_new']),
-      vocLocalOld: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}voc_local_old']),
-      vocForeignOld: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}voc_foreign_old']),
-      categoryIdOld: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}category_id_old']),
-      dateCreatedOld: attachedDatabase.options.types.read(
+      categoryNameOld: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}category_name_old']),
+      categoryLanguageOld: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}category_language_old']),
+      dateCreatedOld: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}date_created_old']),
-      isFavouriteOld: attachedDatabase.options.types
+      isFavouriteOld: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_favourite_old']),
-      dateLastAnsweredOld: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime,
-          data['${effectivePrefix}date_last_answered_old']),
-      rightAnswersOld: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}right_answers_old']),
-      wrongAnswersOld: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}wrong_answers_old']),
     );
   }
 
   @override
-  VocabulariesLog createAlias(String alias) {
-    return VocabulariesLog(attachedDatabase, alias);
+  CategoriesLog createAlias(String alias) {
+    return CategoriesLog(attachedDatabase, alias);
   }
 
   @override
@@ -2825,6 +3227,43 @@ class CategoriesLogData extends DataClass
         isFavouriteOld:
             isFavouriteOld.present ? isFavouriteOld.value : this.isFavouriteOld,
       );
+  CategoriesLogData copyWithCompanion(CategoriesLogCompanion data) {
+    return CategoriesLogData(
+      logId: data.logId.present ? data.logId.value : this.logId,
+      actionName:
+          data.actionName.present ? data.actionName.value : this.actionName,
+      actionTimestamp: data.actionTimestamp.present
+          ? data.actionTimestamp.value
+          : this.actionTimestamp,
+      affectedId:
+          data.affectedId.present ? data.affectedId.value : this.affectedId,
+      categoryNameNew: data.categoryNameNew.present
+          ? data.categoryNameNew.value
+          : this.categoryNameNew,
+      categoryLanguageNew: data.categoryLanguageNew.present
+          ? data.categoryLanguageNew.value
+          : this.categoryLanguageNew,
+      dateCreatedNew: data.dateCreatedNew.present
+          ? data.dateCreatedNew.value
+          : this.dateCreatedNew,
+      isFavouriteNew: data.isFavouriteNew.present
+          ? data.isFavouriteNew.value
+          : this.isFavouriteNew,
+      categoryNameOld: data.categoryNameOld.present
+          ? data.categoryNameOld.value
+          : this.categoryNameOld,
+      categoryLanguageOld: data.categoryLanguageOld.present
+          ? data.categoryLanguageOld.value
+          : this.categoryLanguageOld,
+      dateCreatedOld: data.dateCreatedOld.present
+          ? data.dateCreatedOld.value
+          : this.dateCreatedOld,
+      isFavouriteOld: data.isFavouriteOld.present
+          ? data.isFavouriteOld.value
+          : this.isFavouriteOld,
+    );
+  }
+
   @override
   String toString() {
     return (StringBuffer('CategoriesLogData(')
@@ -3043,239 +3482,9 @@ class CategoriesLogCompanion extends UpdateCompanion<CategoriesLogData> {
   }
 }
 
-class CategoriesLog extends Table
-    with TableInfo<CategoriesLog, CategoriesLogData> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  CategoriesLog(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _logIdMeta = const VerificationMeta('logId');
-  late final GeneratedColumn<int> logId = GeneratedColumn<int>(
-      'log_id', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      $customConstraints: 'NOT NULL PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _actionNameMeta = const VerificationMeta('actionName');
-  late final GeneratedColumn<String> actionName = GeneratedColumn<String>(
-      'action_name', aliasedName, false,
-      type: DriftSqlType.string,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  final VerificationMeta _actionTimestampMeta =
-      const VerificationMeta('actionTimestamp');
-  late final GeneratedColumn<DateTime> actionTimestamp =
-      GeneratedColumn<DateTime>('action_timestamp', aliasedName, false,
-          type: DriftSqlType.dateTime,
-          requiredDuringInsert: false,
-          $customConstraints: 'NOT NULL DEFAULT CURRENT_TIMESTAMP',
-          defaultValue: const CustomExpression<DateTime>('CURRENT_TIMESTAMP'));
-  final VerificationMeta _affectedIdMeta = const VerificationMeta('affectedId');
-  late final GeneratedColumn<int> affectedId = GeneratedColumn<int>(
-      'affected_id', aliasedName, false,
-      type: DriftSqlType.int,
-      requiredDuringInsert: true,
-      $customConstraints: 'NOT NULL');
-  final VerificationMeta _categoryNameNewMeta =
-      const VerificationMeta('categoryNameNew');
-  late final GeneratedColumn<String> categoryNameNew = GeneratedColumn<String>(
-      'category_name_new', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _categoryLanguageNewMeta =
-      const VerificationMeta('categoryLanguageNew');
-  late final GeneratedColumn<String> categoryLanguageNew =
-      GeneratedColumn<String>('category_language_new', aliasedName, true,
-          type: DriftSqlType.string,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  final VerificationMeta _dateCreatedNewMeta =
-      const VerificationMeta('dateCreatedNew');
-  late final GeneratedColumn<DateTime> dateCreatedNew =
-      GeneratedColumn<DateTime>('date_created_new', aliasedName, true,
-          type: DriftSqlType.dateTime,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  final VerificationMeta _isFavouriteNewMeta =
-      const VerificationMeta('isFavouriteNew');
-  late final GeneratedColumn<bool> isFavouriteNew = GeneratedColumn<bool>(
-      'is_favourite_new', aliasedName, true,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _categoryNameOldMeta =
-      const VerificationMeta('categoryNameOld');
-  late final GeneratedColumn<String> categoryNameOld = GeneratedColumn<String>(
-      'category_name_old', aliasedName, true,
-      type: DriftSqlType.string,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  final VerificationMeta _categoryLanguageOldMeta =
-      const VerificationMeta('categoryLanguageOld');
-  late final GeneratedColumn<String> categoryLanguageOld =
-      GeneratedColumn<String>('category_language_old', aliasedName, true,
-          type: DriftSqlType.string,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  final VerificationMeta _dateCreatedOldMeta =
-      const VerificationMeta('dateCreatedOld');
-  late final GeneratedColumn<DateTime> dateCreatedOld =
-      GeneratedColumn<DateTime>('date_created_old', aliasedName, true,
-          type: DriftSqlType.dateTime,
-          requiredDuringInsert: false,
-          $customConstraints: '');
-  final VerificationMeta _isFavouriteOldMeta =
-      const VerificationMeta('isFavouriteOld');
-  late final GeneratedColumn<bool> isFavouriteOld = GeneratedColumn<bool>(
-      'is_favourite_old', aliasedName, true,
-      type: DriftSqlType.bool,
-      requiredDuringInsert: false,
-      $customConstraints: '');
-  @override
-  List<GeneratedColumn> get $columns => [
-        logId,
-        actionName,
-        actionTimestamp,
-        affectedId,
-        categoryNameNew,
-        categoryLanguageNew,
-        dateCreatedNew,
-        isFavouriteNew,
-        categoryNameOld,
-        categoryLanguageOld,
-        dateCreatedOld,
-        isFavouriteOld
-      ];
-  @override
-  String get aliasedName => _alias ?? 'categories_log';
-  @override
-  String get actualTableName => 'categories_log';
-  @override
-  VerificationContext validateIntegrity(Insertable<CategoriesLogData> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('log_id')) {
-      context.handle(
-          _logIdMeta, logId.isAcceptableOrUnknown(data['log_id']!, _logIdMeta));
-    }
-    if (data.containsKey('action_name')) {
-      context.handle(
-          _actionNameMeta,
-          actionName.isAcceptableOrUnknown(
-              data['action_name']!, _actionNameMeta));
-    } else if (isInserting) {
-      context.missing(_actionNameMeta);
-    }
-    if (data.containsKey('action_timestamp')) {
-      context.handle(
-          _actionTimestampMeta,
-          actionTimestamp.isAcceptableOrUnknown(
-              data['action_timestamp']!, _actionTimestampMeta));
-    }
-    if (data.containsKey('affected_id')) {
-      context.handle(
-          _affectedIdMeta,
-          affectedId.isAcceptableOrUnknown(
-              data['affected_id']!, _affectedIdMeta));
-    } else if (isInserting) {
-      context.missing(_affectedIdMeta);
-    }
-    if (data.containsKey('category_name_new')) {
-      context.handle(
-          _categoryNameNewMeta,
-          categoryNameNew.isAcceptableOrUnknown(
-              data['category_name_new']!, _categoryNameNewMeta));
-    }
-    if (data.containsKey('category_language_new')) {
-      context.handle(
-          _categoryLanguageNewMeta,
-          categoryLanguageNew.isAcceptableOrUnknown(
-              data['category_language_new']!, _categoryLanguageNewMeta));
-    }
-    if (data.containsKey('date_created_new')) {
-      context.handle(
-          _dateCreatedNewMeta,
-          dateCreatedNew.isAcceptableOrUnknown(
-              data['date_created_new']!, _dateCreatedNewMeta));
-    }
-    if (data.containsKey('is_favourite_new')) {
-      context.handle(
-          _isFavouriteNewMeta,
-          isFavouriteNew.isAcceptableOrUnknown(
-              data['is_favourite_new']!, _isFavouriteNewMeta));
-    }
-    if (data.containsKey('category_name_old')) {
-      context.handle(
-          _categoryNameOldMeta,
-          categoryNameOld.isAcceptableOrUnknown(
-              data['category_name_old']!, _categoryNameOldMeta));
-    }
-    if (data.containsKey('category_language_old')) {
-      context.handle(
-          _categoryLanguageOldMeta,
-          categoryLanguageOld.isAcceptableOrUnknown(
-              data['category_language_old']!, _categoryLanguageOldMeta));
-    }
-    if (data.containsKey('date_created_old')) {
-      context.handle(
-          _dateCreatedOldMeta,
-          dateCreatedOld.isAcceptableOrUnknown(
-              data['date_created_old']!, _dateCreatedOldMeta));
-    }
-    if (data.containsKey('is_favourite_old')) {
-      context.handle(
-          _isFavouriteOldMeta,
-          isFavouriteOld.isAcceptableOrUnknown(
-              data['is_favourite_old']!, _isFavouriteOldMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {logId};
-  @override
-  CategoriesLogData map(Map<String, dynamic> data, {String? tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CategoriesLogData(
-      logId: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}log_id'])!,
-      actionName: attachedDatabase.options.types
-          .read(DriftSqlType.string, data['${effectivePrefix}action_name'])!,
-      actionTimestamp: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}action_timestamp'])!,
-      affectedId: attachedDatabase.options.types
-          .read(DriftSqlType.int, data['${effectivePrefix}affected_id'])!,
-      categoryNameNew: attachedDatabase.options.types.read(
-          DriftSqlType.string, data['${effectivePrefix}category_name_new']),
-      categoryLanguageNew: attachedDatabase.options.types.read(
-          DriftSqlType.string, data['${effectivePrefix}category_language_new']),
-      dateCreatedNew: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}date_created_new']),
-      isFavouriteNew: attachedDatabase.options.types
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_favourite_new']),
-      categoryNameOld: attachedDatabase.options.types.read(
-          DriftSqlType.string, data['${effectivePrefix}category_name_old']),
-      categoryLanguageOld: attachedDatabase.options.types.read(
-          DriftSqlType.string, data['${effectivePrefix}category_language_old']),
-      dateCreatedOld: attachedDatabase.options.types.read(
-          DriftSqlType.dateTime, data['${effectivePrefix}date_created_old']),
-      isFavouriteOld: attachedDatabase.options.types
-          .read(DriftSqlType.bool, data['${effectivePrefix}is_favourite_old']),
-    );
-  }
-
-  @override
-  CategoriesLog createAlias(String alias) {
-    return CategoriesLog(attachedDatabase, alias);
-  }
-
-  @override
-  bool get dontWriteConstraints => true;
-}
-
 abstract class _$Database extends GeneratedDatabase {
   _$Database(QueryExecutor e) : super(e);
+  $DatabaseManager get managers => $DatabaseManager(this);
   late final Weekdays weekdays = Weekdays(this);
   late final WeekdaysLog weekdaysLog = WeekdaysLog(this);
   late final Trigger afterWeekdaysInsert = Trigger(
@@ -3318,22 +3527,20 @@ abstract class _$Database extends GeneratedDatabase {
         readsFrom: {
           categories,
           vocabularies,
-        }).map((QueryRow row) {
-      return AllVocabulariesResult(
-        id: row.read<int>('id'),
-        vocLocal: row.read<String>('voc_local'),
-        vocForeign: row.read<String>('voc_foreign'),
-        categoryId: row.read<int>('category_id'),
-        dateCreated: row.read<DateTime>('date_created'),
-        isFavourite: row.read<bool>('is_favourite'),
-        dateLastAnswered: row.readNullable<DateTime>('date_last_answered'),
-        rightAnswers: row.read<int>('right_answers'),
-        wrongAnswers: row.read<int>('wrong_answers'),
-        categoryName: row.read<String>('category_name'),
-        categoryLanguage: row.read<String>('category_language'),
-        isLearned: row.read<bool>('is_learned'),
-      );
-    });
+        }).map((QueryRow row) => AllVocabulariesResult(
+          id: row.read<int>('id'),
+          vocLocal: row.read<String>('voc_local'),
+          vocForeign: row.read<String>('voc_foreign'),
+          categoryId: row.read<int>('category_id'),
+          dateCreated: row.read<DateTime>('date_created'),
+          isFavourite: row.read<bool>('is_favourite'),
+          dateLastAnswered: row.readNullable<DateTime>('date_last_answered'),
+          rightAnswers: row.read<int>('right_answers'),
+          wrongAnswers: row.read<int>('wrong_answers'),
+          categoryName: row.read<String>('category_name'),
+          categoryLanguage: row.read<String>('category_language'),
+          isLearned: row.read<bool>('is_learned'),
+        ));
   }
 
   Selectable<Vocabulary> allCategoryVocabularies(int targetCategoryId) {
@@ -3347,20 +3554,44 @@ abstract class _$Database extends GeneratedDatabase {
         }).asyncMap(vocabularies.mapFromRow);
   }
 
+  Selectable<Vocabulary> someCategoryVocabularies(
+      int targetCategoryId, int targetVocabAmount) {
+    return customSelect(
+        'SELECT * FROM vocabularies AS v WHERE v.category_id = ?1 ORDER BY RANDOM() LIMIT ?2',
+        variables: [
+          Variable<int>(targetCategoryId),
+          Variable<int>(targetVocabAmount)
+        ],
+        readsFrom: {
+          vocabularies,
+        }).asyncMap(vocabularies.mapFromRow);
+  }
+
+  Selectable<Vocabulary> someUntrainedCategoryVocabularies(
+      int targetCategoryId, int targetVocabAmount) {
+    return customSelect(
+        'WITH untrained_vocabs AS (SELECT * FROM vocabularies WHERE category_id = ?1 AND right_answers > wrong_answers ORDER BY RANDOM() LIMIT ?2), remaining_vocabs AS (SELECT * FROM vocabularies WHERE category_id = ?1 AND id NOT IN (SELECT id FROM untrained_vocabs) ORDER BY RANDOM() LIMIT(?2 - (SELECT COUNT(*) FROM untrained_vocabs))) SELECT * FROM untrained_vocabs UNION ALL SELECT * FROM remaining_vocabs',
+        variables: [
+          Variable<int>(targetCategoryId),
+          Variable<int>(targetVocabAmount)
+        ],
+        readsFrom: {
+          vocabularies,
+        }).asyncMap(vocabularies.mapFromRow);
+  }
+
   Selectable<CategoryLearnInfoResult> categoryLearnInfo(int targetCategoryId) {
     return customSelect(
-        'SELECT COUNT(is_learned) AS category_vocabs_total, SUM(is_learned) AS amount_learned FROM (SELECT CASE WHEN right_answers > wrong_answers THEN 1 ELSE 0 END AS is_learned FROM vocabularies WHERE category_id = ?1) LIMIT 1',
+        'SELECT COUNT(is_learned) AS category_vocabs_total, COALESCE(SUM(is_learned), 0) AS amount_learned FROM (SELECT CASE WHEN right_answers > wrong_answers THEN 1 ELSE 0 END AS is_learned FROM vocabularies WHERE category_id = ?1) LIMIT 1',
         variables: [
           Variable<int>(targetCategoryId)
         ],
         readsFrom: {
           vocabularies,
-        }).map((QueryRow row) {
-      return CategoryLearnInfoResult(
-        categoryVocabsTotal: row.read<int>('category_vocabs_total'),
-        amountLearned: row.read<int>('amount_learned'),
-      );
-    });
+        }).map((QueryRow row) => CategoryLearnInfoResult(
+          categoryVocabsTotal: row.read<int>('category_vocabs_total'),
+          amountLearned: row.read<int>('amount_learned'),
+        ));
   }
 
   Future<int> createVocabulary(
@@ -3437,6 +3668,16 @@ abstract class _$Database extends GeneratedDatabase {
     }).asyncMap(categories.mapFromRow);
   }
 
+  Selectable<Category> allNonEmptyCategories() {
+    return customSelect(
+        'SELECT c.* FROM categories AS c JOIN vocabularies AS v ON v.category_id = c.id',
+        variables: [],
+        readsFrom: {
+          categories,
+          vocabularies,
+        }).asyncMap(categories.mapFromRow);
+  }
+
   Selectable<Category> allCategoriesWithLang(String targetLanguage) {
     return customSelect('SELECT * FROM categories WHERE category_language = ?1',
         variables: [
@@ -3453,14 +3694,12 @@ abstract class _$Database extends GeneratedDatabase {
         variables: [],
         readsFrom: {
           categories,
-        }).map((QueryRow row) {
-      return AllCategoryDataResult(
-        id: row.read<int>('id'),
-        categoryName: row.read<String>('category_name'),
-        categoryLanguage: row.read<String>('category_language'),
-        isFavourite: row.read<bool>('is_favourite'),
-      );
-    });
+        }).map((QueryRow row) => AllCategoryDataResult(
+          id: row.read<int>('id'),
+          categoryName: row.read<String>('category_name'),
+          categoryLanguage: row.read<String>('category_language'),
+          isFavourite: row.read<bool>('is_favourite'),
+        ));
   }
 
   Selectable<Category> categoryWithId(int targetId) {
@@ -3514,7 +3753,7 @@ abstract class _$Database extends GeneratedDatabase {
   }
 
   @override
-  Iterable<TableInfo<Table, dynamic>> get allTables =>
+  Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
@@ -3607,6 +3846,1910 @@ abstract class _$Database extends GeneratedDatabase {
   @override
   DriftDatabaseOptions get options =>
       const DriftDatabaseOptions(storeDateTimeAsText: true);
+}
+
+typedef $WeekdaysCreateCompanionBuilder = WeekdaysCompanion Function({
+  Value<int> dayOfWeek,
+  required String nameOfDay,
+  required DateTime lastDateOccurred,
+  Value<int> rightAnswers,
+  Value<int> wrongAnswers,
+});
+typedef $WeekdaysUpdateCompanionBuilder = WeekdaysCompanion Function({
+  Value<int> dayOfWeek,
+  Value<String> nameOfDay,
+  Value<DateTime> lastDateOccurred,
+  Value<int> rightAnswers,
+  Value<int> wrongAnswers,
+});
+
+class $WeekdaysFilterComposer extends Composer<_$Database, Weekdays> {
+  $WeekdaysFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get dayOfWeek => $composableBuilder(
+      column: $table.dayOfWeek, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get nameOfDay => $composableBuilder(
+      column: $table.nameOfDay, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastDateOccurred => $composableBuilder(
+      column: $table.lastDateOccurred,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get rightAnswers => $composableBuilder(
+      column: $table.rightAnswers, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get wrongAnswers => $composableBuilder(
+      column: $table.wrongAnswers, builder: (column) => ColumnFilters(column));
+}
+
+class $WeekdaysOrderingComposer extends Composer<_$Database, Weekdays> {
+  $WeekdaysOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get dayOfWeek => $composableBuilder(
+      column: $table.dayOfWeek, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get nameOfDay => $composableBuilder(
+      column: $table.nameOfDay, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastDateOccurred => $composableBuilder(
+      column: $table.lastDateOccurred,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get rightAnswers => $composableBuilder(
+      column: $table.rightAnswers,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get wrongAnswers => $composableBuilder(
+      column: $table.wrongAnswers,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $WeekdaysAnnotationComposer extends Composer<_$Database, Weekdays> {
+  $WeekdaysAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get dayOfWeek =>
+      $composableBuilder(column: $table.dayOfWeek, builder: (column) => column);
+
+  GeneratedColumn<String> get nameOfDay =>
+      $composableBuilder(column: $table.nameOfDay, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastDateOccurred => $composableBuilder(
+      column: $table.lastDateOccurred, builder: (column) => column);
+
+  GeneratedColumn<int> get rightAnswers => $composableBuilder(
+      column: $table.rightAnswers, builder: (column) => column);
+
+  GeneratedColumn<int> get wrongAnswers => $composableBuilder(
+      column: $table.wrongAnswers, builder: (column) => column);
+}
+
+class $WeekdaysTableManager extends RootTableManager<
+    _$Database,
+    Weekdays,
+    Weekday,
+    $WeekdaysFilterComposer,
+    $WeekdaysOrderingComposer,
+    $WeekdaysAnnotationComposer,
+    $WeekdaysCreateCompanionBuilder,
+    $WeekdaysUpdateCompanionBuilder,
+    (Weekday, BaseReferences<_$Database, Weekdays, Weekday>),
+    Weekday,
+    PrefetchHooks Function()> {
+  $WeekdaysTableManager(_$Database db, Weekdays table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $WeekdaysFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $WeekdaysOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $WeekdaysAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> dayOfWeek = const Value.absent(),
+            Value<String> nameOfDay = const Value.absent(),
+            Value<DateTime> lastDateOccurred = const Value.absent(),
+            Value<int> rightAnswers = const Value.absent(),
+            Value<int> wrongAnswers = const Value.absent(),
+          }) =>
+              WeekdaysCompanion(
+            dayOfWeek: dayOfWeek,
+            nameOfDay: nameOfDay,
+            lastDateOccurred: lastDateOccurred,
+            rightAnswers: rightAnswers,
+            wrongAnswers: wrongAnswers,
+          ),
+          createCompanionCallback: ({
+            Value<int> dayOfWeek = const Value.absent(),
+            required String nameOfDay,
+            required DateTime lastDateOccurred,
+            Value<int> rightAnswers = const Value.absent(),
+            Value<int> wrongAnswers = const Value.absent(),
+          }) =>
+              WeekdaysCompanion.insert(
+            dayOfWeek: dayOfWeek,
+            nameOfDay: nameOfDay,
+            lastDateOccurred: lastDateOccurred,
+            rightAnswers: rightAnswers,
+            wrongAnswers: wrongAnswers,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $WeekdaysProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    Weekdays,
+    Weekday,
+    $WeekdaysFilterComposer,
+    $WeekdaysOrderingComposer,
+    $WeekdaysAnnotationComposer,
+    $WeekdaysCreateCompanionBuilder,
+    $WeekdaysUpdateCompanionBuilder,
+    (Weekday, BaseReferences<_$Database, Weekdays, Weekday>),
+    Weekday,
+    PrefetchHooks Function()>;
+typedef $WeekdaysLogCreateCompanionBuilder = WeekdaysLogCompanion Function({
+  Value<int> logId,
+  required String actionName,
+  Value<DateTime> actionTimestamp,
+  required int affectedId,
+  Value<String?> nameOfDayNew,
+  Value<DateTime?> lastDateOccurredNew,
+  Value<int?> rightAnswersNew,
+  Value<int?> wrongAnswersNew,
+  Value<String?> nameOfDayOld,
+  Value<DateTime?> lastDateOccurredOld,
+  Value<int?> rightAnswersOld,
+  Value<int?> wrongAnswersOld,
+});
+typedef $WeekdaysLogUpdateCompanionBuilder = WeekdaysLogCompanion Function({
+  Value<int> logId,
+  Value<String> actionName,
+  Value<DateTime> actionTimestamp,
+  Value<int> affectedId,
+  Value<String?> nameOfDayNew,
+  Value<DateTime?> lastDateOccurredNew,
+  Value<int?> rightAnswersNew,
+  Value<int?> wrongAnswersNew,
+  Value<String?> nameOfDayOld,
+  Value<DateTime?> lastDateOccurredOld,
+  Value<int?> rightAnswersOld,
+  Value<int?> wrongAnswersOld,
+});
+
+class $WeekdaysLogFilterComposer extends Composer<_$Database, WeekdaysLog> {
+  $WeekdaysLogFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get logId => $composableBuilder(
+      column: $table.logId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get actionName => $composableBuilder(
+      column: $table.actionName, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get actionTimestamp => $composableBuilder(
+      column: $table.actionTimestamp,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get affectedId => $composableBuilder(
+      column: $table.affectedId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get nameOfDayNew => $composableBuilder(
+      column: $table.nameOfDayNew, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastDateOccurredNew => $composableBuilder(
+      column: $table.lastDateOccurredNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get rightAnswersNew => $composableBuilder(
+      column: $table.rightAnswersNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get wrongAnswersNew => $composableBuilder(
+      column: $table.wrongAnswersNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get nameOfDayOld => $composableBuilder(
+      column: $table.nameOfDayOld, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get lastDateOccurredOld => $composableBuilder(
+      column: $table.lastDateOccurredOld,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get rightAnswersOld => $composableBuilder(
+      column: $table.rightAnswersOld,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get wrongAnswersOld => $composableBuilder(
+      column: $table.wrongAnswersOld,
+      builder: (column) => ColumnFilters(column));
+}
+
+class $WeekdaysLogOrderingComposer extends Composer<_$Database, WeekdaysLog> {
+  $WeekdaysLogOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get logId => $composableBuilder(
+      column: $table.logId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get actionName => $composableBuilder(
+      column: $table.actionName, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get actionTimestamp => $composableBuilder(
+      column: $table.actionTimestamp,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get affectedId => $composableBuilder(
+      column: $table.affectedId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get nameOfDayNew => $composableBuilder(
+      column: $table.nameOfDayNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastDateOccurredNew => $composableBuilder(
+      column: $table.lastDateOccurredNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get rightAnswersNew => $composableBuilder(
+      column: $table.rightAnswersNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get wrongAnswersNew => $composableBuilder(
+      column: $table.wrongAnswersNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get nameOfDayOld => $composableBuilder(
+      column: $table.nameOfDayOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get lastDateOccurredOld => $composableBuilder(
+      column: $table.lastDateOccurredOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get rightAnswersOld => $composableBuilder(
+      column: $table.rightAnswersOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get wrongAnswersOld => $composableBuilder(
+      column: $table.wrongAnswersOld,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $WeekdaysLogAnnotationComposer extends Composer<_$Database, WeekdaysLog> {
+  $WeekdaysLogAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get logId =>
+      $composableBuilder(column: $table.logId, builder: (column) => column);
+
+  GeneratedColumn<String> get actionName => $composableBuilder(
+      column: $table.actionName, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get actionTimestamp => $composableBuilder(
+      column: $table.actionTimestamp, builder: (column) => column);
+
+  GeneratedColumn<int> get affectedId => $composableBuilder(
+      column: $table.affectedId, builder: (column) => column);
+
+  GeneratedColumn<String> get nameOfDayNew => $composableBuilder(
+      column: $table.nameOfDayNew, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastDateOccurredNew => $composableBuilder(
+      column: $table.lastDateOccurredNew, builder: (column) => column);
+
+  GeneratedColumn<int> get rightAnswersNew => $composableBuilder(
+      column: $table.rightAnswersNew, builder: (column) => column);
+
+  GeneratedColumn<int> get wrongAnswersNew => $composableBuilder(
+      column: $table.wrongAnswersNew, builder: (column) => column);
+
+  GeneratedColumn<String> get nameOfDayOld => $composableBuilder(
+      column: $table.nameOfDayOld, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastDateOccurredOld => $composableBuilder(
+      column: $table.lastDateOccurredOld, builder: (column) => column);
+
+  GeneratedColumn<int> get rightAnswersOld => $composableBuilder(
+      column: $table.rightAnswersOld, builder: (column) => column);
+
+  GeneratedColumn<int> get wrongAnswersOld => $composableBuilder(
+      column: $table.wrongAnswersOld, builder: (column) => column);
+}
+
+class $WeekdaysLogTableManager extends RootTableManager<
+    _$Database,
+    WeekdaysLog,
+    WeekdaysLogData,
+    $WeekdaysLogFilterComposer,
+    $WeekdaysLogOrderingComposer,
+    $WeekdaysLogAnnotationComposer,
+    $WeekdaysLogCreateCompanionBuilder,
+    $WeekdaysLogUpdateCompanionBuilder,
+    (WeekdaysLogData, BaseReferences<_$Database, WeekdaysLog, WeekdaysLogData>),
+    WeekdaysLogData,
+    PrefetchHooks Function()> {
+  $WeekdaysLogTableManager(_$Database db, WeekdaysLog table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $WeekdaysLogFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $WeekdaysLogOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $WeekdaysLogAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> logId = const Value.absent(),
+            Value<String> actionName = const Value.absent(),
+            Value<DateTime> actionTimestamp = const Value.absent(),
+            Value<int> affectedId = const Value.absent(),
+            Value<String?> nameOfDayNew = const Value.absent(),
+            Value<DateTime?> lastDateOccurredNew = const Value.absent(),
+            Value<int?> rightAnswersNew = const Value.absent(),
+            Value<int?> wrongAnswersNew = const Value.absent(),
+            Value<String?> nameOfDayOld = const Value.absent(),
+            Value<DateTime?> lastDateOccurredOld = const Value.absent(),
+            Value<int?> rightAnswersOld = const Value.absent(),
+            Value<int?> wrongAnswersOld = const Value.absent(),
+          }) =>
+              WeekdaysLogCompanion(
+            logId: logId,
+            actionName: actionName,
+            actionTimestamp: actionTimestamp,
+            affectedId: affectedId,
+            nameOfDayNew: nameOfDayNew,
+            lastDateOccurredNew: lastDateOccurredNew,
+            rightAnswersNew: rightAnswersNew,
+            wrongAnswersNew: wrongAnswersNew,
+            nameOfDayOld: nameOfDayOld,
+            lastDateOccurredOld: lastDateOccurredOld,
+            rightAnswersOld: rightAnswersOld,
+            wrongAnswersOld: wrongAnswersOld,
+          ),
+          createCompanionCallback: ({
+            Value<int> logId = const Value.absent(),
+            required String actionName,
+            Value<DateTime> actionTimestamp = const Value.absent(),
+            required int affectedId,
+            Value<String?> nameOfDayNew = const Value.absent(),
+            Value<DateTime?> lastDateOccurredNew = const Value.absent(),
+            Value<int?> rightAnswersNew = const Value.absent(),
+            Value<int?> wrongAnswersNew = const Value.absent(),
+            Value<String?> nameOfDayOld = const Value.absent(),
+            Value<DateTime?> lastDateOccurredOld = const Value.absent(),
+            Value<int?> rightAnswersOld = const Value.absent(),
+            Value<int?> wrongAnswersOld = const Value.absent(),
+          }) =>
+              WeekdaysLogCompanion.insert(
+            logId: logId,
+            actionName: actionName,
+            actionTimestamp: actionTimestamp,
+            affectedId: affectedId,
+            nameOfDayNew: nameOfDayNew,
+            lastDateOccurredNew: lastDateOccurredNew,
+            rightAnswersNew: rightAnswersNew,
+            wrongAnswersNew: wrongAnswersNew,
+            nameOfDayOld: nameOfDayOld,
+            lastDateOccurredOld: lastDateOccurredOld,
+            rightAnswersOld: rightAnswersOld,
+            wrongAnswersOld: wrongAnswersOld,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $WeekdaysLogProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    WeekdaysLog,
+    WeekdaysLogData,
+    $WeekdaysLogFilterComposer,
+    $WeekdaysLogOrderingComposer,
+    $WeekdaysLogAnnotationComposer,
+    $WeekdaysLogCreateCompanionBuilder,
+    $WeekdaysLogUpdateCompanionBuilder,
+    (WeekdaysLogData, BaseReferences<_$Database, WeekdaysLog, WeekdaysLogData>),
+    WeekdaysLogData,
+    PrefetchHooks Function()>;
+typedef $CategoriesCreateCompanionBuilder = CategoriesCompanion Function({
+  Value<int> id,
+  required String categoryName,
+  required String categoryLanguage,
+  Value<DateTime> dateCreated,
+  Value<bool> isFavourite,
+});
+typedef $CategoriesUpdateCompanionBuilder = CategoriesCompanion Function({
+  Value<int> id,
+  Value<String> categoryName,
+  Value<String> categoryLanguage,
+  Value<DateTime> dateCreated,
+  Value<bool> isFavourite,
+});
+
+final class $CategoriesReferences
+    extends BaseReferences<_$Database, Categories, Category> {
+  $CategoriesReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<Vocabularies, List<Vocabulary>>
+      _vocabulariesRefsTable(_$Database db) =>
+          MultiTypedResultKey.fromTable(db.vocabularies,
+              aliasName: $_aliasNameGenerator(
+                  db.categories.id, db.vocabularies.categoryId));
+
+  $VocabulariesProcessedTableManager get vocabulariesRefs {
+    final manager = $VocabulariesTableManager($_db, $_db.vocabularies)
+        .filter((f) => f.categoryId.id($_item.id));
+
+    final cache = $_typedResult.readTableOrNull(_vocabulariesRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $CategoriesFilterComposer extends Composer<_$Database, Categories> {
+  $CategoriesFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get categoryName => $composableBuilder(
+      column: $table.categoryName, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get categoryLanguage => $composableBuilder(
+      column: $table.categoryLanguage,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get dateCreated => $composableBuilder(
+      column: $table.dateCreated, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isFavourite => $composableBuilder(
+      column: $table.isFavourite, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> vocabulariesRefs(
+      Expression<bool> Function($VocabulariesFilterComposer f) f) {
+    final $VocabulariesFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.vocabularies,
+        getReferencedColumn: (t) => t.categoryId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $VocabulariesFilterComposer(
+              $db: $db,
+              $table: $db.vocabularies,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $CategoriesOrderingComposer extends Composer<_$Database, Categories> {
+  $CategoriesOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get categoryName => $composableBuilder(
+      column: $table.categoryName,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get categoryLanguage => $composableBuilder(
+      column: $table.categoryLanguage,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get dateCreated => $composableBuilder(
+      column: $table.dateCreated, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isFavourite => $composableBuilder(
+      column: $table.isFavourite, builder: (column) => ColumnOrderings(column));
+}
+
+class $CategoriesAnnotationComposer extends Composer<_$Database, Categories> {
+  $CategoriesAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get categoryName => $composableBuilder(
+      column: $table.categoryName, builder: (column) => column);
+
+  GeneratedColumn<String> get categoryLanguage => $composableBuilder(
+      column: $table.categoryLanguage, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateCreated => $composableBuilder(
+      column: $table.dateCreated, builder: (column) => column);
+
+  GeneratedColumn<bool> get isFavourite => $composableBuilder(
+      column: $table.isFavourite, builder: (column) => column);
+
+  Expression<T> vocabulariesRefs<T extends Object>(
+      Expression<T> Function($VocabulariesAnnotationComposer a) f) {
+    final $VocabulariesAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.vocabularies,
+        getReferencedColumn: (t) => t.categoryId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $VocabulariesAnnotationComposer(
+              $db: $db,
+              $table: $db.vocabularies,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $CategoriesTableManager extends RootTableManager<
+    _$Database,
+    Categories,
+    Category,
+    $CategoriesFilterComposer,
+    $CategoriesOrderingComposer,
+    $CategoriesAnnotationComposer,
+    $CategoriesCreateCompanionBuilder,
+    $CategoriesUpdateCompanionBuilder,
+    (Category, $CategoriesReferences),
+    Category,
+    PrefetchHooks Function({bool vocabulariesRefs})> {
+  $CategoriesTableManager(_$Database db, Categories table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $CategoriesFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $CategoriesOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $CategoriesAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> categoryName = const Value.absent(),
+            Value<String> categoryLanguage = const Value.absent(),
+            Value<DateTime> dateCreated = const Value.absent(),
+            Value<bool> isFavourite = const Value.absent(),
+          }) =>
+              CategoriesCompanion(
+            id: id,
+            categoryName: categoryName,
+            categoryLanguage: categoryLanguage,
+            dateCreated: dateCreated,
+            isFavourite: isFavourite,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String categoryName,
+            required String categoryLanguage,
+            Value<DateTime> dateCreated = const Value.absent(),
+            Value<bool> isFavourite = const Value.absent(),
+          }) =>
+              CategoriesCompanion.insert(
+            id: id,
+            categoryName: categoryName,
+            categoryLanguage: categoryLanguage,
+            dateCreated: dateCreated,
+            isFavourite: isFavourite,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $CategoriesReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({vocabulariesRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (vocabulariesRefs) db.vocabularies],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (vocabulariesRefs)
+                    await $_getPrefetchedData(
+                        currentTable: table,
+                        referencedTable:
+                            $CategoriesReferences._vocabulariesRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $CategoriesReferences(db, table, p0)
+                                .vocabulariesRefs,
+                        referencedItemsForCurrentItem:
+                            (item, referencedItems) => referencedItems
+                                .where((e) => e.categoryId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $CategoriesProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    Categories,
+    Category,
+    $CategoriesFilterComposer,
+    $CategoriesOrderingComposer,
+    $CategoriesAnnotationComposer,
+    $CategoriesCreateCompanionBuilder,
+    $CategoriesUpdateCompanionBuilder,
+    (Category, $CategoriesReferences),
+    Category,
+    PrefetchHooks Function({bool vocabulariesRefs})>;
+typedef $VocabulariesCreateCompanionBuilder = VocabulariesCompanion Function({
+  Value<int> id,
+  required String vocLocal,
+  required String vocForeign,
+  required int categoryId,
+  Value<DateTime> dateCreated,
+  Value<bool> isFavourite,
+  Value<DateTime?> dateLastAnswered,
+  Value<int> rightAnswers,
+  Value<int> wrongAnswers,
+});
+typedef $VocabulariesUpdateCompanionBuilder = VocabulariesCompanion Function({
+  Value<int> id,
+  Value<String> vocLocal,
+  Value<String> vocForeign,
+  Value<int> categoryId,
+  Value<DateTime> dateCreated,
+  Value<bool> isFavourite,
+  Value<DateTime?> dateLastAnswered,
+  Value<int> rightAnswers,
+  Value<int> wrongAnswers,
+});
+
+final class $VocabulariesReferences
+    extends BaseReferences<_$Database, Vocabularies, Vocabulary> {
+  $VocabulariesReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static Categories _categoryIdTable(_$Database db) =>
+      db.categories.createAlias(
+          $_aliasNameGenerator(db.vocabularies.categoryId, db.categories.id));
+
+  $CategoriesProcessedTableManager get categoryId {
+    final manager = $CategoriesTableManager($_db, $_db.categories)
+        .filter((f) => f.id($_item.categoryId!));
+    final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $VocabulariesFilterComposer extends Composer<_$Database, Vocabularies> {
+  $VocabulariesFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get vocLocal => $composableBuilder(
+      column: $table.vocLocal, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get vocForeign => $composableBuilder(
+      column: $table.vocForeign, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get dateCreated => $composableBuilder(
+      column: $table.dateCreated, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isFavourite => $composableBuilder(
+      column: $table.isFavourite, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get dateLastAnswered => $composableBuilder(
+      column: $table.dateLastAnswered,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get rightAnswers => $composableBuilder(
+      column: $table.rightAnswers, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get wrongAnswers => $composableBuilder(
+      column: $table.wrongAnswers, builder: (column) => ColumnFilters(column));
+
+  $CategoriesFilterComposer get categoryId {
+    final $CategoriesFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $CategoriesFilterComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $VocabulariesOrderingComposer extends Composer<_$Database, Vocabularies> {
+  $VocabulariesOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get vocLocal => $composableBuilder(
+      column: $table.vocLocal, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get vocForeign => $composableBuilder(
+      column: $table.vocForeign, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get dateCreated => $composableBuilder(
+      column: $table.dateCreated, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isFavourite => $composableBuilder(
+      column: $table.isFavourite, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get dateLastAnswered => $composableBuilder(
+      column: $table.dateLastAnswered,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get rightAnswers => $composableBuilder(
+      column: $table.rightAnswers,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get wrongAnswers => $composableBuilder(
+      column: $table.wrongAnswers,
+      builder: (column) => ColumnOrderings(column));
+
+  $CategoriesOrderingComposer get categoryId {
+    final $CategoriesOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $CategoriesOrderingComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $VocabulariesAnnotationComposer
+    extends Composer<_$Database, Vocabularies> {
+  $VocabulariesAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get vocLocal =>
+      $composableBuilder(column: $table.vocLocal, builder: (column) => column);
+
+  GeneratedColumn<String> get vocForeign => $composableBuilder(
+      column: $table.vocForeign, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateCreated => $composableBuilder(
+      column: $table.dateCreated, builder: (column) => column);
+
+  GeneratedColumn<bool> get isFavourite => $composableBuilder(
+      column: $table.isFavourite, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateLastAnswered => $composableBuilder(
+      column: $table.dateLastAnswered, builder: (column) => column);
+
+  GeneratedColumn<int> get rightAnswers => $composableBuilder(
+      column: $table.rightAnswers, builder: (column) => column);
+
+  GeneratedColumn<int> get wrongAnswers => $composableBuilder(
+      column: $table.wrongAnswers, builder: (column) => column);
+
+  $CategoriesAnnotationComposer get categoryId {
+    final $CategoriesAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryId,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $CategoriesAnnotationComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $VocabulariesTableManager extends RootTableManager<
+    _$Database,
+    Vocabularies,
+    Vocabulary,
+    $VocabulariesFilterComposer,
+    $VocabulariesOrderingComposer,
+    $VocabulariesAnnotationComposer,
+    $VocabulariesCreateCompanionBuilder,
+    $VocabulariesUpdateCompanionBuilder,
+    (Vocabulary, $VocabulariesReferences),
+    Vocabulary,
+    PrefetchHooks Function({bool categoryId})> {
+  $VocabulariesTableManager(_$Database db, Vocabularies table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $VocabulariesFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $VocabulariesOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $VocabulariesAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> vocLocal = const Value.absent(),
+            Value<String> vocForeign = const Value.absent(),
+            Value<int> categoryId = const Value.absent(),
+            Value<DateTime> dateCreated = const Value.absent(),
+            Value<bool> isFavourite = const Value.absent(),
+            Value<DateTime?> dateLastAnswered = const Value.absent(),
+            Value<int> rightAnswers = const Value.absent(),
+            Value<int> wrongAnswers = const Value.absent(),
+          }) =>
+              VocabulariesCompanion(
+            id: id,
+            vocLocal: vocLocal,
+            vocForeign: vocForeign,
+            categoryId: categoryId,
+            dateCreated: dateCreated,
+            isFavourite: isFavourite,
+            dateLastAnswered: dateLastAnswered,
+            rightAnswers: rightAnswers,
+            wrongAnswers: wrongAnswers,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required String vocLocal,
+            required String vocForeign,
+            required int categoryId,
+            Value<DateTime> dateCreated = const Value.absent(),
+            Value<bool> isFavourite = const Value.absent(),
+            Value<DateTime?> dateLastAnswered = const Value.absent(),
+            Value<int> rightAnswers = const Value.absent(),
+            Value<int> wrongAnswers = const Value.absent(),
+          }) =>
+              VocabulariesCompanion.insert(
+            id: id,
+            vocLocal: vocLocal,
+            vocForeign: vocForeign,
+            categoryId: categoryId,
+            dateCreated: dateCreated,
+            isFavourite: isFavourite,
+            dateLastAnswered: dateLastAnswered,
+            rightAnswers: rightAnswers,
+            wrongAnswers: wrongAnswers,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $VocabulariesReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({categoryId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (categoryId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.categoryId,
+                    referencedTable:
+                        $VocabulariesReferences._categoryIdTable(db),
+                    referencedColumn:
+                        $VocabulariesReferences._categoryIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $VocabulariesProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    Vocabularies,
+    Vocabulary,
+    $VocabulariesFilterComposer,
+    $VocabulariesOrderingComposer,
+    $VocabulariesAnnotationComposer,
+    $VocabulariesCreateCompanionBuilder,
+    $VocabulariesUpdateCompanionBuilder,
+    (Vocabulary, $VocabulariesReferences),
+    Vocabulary,
+    PrefetchHooks Function({bool categoryId})>;
+typedef $VocabulariesLogCreateCompanionBuilder = VocabulariesLogCompanion
+    Function({
+  Value<int> logId,
+  required String actionName,
+  Value<DateTime> actionTimestamp,
+  required int affectedId,
+  Value<String?> vocLocalNew,
+  Value<String?> vocForeignNew,
+  Value<int?> categoryIdNew,
+  Value<DateTime?> dateCreatedNew,
+  Value<bool?> isFavouriteNew,
+  Value<DateTime?> dateLastAnsweredNew,
+  Value<int?> rightAnswersNew,
+  Value<int?> wrongAnswersNew,
+  Value<String?> vocLocalOld,
+  Value<String?> vocForeignOld,
+  Value<int?> categoryIdOld,
+  Value<DateTime?> dateCreatedOld,
+  Value<bool?> isFavouriteOld,
+  Value<DateTime?> dateLastAnsweredOld,
+  Value<int?> rightAnswersOld,
+  Value<int?> wrongAnswersOld,
+});
+typedef $VocabulariesLogUpdateCompanionBuilder = VocabulariesLogCompanion
+    Function({
+  Value<int> logId,
+  Value<String> actionName,
+  Value<DateTime> actionTimestamp,
+  Value<int> affectedId,
+  Value<String?> vocLocalNew,
+  Value<String?> vocForeignNew,
+  Value<int?> categoryIdNew,
+  Value<DateTime?> dateCreatedNew,
+  Value<bool?> isFavouriteNew,
+  Value<DateTime?> dateLastAnsweredNew,
+  Value<int?> rightAnswersNew,
+  Value<int?> wrongAnswersNew,
+  Value<String?> vocLocalOld,
+  Value<String?> vocForeignOld,
+  Value<int?> categoryIdOld,
+  Value<DateTime?> dateCreatedOld,
+  Value<bool?> isFavouriteOld,
+  Value<DateTime?> dateLastAnsweredOld,
+  Value<int?> rightAnswersOld,
+  Value<int?> wrongAnswersOld,
+});
+
+final class $VocabulariesLogReferences
+    extends BaseReferences<_$Database, VocabulariesLog, VocabulariesLogData> {
+  $VocabulariesLogReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static Categories _categoryIdNewTable(_$Database db) =>
+      db.categories.createAlias($_aliasNameGenerator(
+          db.vocabulariesLog.categoryIdNew, db.categories.id));
+
+  $CategoriesProcessedTableManager? get categoryIdNew {
+    if ($_item.categoryIdNew == null) return null;
+    final manager = $CategoriesTableManager($_db, $_db.categories)
+        .filter((f) => f.id($_item.categoryIdNew!));
+    final item = $_typedResult.readTableOrNull(_categoryIdNewTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static Categories _categoryIdOldTable(_$Database db) =>
+      db.categories.createAlias($_aliasNameGenerator(
+          db.vocabulariesLog.categoryIdOld, db.categories.id));
+
+  $CategoriesProcessedTableManager? get categoryIdOld {
+    if ($_item.categoryIdOld == null) return null;
+    final manager = $CategoriesTableManager($_db, $_db.categories)
+        .filter((f) => f.id($_item.categoryIdOld!));
+    final item = $_typedResult.readTableOrNull(_categoryIdOldTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $VocabulariesLogFilterComposer
+    extends Composer<_$Database, VocabulariesLog> {
+  $VocabulariesLogFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get logId => $composableBuilder(
+      column: $table.logId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get actionName => $composableBuilder(
+      column: $table.actionName, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get actionTimestamp => $composableBuilder(
+      column: $table.actionTimestamp,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get affectedId => $composableBuilder(
+      column: $table.affectedId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get vocLocalNew => $composableBuilder(
+      column: $table.vocLocalNew, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get vocForeignNew => $composableBuilder(
+      column: $table.vocForeignNew, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get dateCreatedNew => $composableBuilder(
+      column: $table.dateCreatedNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isFavouriteNew => $composableBuilder(
+      column: $table.isFavouriteNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get dateLastAnsweredNew => $composableBuilder(
+      column: $table.dateLastAnsweredNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get rightAnswersNew => $composableBuilder(
+      column: $table.rightAnswersNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get wrongAnswersNew => $composableBuilder(
+      column: $table.wrongAnswersNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get vocLocalOld => $composableBuilder(
+      column: $table.vocLocalOld, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get vocForeignOld => $composableBuilder(
+      column: $table.vocForeignOld, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get dateCreatedOld => $composableBuilder(
+      column: $table.dateCreatedOld,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isFavouriteOld => $composableBuilder(
+      column: $table.isFavouriteOld,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get dateLastAnsweredOld => $composableBuilder(
+      column: $table.dateLastAnsweredOld,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get rightAnswersOld => $composableBuilder(
+      column: $table.rightAnswersOld,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get wrongAnswersOld => $composableBuilder(
+      column: $table.wrongAnswersOld,
+      builder: (column) => ColumnFilters(column));
+
+  $CategoriesFilterComposer get categoryIdNew {
+    final $CategoriesFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryIdNew,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $CategoriesFilterComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $CategoriesFilterComposer get categoryIdOld {
+    final $CategoriesFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryIdOld,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $CategoriesFilterComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $VocabulariesLogOrderingComposer
+    extends Composer<_$Database, VocabulariesLog> {
+  $VocabulariesLogOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get logId => $composableBuilder(
+      column: $table.logId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get actionName => $composableBuilder(
+      column: $table.actionName, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get actionTimestamp => $composableBuilder(
+      column: $table.actionTimestamp,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get affectedId => $composableBuilder(
+      column: $table.affectedId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get vocLocalNew => $composableBuilder(
+      column: $table.vocLocalNew, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get vocForeignNew => $composableBuilder(
+      column: $table.vocForeignNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get dateCreatedNew => $composableBuilder(
+      column: $table.dateCreatedNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isFavouriteNew => $composableBuilder(
+      column: $table.isFavouriteNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get dateLastAnsweredNew => $composableBuilder(
+      column: $table.dateLastAnsweredNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get rightAnswersNew => $composableBuilder(
+      column: $table.rightAnswersNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get wrongAnswersNew => $composableBuilder(
+      column: $table.wrongAnswersNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get vocLocalOld => $composableBuilder(
+      column: $table.vocLocalOld, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get vocForeignOld => $composableBuilder(
+      column: $table.vocForeignOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get dateCreatedOld => $composableBuilder(
+      column: $table.dateCreatedOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isFavouriteOld => $composableBuilder(
+      column: $table.isFavouriteOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get dateLastAnsweredOld => $composableBuilder(
+      column: $table.dateLastAnsweredOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get rightAnswersOld => $composableBuilder(
+      column: $table.rightAnswersOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get wrongAnswersOld => $composableBuilder(
+      column: $table.wrongAnswersOld,
+      builder: (column) => ColumnOrderings(column));
+
+  $CategoriesOrderingComposer get categoryIdNew {
+    final $CategoriesOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryIdNew,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $CategoriesOrderingComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $CategoriesOrderingComposer get categoryIdOld {
+    final $CategoriesOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryIdOld,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $CategoriesOrderingComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $VocabulariesLogAnnotationComposer
+    extends Composer<_$Database, VocabulariesLog> {
+  $VocabulariesLogAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get logId =>
+      $composableBuilder(column: $table.logId, builder: (column) => column);
+
+  GeneratedColumn<String> get actionName => $composableBuilder(
+      column: $table.actionName, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get actionTimestamp => $composableBuilder(
+      column: $table.actionTimestamp, builder: (column) => column);
+
+  GeneratedColumn<int> get affectedId => $composableBuilder(
+      column: $table.affectedId, builder: (column) => column);
+
+  GeneratedColumn<String> get vocLocalNew => $composableBuilder(
+      column: $table.vocLocalNew, builder: (column) => column);
+
+  GeneratedColumn<String> get vocForeignNew => $composableBuilder(
+      column: $table.vocForeignNew, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateCreatedNew => $composableBuilder(
+      column: $table.dateCreatedNew, builder: (column) => column);
+
+  GeneratedColumn<bool> get isFavouriteNew => $composableBuilder(
+      column: $table.isFavouriteNew, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateLastAnsweredNew => $composableBuilder(
+      column: $table.dateLastAnsweredNew, builder: (column) => column);
+
+  GeneratedColumn<int> get rightAnswersNew => $composableBuilder(
+      column: $table.rightAnswersNew, builder: (column) => column);
+
+  GeneratedColumn<int> get wrongAnswersNew => $composableBuilder(
+      column: $table.wrongAnswersNew, builder: (column) => column);
+
+  GeneratedColumn<String> get vocLocalOld => $composableBuilder(
+      column: $table.vocLocalOld, builder: (column) => column);
+
+  GeneratedColumn<String> get vocForeignOld => $composableBuilder(
+      column: $table.vocForeignOld, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateCreatedOld => $composableBuilder(
+      column: $table.dateCreatedOld, builder: (column) => column);
+
+  GeneratedColumn<bool> get isFavouriteOld => $composableBuilder(
+      column: $table.isFavouriteOld, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateLastAnsweredOld => $composableBuilder(
+      column: $table.dateLastAnsweredOld, builder: (column) => column);
+
+  GeneratedColumn<int> get rightAnswersOld => $composableBuilder(
+      column: $table.rightAnswersOld, builder: (column) => column);
+
+  GeneratedColumn<int> get wrongAnswersOld => $composableBuilder(
+      column: $table.wrongAnswersOld, builder: (column) => column);
+
+  $CategoriesAnnotationComposer get categoryIdNew {
+    final $CategoriesAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryIdNew,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $CategoriesAnnotationComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $CategoriesAnnotationComposer get categoryIdOld {
+    final $CategoriesAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.categoryIdOld,
+        referencedTable: $db.categories,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $CategoriesAnnotationComposer(
+              $db: $db,
+              $table: $db.categories,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $VocabulariesLogTableManager extends RootTableManager<
+    _$Database,
+    VocabulariesLog,
+    VocabulariesLogData,
+    $VocabulariesLogFilterComposer,
+    $VocabulariesLogOrderingComposer,
+    $VocabulariesLogAnnotationComposer,
+    $VocabulariesLogCreateCompanionBuilder,
+    $VocabulariesLogUpdateCompanionBuilder,
+    (VocabulariesLogData, $VocabulariesLogReferences),
+    VocabulariesLogData,
+    PrefetchHooks Function({bool categoryIdNew, bool categoryIdOld})> {
+  $VocabulariesLogTableManager(_$Database db, VocabulariesLog table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $VocabulariesLogFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $VocabulariesLogOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $VocabulariesLogAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> logId = const Value.absent(),
+            Value<String> actionName = const Value.absent(),
+            Value<DateTime> actionTimestamp = const Value.absent(),
+            Value<int> affectedId = const Value.absent(),
+            Value<String?> vocLocalNew = const Value.absent(),
+            Value<String?> vocForeignNew = const Value.absent(),
+            Value<int?> categoryIdNew = const Value.absent(),
+            Value<DateTime?> dateCreatedNew = const Value.absent(),
+            Value<bool?> isFavouriteNew = const Value.absent(),
+            Value<DateTime?> dateLastAnsweredNew = const Value.absent(),
+            Value<int?> rightAnswersNew = const Value.absent(),
+            Value<int?> wrongAnswersNew = const Value.absent(),
+            Value<String?> vocLocalOld = const Value.absent(),
+            Value<String?> vocForeignOld = const Value.absent(),
+            Value<int?> categoryIdOld = const Value.absent(),
+            Value<DateTime?> dateCreatedOld = const Value.absent(),
+            Value<bool?> isFavouriteOld = const Value.absent(),
+            Value<DateTime?> dateLastAnsweredOld = const Value.absent(),
+            Value<int?> rightAnswersOld = const Value.absent(),
+            Value<int?> wrongAnswersOld = const Value.absent(),
+          }) =>
+              VocabulariesLogCompanion(
+            logId: logId,
+            actionName: actionName,
+            actionTimestamp: actionTimestamp,
+            affectedId: affectedId,
+            vocLocalNew: vocLocalNew,
+            vocForeignNew: vocForeignNew,
+            categoryIdNew: categoryIdNew,
+            dateCreatedNew: dateCreatedNew,
+            isFavouriteNew: isFavouriteNew,
+            dateLastAnsweredNew: dateLastAnsweredNew,
+            rightAnswersNew: rightAnswersNew,
+            wrongAnswersNew: wrongAnswersNew,
+            vocLocalOld: vocLocalOld,
+            vocForeignOld: vocForeignOld,
+            categoryIdOld: categoryIdOld,
+            dateCreatedOld: dateCreatedOld,
+            isFavouriteOld: isFavouriteOld,
+            dateLastAnsweredOld: dateLastAnsweredOld,
+            rightAnswersOld: rightAnswersOld,
+            wrongAnswersOld: wrongAnswersOld,
+          ),
+          createCompanionCallback: ({
+            Value<int> logId = const Value.absent(),
+            required String actionName,
+            Value<DateTime> actionTimestamp = const Value.absent(),
+            required int affectedId,
+            Value<String?> vocLocalNew = const Value.absent(),
+            Value<String?> vocForeignNew = const Value.absent(),
+            Value<int?> categoryIdNew = const Value.absent(),
+            Value<DateTime?> dateCreatedNew = const Value.absent(),
+            Value<bool?> isFavouriteNew = const Value.absent(),
+            Value<DateTime?> dateLastAnsweredNew = const Value.absent(),
+            Value<int?> rightAnswersNew = const Value.absent(),
+            Value<int?> wrongAnswersNew = const Value.absent(),
+            Value<String?> vocLocalOld = const Value.absent(),
+            Value<String?> vocForeignOld = const Value.absent(),
+            Value<int?> categoryIdOld = const Value.absent(),
+            Value<DateTime?> dateCreatedOld = const Value.absent(),
+            Value<bool?> isFavouriteOld = const Value.absent(),
+            Value<DateTime?> dateLastAnsweredOld = const Value.absent(),
+            Value<int?> rightAnswersOld = const Value.absent(),
+            Value<int?> wrongAnswersOld = const Value.absent(),
+          }) =>
+              VocabulariesLogCompanion.insert(
+            logId: logId,
+            actionName: actionName,
+            actionTimestamp: actionTimestamp,
+            affectedId: affectedId,
+            vocLocalNew: vocLocalNew,
+            vocForeignNew: vocForeignNew,
+            categoryIdNew: categoryIdNew,
+            dateCreatedNew: dateCreatedNew,
+            isFavouriteNew: isFavouriteNew,
+            dateLastAnsweredNew: dateLastAnsweredNew,
+            rightAnswersNew: rightAnswersNew,
+            wrongAnswersNew: wrongAnswersNew,
+            vocLocalOld: vocLocalOld,
+            vocForeignOld: vocForeignOld,
+            categoryIdOld: categoryIdOld,
+            dateCreatedOld: dateCreatedOld,
+            isFavouriteOld: isFavouriteOld,
+            dateLastAnsweredOld: dateLastAnsweredOld,
+            rightAnswersOld: rightAnswersOld,
+            wrongAnswersOld: wrongAnswersOld,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $VocabulariesLogReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: (
+              {categoryIdNew = false, categoryIdOld = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (categoryIdNew) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.categoryIdNew,
+                    referencedTable:
+                        $VocabulariesLogReferences._categoryIdNewTable(db),
+                    referencedColumn:
+                        $VocabulariesLogReferences._categoryIdNewTable(db).id,
+                  ) as T;
+                }
+                if (categoryIdOld) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.categoryIdOld,
+                    referencedTable:
+                        $VocabulariesLogReferences._categoryIdOldTable(db),
+                    referencedColumn:
+                        $VocabulariesLogReferences._categoryIdOldTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $VocabulariesLogProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    VocabulariesLog,
+    VocabulariesLogData,
+    $VocabulariesLogFilterComposer,
+    $VocabulariesLogOrderingComposer,
+    $VocabulariesLogAnnotationComposer,
+    $VocabulariesLogCreateCompanionBuilder,
+    $VocabulariesLogUpdateCompanionBuilder,
+    (VocabulariesLogData, $VocabulariesLogReferences),
+    VocabulariesLogData,
+    PrefetchHooks Function({bool categoryIdNew, bool categoryIdOld})>;
+typedef $CategoriesLogCreateCompanionBuilder = CategoriesLogCompanion Function({
+  Value<int> logId,
+  required String actionName,
+  Value<DateTime> actionTimestamp,
+  required int affectedId,
+  Value<String?> categoryNameNew,
+  Value<String?> categoryLanguageNew,
+  Value<DateTime?> dateCreatedNew,
+  Value<bool?> isFavouriteNew,
+  Value<String?> categoryNameOld,
+  Value<String?> categoryLanguageOld,
+  Value<DateTime?> dateCreatedOld,
+  Value<bool?> isFavouriteOld,
+});
+typedef $CategoriesLogUpdateCompanionBuilder = CategoriesLogCompanion Function({
+  Value<int> logId,
+  Value<String> actionName,
+  Value<DateTime> actionTimestamp,
+  Value<int> affectedId,
+  Value<String?> categoryNameNew,
+  Value<String?> categoryLanguageNew,
+  Value<DateTime?> dateCreatedNew,
+  Value<bool?> isFavouriteNew,
+  Value<String?> categoryNameOld,
+  Value<String?> categoryLanguageOld,
+  Value<DateTime?> dateCreatedOld,
+  Value<bool?> isFavouriteOld,
+});
+
+class $CategoriesLogFilterComposer extends Composer<_$Database, CategoriesLog> {
+  $CategoriesLogFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get logId => $composableBuilder(
+      column: $table.logId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get actionName => $composableBuilder(
+      column: $table.actionName, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get actionTimestamp => $composableBuilder(
+      column: $table.actionTimestamp,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get affectedId => $composableBuilder(
+      column: $table.affectedId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get categoryNameNew => $composableBuilder(
+      column: $table.categoryNameNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get categoryLanguageNew => $composableBuilder(
+      column: $table.categoryLanguageNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get dateCreatedNew => $composableBuilder(
+      column: $table.dateCreatedNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isFavouriteNew => $composableBuilder(
+      column: $table.isFavouriteNew,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get categoryNameOld => $composableBuilder(
+      column: $table.categoryNameOld,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get categoryLanguageOld => $composableBuilder(
+      column: $table.categoryLanguageOld,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get dateCreatedOld => $composableBuilder(
+      column: $table.dateCreatedOld,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isFavouriteOld => $composableBuilder(
+      column: $table.isFavouriteOld,
+      builder: (column) => ColumnFilters(column));
+}
+
+class $CategoriesLogOrderingComposer
+    extends Composer<_$Database, CategoriesLog> {
+  $CategoriesLogOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get logId => $composableBuilder(
+      column: $table.logId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get actionName => $composableBuilder(
+      column: $table.actionName, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get actionTimestamp => $composableBuilder(
+      column: $table.actionTimestamp,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get affectedId => $composableBuilder(
+      column: $table.affectedId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get categoryNameNew => $composableBuilder(
+      column: $table.categoryNameNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get categoryLanguageNew => $composableBuilder(
+      column: $table.categoryLanguageNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get dateCreatedNew => $composableBuilder(
+      column: $table.dateCreatedNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isFavouriteNew => $composableBuilder(
+      column: $table.isFavouriteNew,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get categoryNameOld => $composableBuilder(
+      column: $table.categoryNameOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get categoryLanguageOld => $composableBuilder(
+      column: $table.categoryLanguageOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get dateCreatedOld => $composableBuilder(
+      column: $table.dateCreatedOld,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isFavouriteOld => $composableBuilder(
+      column: $table.isFavouriteOld,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $CategoriesLogAnnotationComposer
+    extends Composer<_$Database, CategoriesLog> {
+  $CategoriesLogAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get logId =>
+      $composableBuilder(column: $table.logId, builder: (column) => column);
+
+  GeneratedColumn<String> get actionName => $composableBuilder(
+      column: $table.actionName, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get actionTimestamp => $composableBuilder(
+      column: $table.actionTimestamp, builder: (column) => column);
+
+  GeneratedColumn<int> get affectedId => $composableBuilder(
+      column: $table.affectedId, builder: (column) => column);
+
+  GeneratedColumn<String> get categoryNameNew => $composableBuilder(
+      column: $table.categoryNameNew, builder: (column) => column);
+
+  GeneratedColumn<String> get categoryLanguageNew => $composableBuilder(
+      column: $table.categoryLanguageNew, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateCreatedNew => $composableBuilder(
+      column: $table.dateCreatedNew, builder: (column) => column);
+
+  GeneratedColumn<bool> get isFavouriteNew => $composableBuilder(
+      column: $table.isFavouriteNew, builder: (column) => column);
+
+  GeneratedColumn<String> get categoryNameOld => $composableBuilder(
+      column: $table.categoryNameOld, builder: (column) => column);
+
+  GeneratedColumn<String> get categoryLanguageOld => $composableBuilder(
+      column: $table.categoryLanguageOld, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get dateCreatedOld => $composableBuilder(
+      column: $table.dateCreatedOld, builder: (column) => column);
+
+  GeneratedColumn<bool> get isFavouriteOld => $composableBuilder(
+      column: $table.isFavouriteOld, builder: (column) => column);
+}
+
+class $CategoriesLogTableManager extends RootTableManager<
+    _$Database,
+    CategoriesLog,
+    CategoriesLogData,
+    $CategoriesLogFilterComposer,
+    $CategoriesLogOrderingComposer,
+    $CategoriesLogAnnotationComposer,
+    $CategoriesLogCreateCompanionBuilder,
+    $CategoriesLogUpdateCompanionBuilder,
+    (
+      CategoriesLogData,
+      BaseReferences<_$Database, CategoriesLog, CategoriesLogData>
+    ),
+    CategoriesLogData,
+    PrefetchHooks Function()> {
+  $CategoriesLogTableManager(_$Database db, CategoriesLog table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $CategoriesLogFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $CategoriesLogOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $CategoriesLogAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> logId = const Value.absent(),
+            Value<String> actionName = const Value.absent(),
+            Value<DateTime> actionTimestamp = const Value.absent(),
+            Value<int> affectedId = const Value.absent(),
+            Value<String?> categoryNameNew = const Value.absent(),
+            Value<String?> categoryLanguageNew = const Value.absent(),
+            Value<DateTime?> dateCreatedNew = const Value.absent(),
+            Value<bool?> isFavouriteNew = const Value.absent(),
+            Value<String?> categoryNameOld = const Value.absent(),
+            Value<String?> categoryLanguageOld = const Value.absent(),
+            Value<DateTime?> dateCreatedOld = const Value.absent(),
+            Value<bool?> isFavouriteOld = const Value.absent(),
+          }) =>
+              CategoriesLogCompanion(
+            logId: logId,
+            actionName: actionName,
+            actionTimestamp: actionTimestamp,
+            affectedId: affectedId,
+            categoryNameNew: categoryNameNew,
+            categoryLanguageNew: categoryLanguageNew,
+            dateCreatedNew: dateCreatedNew,
+            isFavouriteNew: isFavouriteNew,
+            categoryNameOld: categoryNameOld,
+            categoryLanguageOld: categoryLanguageOld,
+            dateCreatedOld: dateCreatedOld,
+            isFavouriteOld: isFavouriteOld,
+          ),
+          createCompanionCallback: ({
+            Value<int> logId = const Value.absent(),
+            required String actionName,
+            Value<DateTime> actionTimestamp = const Value.absent(),
+            required int affectedId,
+            Value<String?> categoryNameNew = const Value.absent(),
+            Value<String?> categoryLanguageNew = const Value.absent(),
+            Value<DateTime?> dateCreatedNew = const Value.absent(),
+            Value<bool?> isFavouriteNew = const Value.absent(),
+            Value<String?> categoryNameOld = const Value.absent(),
+            Value<String?> categoryLanguageOld = const Value.absent(),
+            Value<DateTime?> dateCreatedOld = const Value.absent(),
+            Value<bool?> isFavouriteOld = const Value.absent(),
+          }) =>
+              CategoriesLogCompanion.insert(
+            logId: logId,
+            actionName: actionName,
+            actionTimestamp: actionTimestamp,
+            affectedId: affectedId,
+            categoryNameNew: categoryNameNew,
+            categoryLanguageNew: categoryLanguageNew,
+            dateCreatedNew: dateCreatedNew,
+            isFavouriteNew: isFavouriteNew,
+            categoryNameOld: categoryNameOld,
+            categoryLanguageOld: categoryLanguageOld,
+            dateCreatedOld: dateCreatedOld,
+            isFavouriteOld: isFavouriteOld,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $CategoriesLogProcessedTableManager = ProcessedTableManager<
+    _$Database,
+    CategoriesLog,
+    CategoriesLogData,
+    $CategoriesLogFilterComposer,
+    $CategoriesLogOrderingComposer,
+    $CategoriesLogAnnotationComposer,
+    $CategoriesLogCreateCompanionBuilder,
+    $CategoriesLogUpdateCompanionBuilder,
+    (
+      CategoriesLogData,
+      BaseReferences<_$Database, CategoriesLog, CategoriesLogData>
+    ),
+    CategoriesLogData,
+    PrefetchHooks Function()>;
+
+class $DatabaseManager {
+  final _$Database _db;
+  $DatabaseManager(this._db);
+  $WeekdaysTableManager get weekdays =>
+      $WeekdaysTableManager(_db, _db.weekdays);
+  $WeekdaysLogTableManager get weekdaysLog =>
+      $WeekdaysLogTableManager(_db, _db.weekdaysLog);
+  $CategoriesTableManager get categories =>
+      $CategoriesTableManager(_db, _db.categories);
+  $VocabulariesTableManager get vocabularies =>
+      $VocabulariesTableManager(_db, _db.vocabularies);
+  $VocabulariesLogTableManager get vocabulariesLog =>
+      $VocabulariesLogTableManager(_db, _db.vocabulariesLog);
+  $CategoriesLogTableManager get categoriesLog =>
+      $CategoriesLogTableManager(_db, _db.categoriesLog);
 }
 
 class AllVocabulariesResult {
