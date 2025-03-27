@@ -51,7 +51,7 @@ class _VocabManually extends State<VocabManually> {
                 header,
                 Form(
                     key: _createVocabFormKey,
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
                       Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
                         Padding(
                             padding: const EdgeInsets.only(right: 10),
@@ -93,6 +93,7 @@ class _VocabManually extends State<VocabManually> {
                               return null;
                             }
                           }),
+                      SizedBox(height: 20),
                       ElevatedButton(
                           onPressed: () async {
                             if (_createVocabFormKey.currentState!.validate()) {
@@ -110,13 +111,6 @@ class _VocabManually extends State<VocabManually> {
                               }
                             }
                           },
-                          style: ButtonStyle(backgroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-                            if (states.contains(WidgetState.pressed) || states.contains(WidgetState.hovered)) {
-                              return BrandColors.colorPrimaryDark;
-                            } else {
-                              return BrandColors.colorPrimary;
-                            }
-                          })),
                           child: Text(AppLocalizations.of(context)!.save))
                     ]))
               ]);

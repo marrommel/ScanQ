@@ -66,12 +66,11 @@ System: ${iosInfo.systemName}
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          SizedBox(height: 10),
           const Text(
             'ScanQ',
             textAlign: TextAlign.center,

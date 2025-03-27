@@ -15,7 +15,7 @@ class AppModule extends Module {
       '/',
       child: (context) => Scaffold(
         appBar: null,
-        body: const ActivityHome(),
+        body: SafeArea(child: const ActivityHome()),
 
         //   ListView(children: [
         //   Container(

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:scanq_multiplatform/common/brand_colors.dart';
 import 'package:scanq_multiplatform/common/extensions.dart';
 import 'package:scanq_multiplatform/database/database.dart';
@@ -40,10 +42,17 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
   bool onlyUntrained = false;
 
   bool _isDataLoaded = false;
+  bool _isDialogShown = false;
 
   Future<void> _loadCategories() async {
     final Database db = Modular.get<Database>();
     categories = await db.allNonEmptyCategories().get();
+
+    //
+    if (categories.isEmpty) {
+      setState(() => _isDataLoaded = true);
+      return;
+    }
 
     for (Category category in categories) {
       languages.add(category.categoryLanguage);
@@ -59,15 +68,15 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
 
     selectedCategory = categoryNames.first;
 
-    setState(() {
-      _isDataLoaded = true;
-    });
+    // set a flag to indicate that the data has been loaded
+    setState(() => _isDataLoaded = true);
   }
 
   @override
   void initState() {
     super.initState();
 
+    // load all not empty categories from the database
     _loadCategories();
   }
 
@@ -99,7 +108,29 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
 
     // display a loading animation while data from database is loaded
     if (!_isDataLoaded) {
-      return Center(child: CircularProgressIndicator());
+      return Scaffold(
+        backgroundColor: BrandColors.colorPrimary,
+        body: Center(child: CircularProgressIndicator(color: Colors.white)),
+      );
+    }
+
+    // display a warning dialog if the user has no categories with vocabulary
+    if (categories.isEmpty && !_isDialogShown) {
+      Future.microtask(() {
+        QuickAlert.show(
+            context: context,
+            type: QuickAlertType.info,
+            barrierColor: BrandColors.colorPrimary,
+            text: "Du hast noch keine Vokabeln gespeichert. Scanne oder tippe neue Vokabeln ein, um ein Quiz zu starten.",
+            confirmBtnColor: Color(0xFFFFC847),
+            confirmBtnText: "OK",
+            title: "Vokabeln hinzufügen");
+      });
+
+      _isDialogShown = true;
+
+      // close the underlying activity
+      if (mounted) Navigator.pop(context);
     }
 
     return Scaffold(

@@ -3,6 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/widgets/widget_vocabulary_table.dart';
 
 import '../../common/brand_colors.dart';
+import '../../common/transparent_app_bar.dart';
 import '../../common/vocabulary_type.dart';
 import '../../database/database.dart';
 import '../logic/widget_save_scanned_vocabs.dart';
@@ -23,7 +24,7 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: null,
+      appBar: TransparentAppBar(),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(

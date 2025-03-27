@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:scanq_multiplatform/common/extensions.dart';
 import 'package:scanq_multiplatform/speech/voice_output.dart';
 import 'package:scanq_multiplatform/widgets/widget_vocabularies_table.dart';
 
 import '../common/brand_colors.dart';
+import '../common/transparent_app_bar.dart';
 import '../database/database.dart';
 
 class VocabularyBook extends StatefulWidget {
@@ -69,7 +71,7 @@ class _VocabularyBook extends State<VocabularyBook> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: null,
+        appBar: TransparentAppBar(),
         body: ListView(children: [
           Container(
               margin: const EdgeInsets.all(15),
@@ -79,10 +81,11 @@ class _VocabularyBook extends State<VocabularyBook> {
                   child: Container(
                       padding: const EdgeInsets.all(20),
                       child: Column(children: [
-                        Text(widget.category.categoryName,
+                        Text(widget.category.categoryName.capitalize(),
                             style:
                                 const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: BrandColors.colorPrimaryDark)),
                         //getButtonReadingAction(),
+                        SizedBox(height: 20),
                         VocabulariesTable(category: widget.category)
                       ]))))
         ]));
