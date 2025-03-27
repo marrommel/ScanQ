@@ -5,6 +5,7 @@ import 'package:scanq_multiplatform/widgets/widget_vocabulary_table.dart';
 import '../../common/brand_colors.dart';
 import '../../common/vocabulary_type.dart';
 import '../../database/database.dart';
+import '../logic/widget_save_scanned_vocabs.dart';
 
 class ActivityScanResult extends StatefulWidget {
   final List<VocabularyType> vocabularyData;
@@ -16,6 +17,9 @@ class ActivityScanResult extends StatefulWidget {
 }
 
 class _ActivityScanResultState extends State<ActivityScanResult> {
+  bool createNewCategory = false;
+  int? categoryId;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +52,46 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
   }
 
   void _saveVocabs() {
-    final Database db = Modular.get<Database>();
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        useSafeArea: true,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: SaveScannedVocabs(
+                language: "en",
+                onAccept: (id, name) async {
+                  final Database db = Modular.get<Database>();
+                  if (name.isNotEmpty) {
+                    await db.createCategory(name, "en");
+                    Category newCategory = await db.lastlyInsertedCategory().getSingle();
 
-    for (VocabularyType voc in widget.vocabularyData) {
-      db.createVocabulary(voc.translation, voc.vocabulary, 1, false);
-    }
+                    for (VocabularyType voc in widget.vocabularyData) {
+                      db.createVocabulary(voc.translation, voc.vocabulary, newCategory.id, false);
+                    }
+                  } else {
+                    for (VocabularyType voc in widget.vocabularyData) {
+                      db.createVocabulary(voc.translation, voc.vocabulary, id, false);
+                    }
+                  }
 
-    Navigator.pop(context);
+                  if (context.mounted) {
+                    Navigator.pop(context);
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Vokabeln erfolgreich gespeichert!")));
+                  }
+                },
+              ),
+            ),
+          );
+        });
   }
+
+  Stream<List<DropdownMenuItem<String>>> getCategoryOptions(final Database db) =>
+      db.allCategoriesWithLang("en").map((Category category) {
+        return DropdownMenuItem<String>(value: "${category.id}", child: Text(category.categoryName));
+      }).watch();
 }

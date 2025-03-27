@@ -7,19 +7,21 @@ import 'package:scanq_multiplatform/quiz/ui/widgets/widget_quiz_header.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_top_curve.dart';
 
 import '../../common/brand_colors.dart';
+import '../data/quiz_config.dart';
 import '../data/quiz_item.dart';
 import '../data/quiz_metadata.dart';
+import '../data/quiz_mode.dart';
 import '../logic/quiz_vocabulary_loader.dart';
 
 class ActivityInputQuiz extends StatefulWidget {
-  const ActivityInputQuiz({super.key});
+  final QuizConfig config;
+
+  const ActivityInputQuiz({super.key, required this.config});
 
   @override
   _ActivityInputQuizState createState() => _ActivityInputQuizState();
 }
 
-// TODO: two buttons for skipping and submitting ("später" & "antworten")
-// TODO: No need for random
 // TODO: resize font to fit text in question
 
 class _ActivityInputQuizState extends State<ActivityInputQuiz> {
@@ -49,12 +51,12 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
 
   Future<void> _loadVocabulary() async {
     // Load or generate your input-based quiz items
-    QuizVocabularyLoader loader = QuizVocabularyLoader();
+    QuizVocabularyLoader loader = QuizVocabularyLoader(widget.config);
     await loader.loadVocabulary();
 
     // Assume generateInputQuestions() returns List<InputQuizItem>
-    List<QuizItem> inputQuizItems = loader.generateInputQuizQuestions();
-    _metadata = QuizMetadata(inputQuizItems);
+    List<QuizItem> inputQuizItems = loader.generateQuizQuestions();
+    _metadata = QuizMetadata(widget.config, QuizMode.INPUT, inputQuizItems);
 
     setState(() {
       _isDataLoaded = true;
@@ -62,17 +64,21 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
   }
 
   void _onSubmitAnswer() {
-    if (_metadata.isAnswered) return;
-
     final String userAnswer = _inputController.text.trim();
+    if (_metadata.isAnswered || userAnswer.isEmpty) return;
+
+    // give a point for a correct answer
     _metadata.incrementScoreIfCorrect(userAnswer);
 
     submitButtonText = _metadata.isLast ? "Beenden" : "Nächste Frage";
     setState(() => {});
 
     // Move to next question after 0.8 seconds if correct and after 1.5 seconds if wrong
-    int skipDuration = (_metadata.quizItem.isCorrect) ? 800 : 1500;
-    _timer = Timer(Duration(milliseconds: skipDuration), () => _nextQuestion(false));
+    if (widget.config.autoContinue) {
+      bool isCorrect = widget.config.caseSensitive ? _metadata.quizItem.isCorrect : _metadata.quizItem.isCorrectCaseInsensitive;
+      int skipDuration = isCorrect ? 800 : 1500;
+      _timer = Timer(Duration(milliseconds: skipDuration), () => _nextQuestion(false));
+    }
   }
 
   void _showHint() {
@@ -131,6 +137,8 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
 
     final currentQuestion = _metadata.quizItem;
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
+    bool isCorrect = widget.config.caseSensitive ? _metadata.quizItem.isCorrect : _metadata.quizItem.isCorrectCaseInsensitive;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -202,8 +210,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
                                 hintText: "Deine Antwort...",
                                 hintStyle: const TextStyle(fontSize: 18),
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                                fillColor:
-                                    _metadata.isAnswered ? (currentQuestion.isCorrect ? Colors.green : Colors.red) : Colors.white,
+                                fillColor: _metadata.isAnswered ? (isCorrect ? Colors.green : Colors.red) : Colors.white,
                                 filled: true,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(20),
@@ -279,19 +286,6 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
                           : Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                               const SizedBox(width: 20),
                               ElevatedButton(
-                                onPressed: () => _onSubmitAnswer(),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: (_inputController.text.trim().isNotEmpty) ? Colors.white : Colors.grey[400],
-                                  foregroundColor: Colors.black,
-                                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                ),
-                                child: Text(
-                                  "Antworten",
-                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              ElevatedButton(
                                 onPressed: () => setState(() {
                                   _inputController.text = "";
                                   isFirstHintUse = false;
@@ -308,21 +302,35 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                               ),
+                              ElevatedButton(
+                                onPressed: () => _onSubmitAnswer(),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: (_inputController.text.trim().isNotEmpty) ? Colors.white : Colors.grey[400],
+                                  foregroundColor: Colors.black,
+                                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                ),
+                                child: Text(
+                                  "Antworten",
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                              ),
                               const SizedBox(width: 20),
                             ]),
                       // TODO: work on bottom overflow
                       SizedBox(height: max(0, 140 - keyboardHeight)),
 
-                      TextButton(
-                        onPressed: (_metadata.hintUsed) ? null : _showHint,
-                        child: Text(
-                          "Hinweis anzeigen",
-                          style: TextStyle(
-                            color: (_metadata.hintUsed) ? Colors.white54 : Colors.white,
-                            fontSize: 18,
+                      if (widget.config.hintsEnabled)
+                        TextButton(
+                          onPressed: (_metadata.hintUsed) ? null : _showHint,
+                          child: Text(
+                            "Hinweis anzeigen",
+                            style: TextStyle(
+                              color: (_metadata.hintUsed) ? Colors.white54 : Colors.white,
+                              fontSize: 18,
+                            ),
                           ),
                         ),
-                      ),
                       const SizedBox(height: 20),
                     ],
                   ),

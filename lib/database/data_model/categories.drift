@@ -3,7 +3,7 @@ import 'vocabularies.drift';
 CREATE TABLE IF NOT EXISTS categories(
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     category_name TEXT NOT NULL,
-    category_language VARCHAR(2) NOT NULL,
+    category_language TEXT NOT NULL,
     date_created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_favourite BOOL NOT NULL DEFAULT FALSE
 ) AS Category;
@@ -17,11 +17,11 @@ CREATE TABLE IF NOT EXISTS categories_log(
     action_timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     affected_id INTEGER NOT NULL,
     category_name_new TEXT,
-    category_language_new VARCHAR(2),
+    category_language_new TEXT,
     date_created_new DATETIME,
     is_favourite_new BOOL,
     category_name_old TEXT,
-    category_language_old VARCHAR(2),
+    category_language_old TEXT,
     date_created_old DATETIME,
     is_favourite_old BOOL
 );
@@ -48,6 +48,7 @@ CREATE TRIGGER after_category_delete AFTER DELETE ON categories FOR EACH ROW
 
 -- common SQL queries against 'categories'
 allCategories: SELECT * FROM categories;
+allNonEmptyCategories: SELECT c.* FROM categories c JOIN vocabularies v ON v.category_id = c.id;
 allCategoriesWithLang: SELECT * FROM categories WHERE category_language = :target_language;
 allCategoryData: SELECT id, category_name, category_language, is_favourite FROM categories;
 categoryWithId: SELECT * FROM categories WHERE id = :target_id;

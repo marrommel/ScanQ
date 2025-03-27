@@ -7,7 +7,10 @@ import 'package:scanq_multiplatform/common/brand_colors.dart';
 import '../../database/database.dart';
 
 class SaveScannedVocabs extends StatefulWidget {
-  const SaveScannedVocabs({super.key});
+  final void Function(int categoryId, String newCategoryName) onAccept;
+  final String language;
+
+  const SaveScannedVocabs({super.key, required this.onAccept, required this.language});
 
   @override
   State<SaveScannedVocabs> createState() => _SaveScannedVocabsState();
@@ -15,16 +18,19 @@ class SaveScannedVocabs extends StatefulWidget {
 
 class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
   String categoryName = "";
-
   String? selectedValueCombination;
 
-  int get selectedCategory => int.parse(selectedValueCombination!.split(";")[0]);
+  int get selectedCategoryId => int.parse(selectedValueCombination!.split(";")[0]);
 
   String get selectedCategoryLang => selectedValueCombination!.split(";")[1];
 
-  Stream<List<DropdownMenuItem<String>>> getCategoryOptions(final Database db) => db.allCategories().map((Category category) {
+  Stream<List<DropdownMenuItem<String>>>? getCategoryOptions(final Database db) =>
+      db.allCategoriesWithLang(widget.language).map((Category category) {
         selectedValueCombination ??= "${category.id};${category.categoryLanguage}";
-        return DropdownMenuItem<String>(value: "${category.id};${category.categoryLanguage}", child: Text(category.categoryName));
+        return DropdownMenuItem<String>(
+          value: "${category.id};${category.categoryLanguage}",
+          child: Text(category.categoryName),
+        );
       }).watch();
 
   final _createCategoryFormKey = GlobalKey<FormState>();
@@ -34,86 +40,120 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
     final Database db = Modular.get<Database>();
 
     return StreamBuilder(
-        stream: getCategoryOptions(db),
-        builder: (context, AsyncSnapshot<List<DropdownMenuItem<String>>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
-              return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      stream: getCategoryOptions(db),
+      builder: (context, AsyncSnapshot<List<DropdownMenuItem<String>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasData) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
                 Container(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Text(AppLocalizations.of(context)!.addCategory,
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: BrandColors.colorPrimaryDark))),
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Text(
+                    "Vokablen speichern",
+                    style: const TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.bold,
+                      color: BrandColors.colorPrimaryDark,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
                 Form(
-                    key: _createCategoryFormKey,
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                      DropdownButtonHideUnderline(
-                          child: DropdownButton2(
-                              hint: Text(AppLocalizations.of(context)!.category),
-                              items: snapshot.data,
-                              value: selectedValueCombination,
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedValueCombination = value as String;
-                                });
-                              })),
+                  key: _createCategoryFormKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      TextFormField(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: "Kategorie erstellen",
+                        ),
+                        validator: (name) {
+                          if (name == null) {
+                            return AppLocalizations.of(context)!.pleaseEnterAName;
+                          } else if (name.length > 50) {
+                            return "Bitte wähle einen kürzeren Namen für die Kategorie.";
+                          } else {
+                            categoryName = name;
+                            return null;
+                          }
+                        },
+                      ),
                       Row(
                         children: [
                           const Expanded(
-                            child: Divider(),
+                            child: Divider(
+                              height: 60,
+                              thickness: 2,
+                              color: Colors.black26,
+                            ),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: const Text("oder"),
+                            child: const Text(
+                              "oder",
+                              style: TextStyle(fontSize: 18, color: Colors.black45),
+                            ),
                           ),
                           const Expanded(
-                            child: Divider(),
+                            child: Divider(
+                              height: 60,
+                              thickness: 2,
+                              color: Colors.black26,
+                            ),
                           ),
                         ],
                       ),
-                      TextFormField(
-                          decoration: InputDecoration(
-                              border: const UnderlineInputBorder(), labelText: AppLocalizations.of(context)!.categoryName),
-                          validator: (name) {
-                            if (name == null || name.isEmpty) {
-                              return AppLocalizations.of(context)!.pleaseEnterAName;
-                            } else {
-                              categoryName = name;
-                              return null;
-                            }
-                          }),
-                      ElevatedButton(
-                          onPressed: () async {
-                            if (_createCategoryFormKey.currentState!.validate()) {
-                              if (categoryName.isNotEmpty) {
-                                final db = Modular.get<Database>();
-                                await db.createCategory(categoryName, "en");
-
-                                if (mounted) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text(AppLocalizations.of(context)!.categoryCreatedText(categoryName))));
-                                }
-
-                                categoryName = "";
-                                _createCategoryFormKey.currentState?.reset();
-                              }
-                            }
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          hint: Text(AppLocalizations.of(context)!.category),
+                          items: snapshot.data,
+                          value: selectedValueCombination,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedValueCombination = value as String;
+                            });
                           },
-                          style: ButtonStyle(backgroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-                            if (states.contains(WidgetState.pressed) || states.contains(WidgetState.hovered)) {
-                              return BrandColors.colorPrimaryDark;
-                            } else {
-                              return BrandColors.colorPrimary;
-                            }
-                          })),
-                          child: Text(AppLocalizations.of(context)!.save))
-                    ]))
-              ]);
-            } else {
-              return SizedBox(height: 1);
-            }
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_createCategoryFormKey.currentState!.validate()) {
+                            widget.onAccept(
+                              selectedCategoryId,
+                              categoryName.isNotEmpty ? categoryName : "",
+                            );
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.resolveWith<Color>(
+                            (Set<WidgetState> states) {
+                              if (states.contains(WidgetState.pressed) || states.contains(WidgetState.hovered)) {
+                                return BrandColors.colorPrimaryDark;
+                              } else {
+                                return BrandColors.colorPrimary;
+                              }
+                            },
+                          ),
+                        ),
+                        child: Text("Speichern"),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
           } else {
             return SizedBox(height: 1);
           }
-        });
+        } else {
+          return SizedBox(height: 1);
+        }
+      },
+    );
   }
 }

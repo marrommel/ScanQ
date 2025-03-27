@@ -16,6 +16,7 @@ class BrandColors {
   });
 
   static const Color colorPrimaryDark = Color(0xFF2E8E93);
+  static const Color colorPrimaryExtraDark = Color(0xFF1D6063);
   static const Color colorBorderCV = Color(0xFFE2E2E2);
   static const Color colorPrimaryTransparent = Color(0x9E309D8E);
   static const Color colorAccent = Color(0xFF55C89D);

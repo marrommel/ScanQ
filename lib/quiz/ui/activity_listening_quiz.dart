@@ -7,12 +7,16 @@ import 'package:scanq_multiplatform/quiz/ui/widgets/widget_quiz_header.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_top_curve.dart';
 
 import '../../common/brand_colors.dart';
+import '../data/quiz_config.dart';
 import '../data/quiz_item.dart';
 import '../data/quiz_metadata.dart';
+import '../data/quiz_mode.dart';
 import '../logic/quiz_vocabulary_loader.dart';
 
 class ActivityListeningQuiz extends StatefulWidget {
-  const ActivityListeningQuiz({super.key});
+  final QuizConfig config;
+
+  const ActivityListeningQuiz({super.key, required this.config});
 
   @override
   _ActivityListeningQuizState createState() => _ActivityListeningQuizState();
@@ -27,6 +31,9 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
 
   // Timer to automatically move to the next question after a short delay
   Timer? _timer;
+
+  // Flag to indicate if TTS is currently playing
+  bool _isPlaying = false;
 
   // Submit button label changes as the user types and after an answer is given
   String submitButtonText = "Später antworten";
@@ -43,15 +50,22 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
   @override
   void initState() {
     super.initState();
+
+    _flutterTts.setLanguage("en-US");
+    _flutterTts.setSpeechRate(0.8 - widget.config.speechRate * 0.25);
+    _flutterTts.setCompletionHandler(() {
+      setState(() => _isPlaying = false);
+    });
+
     _loadVocabulary();
   }
 
   Future<void> _loadVocabulary() async {
-    QuizVocabularyLoader loader = QuizVocabularyLoader();
+    QuizVocabularyLoader loader = QuizVocabularyLoader(widget.config);
     await loader.loadVocabulary();
 
-    List<QuizItem> inputQuizItems = loader.generateListeningQuizQuestions();
-    _metadata = QuizMetadata(inputQuizItems);
+    List<QuizItem> inputQuizItems = loader.generateQuizQuestions();
+    _metadata = QuizMetadata(widget.config, QuizMode.LISTENING, inputQuizItems);
 
     setState(() {
       _isDataLoaded = true;
@@ -63,10 +77,13 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
 
   // Reads the current question aloud (e.g. the English word).
   Future<void> _speak(String text) async {
-    // Adjust TTS settings as desired, e.g.:
-    await _flutterTts.setLanguage("en-US");
-    await _flutterTts.setSpeechRate(0.5);
-    await _flutterTts.speak(text);
+    if (_isPlaying) {
+      await _flutterTts.stop();
+      setState(() => _isPlaying = false);
+    } else {
+      setState(() => _isPlaying = true);
+      await _flutterTts.speak(text);
+    }
   }
 
   // Call this after loading or moving to the next question
@@ -89,8 +106,11 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
     setState(() => {});
 
     // Move to next question after 0.8 seconds if correct and 1.5 seconds if wrong
-    int skipDuration = (_metadata.quizItem.isCorrect) ? 800 : 1500;
-    _timer = Timer(Duration(milliseconds: skipDuration), () => _nextQuestion(false));
+    if (widget.config.autoContinue) {
+      bool isCorrect = widget.config.caseSensitive ? _metadata.quizItem.isCorrect : _metadata.quizItem.isCorrectCaseInsensitive;
+      int skipDuration = isCorrect ? 800 : 1500;
+      _timer = Timer(Duration(milliseconds: skipDuration), () => _nextQuestion(false));
+    }
   }
 
   void _showHint() {
@@ -158,6 +178,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
     }
 
     final currentQuestion = _metadata.quizItem;
+    bool isCorrect = widget.config.caseSensitive ? _metadata.quizItem.isCorrect : _metadata.quizItem.isCorrectCaseInsensitive;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -171,14 +192,24 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
             const Spacer(),
             GestureDetector(
               onTap: () => _speak(currentQuestion.question),
-              child: SizedBox(
-                height: 220,
-                width: 220,
-                child: Lottie.asset(
-                  "assets/animation/voice_blob.json",
-                  fit: BoxFit.contain,
-                  repeat: true,
-                ),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    height: 220,
+                    width: 220,
+                    child: Lottie.asset(
+                      "assets/animation/voice_blob.json",
+                      fit: BoxFit.contain,
+                      repeat: true,
+                    ),
+                  ),
+                  Icon(
+                    _isPlaying ? Icons.stop_circle : Icons.play_circle,
+                    size: 80,
+                    color: Colors.white70,
+                  ),
+                ],
               ),
             ),
 
@@ -221,8 +252,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
                               hintText: "Deine Antwort...",
                               hintStyle: const TextStyle(fontSize: 18),
                               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                              fillColor:
-                                  _metadata.isAnswered ? (currentQuestion.isCorrect ? Colors.green : Colors.red) : Colors.white,
+                              fillColor: _metadata.isAnswered ? (isCorrect ? Colors.green : Colors.red) : Colors.white,
                               filled: true,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
@@ -316,16 +346,17 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
                     const SizedBox(height: 140),
 
                     // Hint button
-                    TextButton(
-                      onPressed: (_metadata.hintUsed) ? null : _showHint,
-                      child: Text(
-                        "Hinweis anzeigen",
-                        style: TextStyle(
-                          color: (_metadata.hintUsed) ? Colors.white54 : Colors.white,
-                          fontSize: 18,
+                    if (widget.config.hintsEnabled)
+                      TextButton(
+                        onPressed: (_metadata.hintUsed) ? null : _showHint,
+                        child: Text(
+                          "Hinweis anzeigen",
+                          style: TextStyle(
+                            color: (_metadata.hintUsed) ? Colors.white54 : Colors.white,
+                            fontSize: 18,
+                          ),
                         ),
                       ),
-                    ),
 
                     const SizedBox(height: 20),
                   ],

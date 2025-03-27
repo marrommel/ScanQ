@@ -1,18 +1,26 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scanq_multiplatform/common/brand_colors.dart';
+import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 
 import '../data/quiz_item.dart';
+import '../data/quiz_mode.dart';
 
 class ActivityQuizResult extends StatefulWidget {
   final int score;
   final List<QuizItem> quizResults;
   final int totalQuestions;
+  final QuizConfig quizConfig;
+  final QuizMode quizMode;
 
   const ActivityQuizResult({
     super.key,
     required this.score,
     required this.quizResults,
+    required this.quizConfig,
+    required this.quizMode,
   }) : totalQuestions = quizResults.length;
 
   @override
@@ -29,12 +37,16 @@ class _ActivityQuizResultState extends State<ActivityQuizResult> {
   }
 
   void _setAnimation() {
-    double percentage = widget.score / widget.totalQuestions;
-    if (percentage == 1.0) {
+    int mistakes = widget.totalQuestions - widget.score;
+    double goldThreshold = 0;
+    double silverThreshold = min(max(1, widget.totalQuestions * 0.1), widget.totalQuestions - 1);
+    double bronzeThreshold = min(max(2, widget.totalQuestions * 0.2), widget.totalQuestions - 1);
+
+    if (mistakes <= goldThreshold) {
       animationAsset = 'assets/animation/trophy_gold.json';
-    } else if (percentage >= 0.9) {
+    } else if (mistakes <= silverThreshold) {
       animationAsset = 'assets/animation/trophy_silver.json';
-    } else if (percentage >= 0.8) {
+    } else if (mistakes <= bronzeThreshold) {
       animationAsset = 'assets/animation/trophy_bronze.json';
     } else {
       animationAsset = 'assets/animation/success.json';
@@ -115,9 +127,10 @@ class _ActivityQuizResultState extends State<ActivityQuizResult> {
                               borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                          // TODO: add context info like which mode was played, words, etc... (Settings object)
-                          onPressed: () => {},
-                          //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => )),
+                          onPressed: () => {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(builder: (context) => widget.quizMode.activity(widget.quizConfig))),
+                          },
                           child: const Text("Wiederholen",
                               style: TextStyle(
                                 fontSize: 18,
@@ -173,7 +186,7 @@ class _ActivityQuizResultState extends State<ActivityQuizResult> {
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
                         (context, index) {
-                          return QuestionItem(widget.quizResults[index], index);
+                          return QuestionItem(widget.quizResults[index], index, widget.quizConfig.caseSensitive);
                         },
                         childCount: widget.quizResults.length,
                       ),
@@ -192,8 +205,9 @@ class _ActivityQuizResultState extends State<ActivityQuizResult> {
 class QuestionItem extends StatefulWidget {
   final QuizItem result;
   final int index;
+  final bool isCaseSensitive;
 
-  const QuestionItem(this.result, this.index, {super.key});
+  const QuestionItem(this.result, this.index, this.isCaseSensitive, {super.key});
 
   @override
   _QuestionItemState createState() => _QuestionItemState();
@@ -204,13 +218,20 @@ class _QuestionItemState extends State<QuestionItem> {
 
   @override
   Widget build(BuildContext context) {
+    bool isCorrect;
+    if (widget.isCaseSensitive) {
+      isCorrect = widget.result.givenAnswer == widget.result.correctAnswer;
+    } else {
+      isCorrect = widget.result.givenAnswer.toLowerCase() == widget.result.correctAnswer.toLowerCase();
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
           title: Text("${widget.index + 1}. ${widget.result.givenAnswer}",
               style: TextStyle(
-                color: widget.result.givenAnswer == widget.result.correctAnswer ? Colors.green : Colors.red,
+                color: isCorrect ? Colors.green : Colors.red,
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
               )),
@@ -231,7 +252,7 @@ class _QuestionItemState extends State<QuestionItem> {
                   widget.result.question,
                   style: TextStyle(fontSize: 15),
                 ),
-                if (widget.result.givenAnswer != widget.result.correctAnswer)
+                if (!isCorrect)
                   Text(
                     "Richtige Antwort: ${widget.result.correctAnswer}",
                     style: TextStyle(fontSize: 15),

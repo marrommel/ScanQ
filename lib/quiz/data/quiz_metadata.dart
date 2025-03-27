@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_item.dart';
+import 'package:scanq_multiplatform/quiz/data/quiz_mode.dart';
 
 import '../ui/activity_quiz_result.dart';
 
@@ -12,8 +14,10 @@ class QuizMetadata {
 
   final int _totalQuestions;
   final List<QuizItem> _quizItems;
+  final QuizConfig config;
+  final QuizMode mode;
 
-  QuizMetadata(this._quizItems) : _totalQuestions = _quizItems.length;
+  QuizMetadata(this.config, this.mode, this._quizItems) : _totalQuestions = _quizItems.length;
 
   /// GETTER
   int get questionIndex => _questionIndex;
@@ -47,9 +51,13 @@ class QuizMetadata {
     // store the given answer
     quizItem.givenAnswer = answer;
 
-    // check if the given answer is correct
-    bool isCorrect = quizItem.correctAnswer == answer;
-
+    // only check with case if quiz is configured as case sensitive
+    bool isCorrect;
+    if (config.caseSensitive) {
+      isCorrect = quizItem.correctAnswer == answer;
+    } else {
+      isCorrect = quizItem.correctAnswer.toLowerCase() == answer.toLowerCase();
+    }
     // increment the score if the right answer was given
     if (isCorrect) _score++;
 
@@ -79,7 +87,7 @@ class QuizMetadata {
   void showResultScreen(BuildContext context) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => ActivityQuizResult(score: _score, quizResults: _quizItems),
+        builder: (context) => ActivityQuizResult(score: _score, quizResults: _quizItems, quizConfig: config, quizMode: mode),
       ),
     );
   }

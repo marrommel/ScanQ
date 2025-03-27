@@ -9,5 +9,7 @@ class QuizItem {
 
   String get question => _question;
 
-  bool get isCorrect => givenAnswer.trim() == correctAnswer;
+  bool get isCorrect => givenAnswer == correctAnswer;
+
+  bool get isCorrectCaseInsensitive => givenAnswer.toLowerCase() == correctAnswer.toLowerCase();
 }

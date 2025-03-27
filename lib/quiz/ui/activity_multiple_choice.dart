@@ -2,15 +2,20 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:scanq_multiplatform/common/brand_colors.dart';
+import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_metadata.dart';
+import 'package:scanq_multiplatform/quiz/data/quiz_mode.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_top_curve.dart';
 
 import '../data/multiple_choice_item.dart';
 import '../logic/quiz_vocabulary_loader.dart';
 
 class ActivityMultipleChoice extends StatefulWidget {
-  const ActivityMultipleChoice({super.key});
+  final QuizConfig config;
+
+  const ActivityMultipleChoice({super.key, required this.config});
 
   @override
   _ActivityMultipleChoiceState createState() => _ActivityMultipleChoiceState();
@@ -26,6 +31,9 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
   /// Boolean to indicate if the quiz data is ready.
   bool _isDataLoaded = false;
 
+  /// Boolean to indicate if the quiz data contains enough vocabularies.
+  bool _isVocabulariesEnough = true;
+
   /// Skip button will show different text if the question has already been answerd.
   String skipText = "Später antworten";
 
@@ -37,12 +45,17 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
 
   Future<void> _loadVocabulary() async {
     // initialize the loader to retrieve vocabulary form database
-    QuizVocabularyLoader loader = QuizVocabularyLoader();
+    QuizVocabularyLoader loader = QuizVocabularyLoader(widget.config);
     await loader.loadVocabulary();
 
     // create quiz items from the loaded vocabulary
-    List<MultipleChoiceItem> multipleChoiceItems = loader.generateMultipleChoiceQuestions();
-    _metadata = QuizMetadata(multipleChoiceItems);
+    List<MultipleChoiceItem>? multipleChoiceItems = loader.generateMultipleChoiceQuestions();
+
+    if (multipleChoiceItems == null) {
+      _isVocabulariesEnough = false;
+    } else {
+      _metadata = QuizMetadata(widget.config, QuizMode.MULTIPLE_CHOICE, multipleChoiceItems);
+    }
 
     // update the ui as the data is ready
     setState(() {
@@ -63,8 +76,10 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
     // update the ui
     setState(() => {});
 
-    // show the next question after 2 seconds
-    _timer = Timer(Duration(seconds: 2), () => _nextQuestion(false));
+    // show the next question after 2 seconds (if enabled in config)
+    if (widget.config.autoContinue) {
+      _timer = Timer(Duration(seconds: 2), () => _nextQuestion(false));
+    }
   }
 
   void _nextQuestion(bool immediately) {
@@ -88,6 +103,30 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
     // show loading screen while data is being fetched
     if (!_isDataLoaded) {
       return Center(child: CircularProgressIndicator());
+    }
+
+    if (!_isVocabulariesEnough) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Lottie.asset("assets/animation/fail.json", repeat: false, width: 500, fit: BoxFit.contain),
+            Padding(
+              padding: EdgeInsets.all(30),
+              child: Text(
+                "Die ausgewählte Kategorie hat nicht genug Vokabeln. Bitte wähle eine Kategorie mit mindestens 4 Vokablen aus.",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: Navigator.of(context).pop, child: Text("Beenden")),
+            SizedBox(height: 120),
+          ],
+        ),
+      );
     }
 
     // show the quiz once all data is loaded

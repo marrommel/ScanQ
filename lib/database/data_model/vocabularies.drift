@@ -62,7 +62,26 @@ allVocabularies: SELECT v.*, c.category_name, c.category_language,
     END AS is_learned
     FROM vocabularies AS v INNER JOIN categories AS c ON v.category_id = c.id;
 allCategoryVocabularies: SELECT * FROM vocabularies AS v WHERE v.category_id = :target_category_id;
-categoryLearnInfo: SELECT COUNT(is_learned) AS category_vocabs_total, SUM(is_learned) AS amount_learned
+someCategoryVocabularies: SELECT * FROM vocabularies AS v WHERE v.category_id = :target_category_id ORDER BY RANDOM() LIMIT :target_vocab_amount;
+someUntrainedCategoryVocabularies: WITH untrained_vocabs AS (
+                                       SELECT * FROM vocabularies
+                                       WHERE category_id = :target_category_id
+                                       AND right_answers > wrong_answers
+                                       ORDER BY RANDOM()
+                                       LIMIT :target_vocab_amount
+                                   ),
+                                   remaining_vocabs AS (
+                                       SELECT * FROM vocabularies
+                                       WHERE category_id = :target_category_id
+                                       AND id NOT IN (SELECT id FROM untrained_vocabs)
+                                       ORDER BY RANDOM()
+                                       LIMIT (:target_vocab_amount - (SELECT COUNT(*) FROM untrained_vocabs))
+                                   )
+                                   SELECT * FROM untrained_vocabs
+                                   UNION ALL
+                                   SELECT * FROM remaining_vocabs;
+
+categoryLearnInfo: SELECT COUNT(is_learned) AS category_vocabs_total,  COALESCE(SUM(is_learned), 0) AS amount_learned
     FROM (SELECT
         CASE
             WHEN right_answers > wrong_answers THEN 1

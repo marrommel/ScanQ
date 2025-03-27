@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.17.6 <3.0.0"
+  sdk: '>=3.0.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -61,6 +61,9 @@ dependencies:
   sentry_flutter: ^8.10.1
   flutter_modular: ^6.3.4
   auto_size_text: ^3.0.0
+  flutter_svg: ^1.1.6
+  url_launcher: ^6.1.14
+  device_info_plus: ^9.1.2
 
   #url_launcher_web: any
   #flutter_web_plugins: any
@@ -90,9 +93,16 @@ flutter:
   generate: true
   uses-material-design: true
 
+  fonts:
+    - family: ScanQFont
+      fonts:
+        - asset: assets/font/ScanQ.ttf
+
   assets:
+    - assets/icon/
     - assets/image/
     - assets/animation/
+    - assets/font/
 
 flutter_icons:
   android: "launcher_icon"

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_item.dart';
 
 import '../../database/database.dart';
@@ -8,51 +9,52 @@ import '../data/multiple_choice_item.dart';
 
 class QuizVocabularyLoader {
   List<Vocabulary> vocabularyList = [];
+  QuizConfig config;
+
+  QuizVocabularyLoader(this.config);
 
   // Async method to load vocabulary
   Future<void> loadVocabulary() async {
     final Database db = Modular.get<Database>();
-    vocabularyList = await db.allCategoryVocabularies(3).get();
+
+    if (config.onlyUntrained) {
+      vocabularyList = await db.someCategoryVocabularies(config.categoryId, config.totalQuestions).get();
+    } else {
+      vocabularyList = await db.someUntrainedCategoryVocabularies(config.categoryId, config.totalQuestions).get();
+    }
   }
 
   // Method to generate input quiz questions from the loaded vocabulary
-  List<QuizItem> generateInputQuizQuestions() {
-    List<QuizItem> inputQuizList = [];
+  List<QuizItem> generateQuizQuestions() {
+    List<QuizItem> quizQuestionList = [];
 
-    // Generate a set of 10 multiple-choice questions
+    // Generate a set of quiz questions
     for (Vocabulary vocab in vocabularyList) {
-      inputQuizList.add(QuizItem(vocab.vocLocal, vocab.vocForeign));
-
-      if (inputQuizList.length == 10) break;
+      if (config.reverseTranslation) {
+        quizQuestionList.add(QuizItem(vocab.vocForeign, vocab.vocLocal));
+      } else {
+        quizQuestionList.add(QuizItem(vocab.vocLocal, vocab.vocForeign));
+      }
     }
 
-    return inputQuizList;
-  }
-
-  // Method to generate input quiz questions from the loaded vocabulary
-  List<QuizItem> generateListeningQuizQuestions() {
-    List<QuizItem> listeningQuizList = [];
-
-    // Generate a set of 10 multiple-choice questions
-    for (Vocabulary vocab in vocabularyList) {
-      listeningQuizList.add(QuizItem(vocab.vocForeign, vocab.vocForeign));
-
-      if (listeningQuizList.length == 10) break;
-    }
-
-    return listeningQuizList;
+    return quizQuestionList;
   }
 
   // Method to generate multiple choice questions from the loaded vocabulary
-  List<MultipleChoiceItem> generateMultipleChoiceQuestions() {
+  List<MultipleChoiceItem>? generateMultipleChoiceQuestions() {
+    if (vocabularyList.length < 4) return null;
+
     List<MultipleChoiceItem> multipleChoiceList = [];
 
     // Generate a set of 10 multiple-choice questions
     for (Vocabulary vocab in vocabularyList) {
-      Set<String> wrongAnswers = _getWrongAnswers(vocabularyList, vocab.vocForeign);
-      multipleChoiceList.add(MultipleChoiceItem(vocab.vocLocal, vocab.vocForeign, wrongAnswers));
-
-      if (multipleChoiceList.length == 10) break;
+      if (config.reverseTranslation) {
+        Set<String> wrongAnswers = _getWrongAnswers(vocabularyList, vocab.vocLocal);
+        multipleChoiceList.add(MultipleChoiceItem(vocab.vocForeign, vocab.vocLocal, wrongAnswers));
+      } else {
+        Set<String> wrongAnswers = _getWrongAnswers(vocabularyList, vocab.vocForeign);
+        multipleChoiceList.add(MultipleChoiceItem(vocab.vocLocal, vocab.vocForeign, wrongAnswers));
+      }
     }
 
     return multipleChoiceList;
@@ -64,7 +66,13 @@ class QuizVocabularyLoader {
     Set<String> wrongAnswers = {};
     while (wrongAnswers.length < 3) {
       // Randomly select from the list of translations, making sure it's not the correct one
-      String wrongAnswer = vocabularyList[random.nextInt(vocabularyList.length)].vocForeign;
+      Vocabulary voc = vocabularyList[random.nextInt(vocabularyList.length)];
+
+      String wrongAnswer = voc.vocForeign;
+      if (config.reverseTranslation) {
+        wrongAnswer = voc.vocLocal;
+      }
+
       if (wrongAnswer != correctAnswer) {
         wrongAnswers.add(wrongAnswer);
       }

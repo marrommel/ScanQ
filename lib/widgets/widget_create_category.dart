@@ -46,6 +46,8 @@ class _CreateCategoryState extends State<CreateCategory> {
                 validator: (name) {
                   if (name == null || name.isEmpty) {
                     return AppLocalizations.of(context)!.pleaseEnterAName;
+                  } else if (name.length > 25) {
+                    return "Bitte gib einen kürzeren Namen für deine Kategorie ein.";
                   } else {
                     categoryName = name;
                     return null;
