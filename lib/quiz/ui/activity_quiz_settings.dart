@@ -13,7 +13,7 @@ import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_mode.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_offset_card.dart';
 
-import '../../common/widegt_vertical_slider.dart';
+import '../../common/widget_vertical_slider.dart';
 
 class ActivityQuizSettings extends StatefulWidget {
   final QuizMode quizMode;
