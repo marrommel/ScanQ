@@ -77,26 +77,23 @@ PODS:
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.46.0)
-  - sqlite3 (3.49.1):
-    - sqlite3/common (= 3.49.1)
-  - sqlite3/common (3.49.1)
-  - sqlite3/dbstatvtab (3.49.1):
+  - sqlite3 (3.47.1):
+    - sqlite3/common (= 3.47.1)
+  - sqlite3/common (3.47.1)
+  - sqlite3/dbstatvtab (3.47.1):
     - sqlite3/common
-  - sqlite3/fts5 (3.49.1):
+  - sqlite3/fts5 (3.47.1):
     - sqlite3/common
-  - sqlite3/math (3.49.1):
+  - sqlite3/perf-threadsafe (3.47.1):
     - sqlite3/common
-  - sqlite3/perf-threadsafe (3.49.1):
-    - sqlite3/common
-  - sqlite3/rtree (3.49.1):
+  - sqlite3/rtree (3.47.1):
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
     - FlutterMacOS
-    - sqlite3 (~> 3.49.1)
+    - sqlite3 (~> 3.47.1)
     - sqlite3/dbstatvtab
     - sqlite3/fts5
-    - sqlite3/math
     - sqlite3/perf-threadsafe
     - sqlite3/rtree
   - url_launcher_ios (0.0.1):
@@ -187,10 +184,10 @@ SPEC CHECKSUMS:
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   Sentry: da60d980b197a46db0b35ea12cb8f39af48d8854
   sentry_flutter: 6a134f9d381e49f22ea25a67736cf0cf4d02ec9c
-  sqlite3: fc1400008a9b3525f5914ed715a5d1af0b8f4983
-  sqlite3_flutter_libs: 487032b9008b28de37c72a3aa66849ef3745f3e6
+  sqlite3: 1e522f0938463e44b7faf50393b40bdc1e1e456d
+  sqlite3_flutter_libs: 1b4e98da20ebd4e9b1240269b78cdcf492dbe9f3
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
 
-PODFILE CHECKSUM: ae273562e2241d2b1bd4b6d2d349a48b8fe1a2a7
+PODFILE CHECKSUM: 4eb5a2ca32e537b203b832d16cc91500a2d67796
 
 COCOAPODS: 1.16.2
