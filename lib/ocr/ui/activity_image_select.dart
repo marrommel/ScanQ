@@ -45,14 +45,12 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     super.initState();
 
     // load the placeholder image once at the beginning
-    placeholderImage = Image.asset("assets/image/placeholder.png",
-        fit: BoxFit.cover, height: 200);
+    placeholderImage = Image.asset("assets/image/placeholder.png", fit: BoxFit.cover, height: 200);
   }
 
   @override
   Widget build(BuildContext context) {
-    bool allImagesProvided =
-        (_translationImageBytes == null) || (_vocabImageBytes == null);
+    bool allImagesProvided = (_translationImageBytes == null) || (_vocabImageBytes == null);
 
     return Scaffold(
       appBar: TransparentAppBar(),
@@ -108,9 +106,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                   }
                 },
                 child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(8),
-                        bottomLeft: Radius.circular(8)),
+                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
                     child: loadCorrectImage(target)
                     //createImageWidget(language == ScanLanguages.german ? _translationUpdatedImage ?? imageBytes : _vocabUpdatedImage ?? imageBytes,),
                     ),
@@ -127,17 +123,12 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                           Text(
                             heading,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 30),
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton(
-                                    onPressed: () => _imageSourceDialog(target),
-                                    child: Text("Bild wählen")),
-                              ]),
+                          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                            ElevatedButton(onPressed: () => _imageSourceDialog(target), child: Text("Bild wählen")),
+                          ]),
                         ]))),
           ]),
         ));
@@ -169,8 +160,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
         useSafeArea: true,
         builder: (BuildContext context) {
           return Dialog(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             backgroundColor: Colors.white,
             child: Padding(
               padding: EdgeInsets.all(20),
@@ -180,9 +170,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.image_rounded, size: 50),
-                      ElevatedButton(
-                          onPressed: () => _pickCamera(target),
-                          child: Text("Galerie")),
+                      ElevatedButton(onPressed: () => _pickGallery(target), child: Text("Galerie")),
                     ],
                   ),
                   SizedBox(width: 40),
@@ -190,9 +178,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.camera_alt, size: 50),
-                      ElevatedButton(
-                          onPressed: () => _pickGallery(target),
-                          child: Text("Kamera")),
+                      ElevatedButton(onPressed: () => _pickCamera(target), child: Text("Kamera")),
                     ],
                   ),
                 ],
@@ -208,8 +194,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
 
     File? image;
     try {
-      image = await DocumentScannerFlutter.launch(context,
-          source: ScannerFileSource.GALLERY);
+      image = await DocumentScannerFlutter.launch(context, source: ScannerFileSource.GALLERY);
     } on PlatformException {
       // 'Failed to get document path or operation cancelled!';
     }
@@ -223,8 +208,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
 
     File? image;
     try {
-      image = await DocumentScannerFlutter.launch(context,
-          source: ScannerFileSource.CAMERA);
+      image = await DocumentScannerFlutter.launch(context, source: ScannerFileSource.CAMERA);
       // `scannedDoc` will be the image file scanned from scanner
     } on PlatformException {
       // 'Failed to get document path or operation cancelled!';
@@ -274,8 +258,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     setState(() => {});
   }
 
-  Future<void> _callBoundingBoxActivity(
-      Uint8List imageBytes, ImageTarget target) async {
+  Future<void> _callBoundingBoxActivity(Uint8List imageBytes, ImageTarget target) async {
     List<RecognizedWord> scanRes;
     Set<int> removedWords;
 
@@ -331,34 +314,28 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
       _rawTranslations = OcrEngine.mergeWordsIntoLine(_rawTranslations);
 
       if (_rawVocabs.length != _rawTranslations.length) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-                "Unterschiedliche Anzahl von Vokabeln und Übersetzungen!")));
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Unterschiedliche Anzahl von Vokabeln und Übersetzungen!")));
         resetState(ImageTarget.both);
         return;
       }
 
       if (_rawVocabs.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Es konnten keine Wörter im Bild erkannt werden.")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Es konnten keine Wörter im Bild erkannt werden.")));
         resetState(ImageTarget.both);
         return;
       }
 
       List<VocabularyType> recognizedVocabs = [];
       for (int i = 0; i < _rawVocabs.length; i++) {
-        String vocab =
-            OcrEngine.correctRecognizedString(_rawVocabs[i].getText());
-        String translation =
-            OcrEngine.correctRecognizedString(_rawTranslations[i].getText());
+        String vocab = OcrEngine.correctRecognizedString(_rawVocabs[i].getText());
+        String translation = OcrEngine.correctRecognizedString(_rawTranslations[i].getText());
 
-        recognizedVocabs
-            .add(VocabularyType(vocabulary: vocab, translation: translation));
+        recognizedVocabs.add(VocabularyType(vocabulary: vocab, translation: translation));
       }
 
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) =>
-              ActivityScanResult(vocabularyData: recognizedVocabs)));
+      Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => ActivityScanResult(vocabularyData: recognizedVocabs)));
     }
   }
 

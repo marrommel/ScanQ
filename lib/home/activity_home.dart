@@ -13,7 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ActivityHome extends StatelessWidget {
   const ActivityHome({super.key});
 
-  Future<void> _sendFeedback() async {
+  Future<void> _sendFeedbackMail() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     String deviceData = "Unknown Device";
 
@@ -63,6 +63,13 @@ System: ${iosInfo.systemName}
     }
   }
 
+  Future<void> _openFeedbackSurvey() async {
+    final Uri surveyUri = Uri.parse("https://forms.gle/CkXPdGBrVjVdAXxx7");
+    if (await canLaunchUrl(surveyUri)) {
+      await launchUrl(surveyUri);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -92,7 +99,7 @@ System: ${iosInfo.systemName}
                 _buildImageButton(context, 'assets/icon/home_quiz.png', 'Quiz', ActivityQuizSelect()),
               ],
               null),
-          _buildFeedbackCard(_sendFeedback),
+          _buildFeedbackCard(_sendFeedbackMail, _openFeedbackSurvey),
         ],
       ),
     );
@@ -154,7 +161,7 @@ System: ${iosInfo.systemName}
   }
 
   /// Feedback Card Section
-  Widget _buildFeedbackCard(VoidCallback onFeedbackTap) {
+  Widget _buildFeedbackCard(VoidCallback onFeedbackTap, VoidCallback onContactTap) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -167,16 +174,28 @@ System: ${iosInfo.systemName}
                 "Vielen Dank, dass du die Beta-Version von ScanQ ausprobierst! Hast du Verbesserungen oder gab es Probleme?",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
             const SizedBox(height: 10),
-            Center(
-              child: ElevatedButton(
-                onPressed: onFeedbackTap,
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: onFeedbackTap,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
+                  child: const Text('Feedback geben', style: TextStyle(color: Colors.white, fontSize: 16)),
                 ),
-                child: const Text('Feedback geben', style: TextStyle(color: Colors.white, fontSize: 16)),
-              ),
+                ElevatedButton(
+                  onPressed: onContactTap,
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Kontakt aufnehmen', style: TextStyle(color: Colors.white, fontSize: 16)),
+                ),
+              ],
             ),
           ],
         ),
