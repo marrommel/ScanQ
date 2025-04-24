@@ -77,14 +77,20 @@ class _VocabulariesTable extends State<VocabulariesTable> {
   }
 
   void _showVocabEditOverlay(final BuildContext context, final Vocabulary vocabulary) async {
-    OverlayState? overlayState = Overlay.of(context);
-    OverlayEntry? entry;
-
-    entry = OverlayEntry(
-        builder: (BuildContext context) => Positioned(
-            child: ClipRRect(child: EditVocabulary(category: widget.category, vocabulary: vocabulary, parent: entry))));
-
-    overlayState.insert(entry);
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        useSafeArea: true,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: EditVocabulary(category: widget.category, vocabulary: vocabulary),
+            ),
+          );
+        });
   }
 
   Stream<List<TableRow>> getVocabularyRows(final Database db) =>
@@ -100,23 +106,26 @@ class _VocabulariesTable extends State<VocabulariesTable> {
               child: GestureDetector(
                   onTapDown: _getTapPosition,
                   onLongPress: () => _showContextMenu(context, vocabulary),
-                  child: Container(
-                      color: rowBackgroundColor,
-                      margin: const EdgeInsets.only(right: 2, bottom: 4),
-                      child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child:
-                              Text(vocabulary.vocForeign, style: const TextStyle(color: BrandColors.colorText, fontSize: 18)))))),
+                  child: Expanded(
+                      child: Container(
+                          color: rowBackgroundColor,
+                          margin: const EdgeInsets.only(right: 2, bottom: 4),
+                          child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(vocabulary.vocForeign,
+                                  style: const TextStyle(color: BrandColors.colorText, fontSize: 18))))))),
           TableCell(
               child: GestureDetector(
                   onTapDown: _getTapPosition,
                   onLongPress: () => _showContextMenu(context, vocabulary),
-                  child: Container(
-                      color: rowBackgroundColor,
-                      margin: const EdgeInsets.only(left: 2, bottom: 4),
-                      child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Text(vocabulary.vocLocal, style: const TextStyle(color: BrandColors.colorText, fontSize: 18))))))
+                  child: Expanded(
+                      child: Container(
+                          color: rowBackgroundColor,
+                          margin: const EdgeInsets.only(left: 2, bottom: 4),
+                          child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Text(vocabulary.vocLocal,
+                                  style: const TextStyle(color: BrandColors.colorText, fontSize: 18)))))))
         ]);
       }).watch();
 

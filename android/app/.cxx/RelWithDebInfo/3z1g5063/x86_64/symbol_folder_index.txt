@@ -1,0 +1,1 @@
+C:\Users\marro\AndroidStudioProjects\scanq_multiplatform\build\app\intermediates\cxx\RelWithDebInfo\3z1g5063\obj\x86_64

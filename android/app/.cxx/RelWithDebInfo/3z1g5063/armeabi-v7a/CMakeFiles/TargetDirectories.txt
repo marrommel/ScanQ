@@ -1,0 +1,2 @@
+C:/Users/marro/AndroidStudioProjects/scanq_multiplatform/android/app/.cxx/RelWithDebInfo/3z1g5063/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/marro/AndroidStudioProjects/scanq_multiplatform/android/app/.cxx/RelWithDebInfo/3z1g5063/armeabi-v7a/CMakeFiles/rebuild_cache.dir

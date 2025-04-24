@@ -37,21 +37,18 @@ class _ActivityQuizSelectState extends State<ActivityQuizSelect> {
               alignment: WrapAlignment.spaceAround,
               children: QuizMode.values.map((mode) => _buildQuizButton(mode)).toList(),
             ),
-            // ElevatedButton(
-            //   onPressed: _selectedMode == null || _selectedMode == QuizMode.comingSoon
-            //       ? null
-            //       : () {
-            //
-            //         },
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: Colors.teal,
-            //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            //     padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-            //   ),
-            //   child: const Text('weiter', style: TextStyle(color: Colors.white, fontSize: 18)),
-            // ),
           ],
         ));
+  }
+
+  @override
+  void dispose() {
+    // Reset to default when leaving this screen
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
+    super.dispose();
   }
 
   Widget _buildQuizButton(QuizMode mode) {

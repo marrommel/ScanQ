@@ -3,15 +3,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/database/database.dart';
 
-import '../common/brand_colors.dart';
 import '../common/tools.dart';
+
+// TODO: rework this (maximized height, save button as external logic)
 
 class EditVocabulary extends StatefulWidget {
   final Category category;
   final Vocabulary vocabulary;
-  final OverlayEntry? parent;
 
-  const EditVocabulary({super.key, required this.category, required this.vocabulary, required this.parent});
+  const EditVocabulary({super.key, required this.category, required this.vocabulary});
 
   @override
   State<EditVocabulary> createState() => _EditVocabulary();
@@ -29,8 +29,7 @@ class _EditVocabulary extends State<EditVocabulary> {
       Text(AppLocalizations.of(context)!.editVocabulary),
       Form(
           key: _editVocabularyFormKey,
-          child: Material(
-              child: Column(children: [
+          child: Column(children: [
             TextFormField(
                 initialValue: widget.vocabulary.vocLocal,
                 decoration: InputDecoration(
@@ -75,15 +74,8 @@ class _EditVocabulary extends State<EditVocabulary> {
                     }
                   }
                 },
-                style: ButtonStyle(backgroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
-                  if (states.contains(WidgetState.pressed) || states.contains(WidgetState.hovered)) {
-                    return BrandColors.colorPrimaryDark;
-                  } else {
-                    return BrandColors.colorPrimary;
-                  }
-                })),
                 child: Text(AppLocalizations.of(context)!.save))
-          ])))
+          ]))
     ]);
   }
 }

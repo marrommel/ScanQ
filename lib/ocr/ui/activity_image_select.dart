@@ -53,7 +53,6 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     return Scaffold(
       appBar: TransparentAppBar(),
       body: Column(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        SizedBox(height: 50),
         createScanCard(ScanLanguages.english),
         createScanCard(ScanLanguages.german),
         ElevatedButton(

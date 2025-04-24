@@ -7,6 +7,7 @@ import 'package:scanq_multiplatform/common/brand_colors.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_metadata.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_mode.dart';
+import 'package:scanq_multiplatform/quiz/ui/widgets/widget_quiz_header.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_top_curve.dart';
 
 import '../data/multiple_choice_item.dart';
@@ -137,46 +138,7 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    "${_metadata.questionIndex + 1} / ${_metadata.totalQuestions}",
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.star, color: Colors.black),
-                      SizedBox(width: 5),
-                      Text("${_metadata.score}",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          )),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          QuizHeader(metadata: _metadata),
           Spacer(),
           Text(
             "Übersetze",

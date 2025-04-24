@@ -26,6 +26,8 @@ class ActivityQuizSettings extends StatefulWidget {
 
 enum TtsSpeed { fast, normal, slow }
 
+// vokabeln leer => buttons to scan / eingeben, anzahl umbenneen, kategorien ausgrauen im m/c bei weniger als 4
+
 class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
   List<Category> categories = [];
   Set<String> categoryNames = {};
@@ -353,5 +355,15 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Reset to default when leaving this screen
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
+    super.dispose();
   }
 }
