@@ -1,15 +1,16 @@
 PODS:
-  - cunning_document_scanner (1.0.0):
-    - Flutter
   - device_info_plus (0.0.1):
     - Flutter
+  - document_scanner_flutter (0.0.1):
+    - Flutter
+    - WeScan (>= 0.9)
   - Flutter (1.0.0)
   - flutter_tts (0.0.1):
     - Flutter
-  - google_mlkit_commons (0.9.0):
+  - google_mlkit_commons (0.11.0):
     - Flutter
     - MLKitVision
-  - google_mlkit_text_recognition (0.14.0):
+  - google_mlkit_text_recognition (0.15.0):
     - Flutter
     - google_mlkit_commons
     - GoogleMLKit/TextRecognition (~> 7.0.0)
@@ -73,35 +74,39 @@ PODS:
     - Flutter
   - PromisesObjC (2.4.0)
   - Sentry/HybridSDK (8.46.0)
-  - sentry_flutter (8.14.1):
+  - sentry_flutter (8.14.2):
     - Flutter
     - FlutterMacOS
     - Sentry/HybridSDK (= 8.46.0)
-  - sqlite3 (3.47.1):
-    - sqlite3/common (= 3.47.1)
-  - sqlite3/common (3.47.1)
-  - sqlite3/dbstatvtab (3.47.1):
+  - sqlite3 (3.49.1):
+    - sqlite3/common (= 3.49.1)
+  - sqlite3/common (3.49.1)
+  - sqlite3/dbstatvtab (3.49.1):
     - sqlite3/common
-  - sqlite3/fts5 (3.47.1):
+  - sqlite3/fts5 (3.49.1):
     - sqlite3/common
-  - sqlite3/perf-threadsafe (3.47.1):
+  - sqlite3/math (3.49.1):
     - sqlite3/common
-  - sqlite3/rtree (3.47.1):
+  - sqlite3/perf-threadsafe (3.49.1):
+    - sqlite3/common
+  - sqlite3/rtree (3.49.1):
     - sqlite3/common
   - sqlite3_flutter_libs (0.0.1):
     - Flutter
     - FlutterMacOS
-    - sqlite3 (~> 3.47.1)
+    - sqlite3 (~> 3.49.1)
     - sqlite3/dbstatvtab
     - sqlite3/fts5
+    - sqlite3/math
     - sqlite3/perf-threadsafe
     - sqlite3/rtree
   - url_launcher_ios (0.0.1):
     - Flutter
+  - WeScan (1.7.0)
 
 DEPENDENCIES:
-  - cunning_document_scanner (from `.symlinks/plugins/cunning_document_scanner/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
+  - document_scanner_flutter (from `.symlinks/plugins/document_scanner_flutter/ios`)
   - Flutter (from `Flutter`)
   - flutter_tts (from `.symlinks/plugins/flutter_tts/ios`)
   - google_mlkit_commons (from `.symlinks/plugins/google_mlkit_commons/ios`)
@@ -130,12 +135,13 @@ SPEC REPOS:
     - PromisesObjC
     - Sentry
     - sqlite3
+    - WeScan
 
 EXTERNAL SOURCES:
-  cunning_document_scanner:
-    :path: ".symlinks/plugins/cunning_document_scanner/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
+  document_scanner_flutter:
+    :path: ".symlinks/plugins/document_scanner_flutter/ios"
   Flutter:
     :path: Flutter
   flutter_tts:
@@ -160,12 +166,12 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  cunning_document_scanner: 7cb9bd173f7cc7b11696dde98d01492187fc3a67
-  device_info_plus: c6fb39579d0f423935b0c9ce7ee2f44b71b9fce6
+  device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
+  document_scanner_flutter: cbbff63c2e3060e0593729cea2596120b62e794c
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_tts: 0f492aab6accf87059b72354fcb4ba934304771d
-  google_mlkit_commons: 384e4e206e122b6dad430d3158205e0b2fac6789
-  google_mlkit_text_recognition: e540f2aff997f2b0daaa1b4fd5ead3b0b7030adc
+  google_mlkit_commons: 2544377e5503bf78ee7412ccfce0394c2dcb8a6b
+  google_mlkit_text_recognition: c30828d00af79c10dc56bed2c6a4ca8b7dd40a50
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleMLKit: eff9e23ec1d90ea4157a1ee2e32a4f610c5b3318
   GoogleToolboxForMac: d1a2cbf009c453f4d6ded37c105e2f67a32206d8
@@ -183,11 +189,12 @@ SPEC CHECKSUMS:
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   Sentry: da60d980b197a46db0b35ea12cb8f39af48d8854
-  sentry_flutter: 6a134f9d381e49f22ea25a67736cf0cf4d02ec9c
-  sqlite3: 1e522f0938463e44b7faf50393b40bdc1e1e456d
-  sqlite3_flutter_libs: 1b4e98da20ebd4e9b1240269b78cdcf492dbe9f3
+  sentry_flutter: 2df8b0aab7e4aba81261c230cbea31c82a62dd1b
+  sqlite3: fc1400008a9b3525f5914ed715a5d1af0b8f4983
+  sqlite3_flutter_libs: 487032b9008b28de37c72a3aa66849ef3745f3e6
   url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  WeScan: fed582f6c38014d529afb5aa9ffd1bad38fc72b7
 
-PODFILE CHECKSUM: 4eb5a2ca32e537b203b832d16cc91500a2d67796
+PODFILE CHECKSUM: 2cf0a6935462dad0e08f63c28c81124f2bd61554
 
 COCOAPODS: 1.16.2

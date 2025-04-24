@@ -47,8 +47,10 @@ post_install do |installer|
 
         ## dart: PermissionGroup.camera
         'PERMISSION_CAMERA=1',
-      ]
 
+         ## dart: PermissionGroup.photos
+         'PERMISSION_PHOTOS=1',
+      ]
     end
     # End of the permission_handler configuration
   end
