@@ -1,8 +1,10 @@
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:cunning_document_scanner/cunning_document_scanner.dart';
+import 'package:document_scanner_flutter/configs/configs.dart';
+import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../common/transparent_app_bar.dart';
 import '../../common/vocabulary_type.dart';
@@ -43,12 +45,14 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     super.initState();
 
     // load the placeholder image once at the beginning
-    placeholderImage = Image.asset("assets/image/placeholder.png", fit: BoxFit.cover, height: 200);
+    placeholderImage = Image.asset("assets/image/placeholder.png",
+        fit: BoxFit.cover, height: 200);
   }
 
   @override
   Widget build(BuildContext context) {
-    bool allImagesProvided = (_translationImageBytes == null) || (_vocabImageBytes == null);
+    bool allImagesProvided =
+        (_translationImageBytes == null) || (_vocabImageBytes == null);
 
     return Scaffold(
       appBar: TransparentAppBar(),
@@ -100,11 +104,13 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                   if (imageBytes != null) {
                     _callBoundingBoxActivity(imageBytes, target);
                   } else {
-                    _pickImage(target: target);
+                    _imageSourceDialog(target);
                   }
                 },
                 child: ClipRRect(
-                    borderRadius: const BorderRadius.only(topLeft: Radius.circular(8), bottomLeft: Radius.circular(8)),
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        bottomLeft: Radius.circular(8)),
                     child: loadCorrectImage(target)
                     //createImageWidget(language == ScanLanguages.german ? _translationUpdatedImage ?? imageBytes : _vocabUpdatedImage ?? imageBytes,),
                     ),
@@ -121,12 +127,17 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                           Text(
                             heading,
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 30),
-                          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                            ElevatedButton(onPressed: () => _pickImage(target: target), child: Text("Bild wählen")),
-                          ]),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                ElevatedButton(
+                                    onPressed: () => _imageSourceDialog(target),
+                                    child: Text("Bild wählen")),
+                              ]),
                         ]))),
           ]),
         ));
@@ -151,50 +162,120 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     return Image.memory(imageBytes, fit: BoxFit.cover, height: 200);
   }
 
-  Future<void> _pickImage({required ImageTarget target}) async {
-    // load the image using the cunning document scanner
-    final imagePath = await CunningDocumentScanner.getPictures(noOfPages: 1, isGalleryImportAllowed: true);
-
-    // check if an image has been loaded correctly
-    if (imagePath != null) {
-      // initialise the OCR engine for the selected image
-      final OcrEngine ocrEngine = OcrEngine(imagePath: imagePath.first);
-
-      // reset the according state variables of a new image has been loaded
-      resetState(target);
-
-      // check if a vocabulary image is provided
-      if (target == ImageTarget.vocabulary) {
-        // update the vocabulary image view once the image is loaded
-        _vocabImageBytes = await File(imagePath.first).readAsBytes();
-
-        // call the OCR Engine to extract vocabulary form the image
-        _rawVocabs = await ocrEngine.extractWords();
-
-        // TODO: check if this is sufficiently replaced by function call above
-        // reset the set for manually removed vocabs
-        //_removedVocabs = {};
-      } else if (target == ImageTarget.translation) {
-        // if no vocabulary image has been provided, assume it is a translation image
-        // update the translations image view once the image is loaded
-        _translationImageBytes = await File(imagePath.first).readAsBytes();
-
-        // call the OCR Engine to extract translation form the image
-        _rawTranslations = await ocrEngine.extractWords();
-
-        // TODO: check if this is sufficiently replaced by function call above
-        //reset the set for manually removed translations
-        //_removedTranslations = {};
-      } else {
-        throw Exception("INVALID IMAGE TARGET HAS BEEN PASSED!");
-      }
-
-      // refresh the ui
-      setState(() => {});
-    }
+  void _imageSourceDialog(ImageTarget target) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        useSafeArea: true,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.image_rounded, size: 50),
+                      ElevatedButton(
+                          onPressed: () => _pickCamera(target),
+                          child: Text("Galerie")),
+                    ],
+                  ),
+                  SizedBox(width: 40),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.camera_alt, size: 50),
+                      ElevatedButton(
+                          onPressed: () => _pickGallery(target),
+                          child: Text("Kamera")),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 
-  Future<void> _callBoundingBoxActivity(Uint8List imageBytes, ImageTarget target) async {
+  Future<void> _pickGallery(ImageTarget target) async {
+    // request the required permission
+    requestGalleryPermission();
+
+    File? image;
+    try {
+      image = await DocumentScannerFlutter.launch(context,
+          source: ScannerFileSource.GALLERY);
+    } on PlatformException {
+      // 'Failed to get document path or operation cancelled!';
+    }
+
+    if (image != null) _processImage(target, image.path);
+  }
+
+  Future<void> _pickCamera(ImageTarget target) async {
+    // request the required permission
+    requestCameraPermission();
+
+    File? image;
+    try {
+      image = await DocumentScannerFlutter.launch(context,
+          source: ScannerFileSource.CAMERA);
+      // `scannedDoc` will be the image file scanned from scanner
+    } on PlatformException {
+      // 'Failed to get document path or operation cancelled!';
+    }
+
+    if (image != null) _processImage(target, image.path);
+  }
+
+  Future<void> _processImage(ImageTarget target, String imagePath) async {
+    // load the image using the cunning document scanner
+    //final imagePath = await CunningDocumentScanner.getPictures(
+    //  noOfPages: 1, isGalleryImportAllowed: true);
+
+    // initialise the OCR engine for the selected image
+    final OcrEngine ocrEngine = OcrEngine(imagePath: imagePath);
+
+    // reset the according state variables of a new image has been loaded
+    resetState(target);
+
+    // check if a vocabulary image is provided
+    if (target == ImageTarget.vocabulary) {
+      // update the vocabulary image view once the image is loaded
+      _vocabImageBytes = await File(imagePath).readAsBytes();
+
+      // call the OCR Engine to extract vocabulary form the image
+      _rawVocabs = await ocrEngine.extractWords();
+
+      // TODO: check if this is sufficiently replaced by function call above
+      // reset the set for manually removed vocabs
+      //_removedVocabs = {};
+    } else if (target == ImageTarget.translation) {
+      // if no vocabulary image has been provided, assume it is a translation image
+      // update the translations image view once the image is loaded
+      _translationImageBytes = await File(imagePath).readAsBytes();
+
+      // call the OCR Engine to extract translation form the image
+      _rawTranslations = await ocrEngine.extractWords();
+
+      // TODO: check if this is sufficiently replaced by function call above
+      //reset the set for manually removed translations
+      //_removedTranslations = {};
+    } else {
+      throw Exception("INVALID IMAGE TARGET HAS BEEN PASSED!");
+    }
+
+    // refresh the ui
+    setState(() => {});
+  }
+
+  Future<void> _callBoundingBoxActivity(
+      Uint8List imageBytes, ImageTarget target) async {
     List<RecognizedWord> scanRes;
     Set<int> removedWords;
 
@@ -250,28 +331,34 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
       _rawTranslations = OcrEngine.mergeWordsIntoLine(_rawTranslations);
 
       if (_rawVocabs.length != _rawTranslations.length) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Unterschiedliche Anzahl von Vokabeln und Übersetzungen!")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+                "Unterschiedliche Anzahl von Vokabeln und Übersetzungen!")));
         resetState(ImageTarget.both);
         return;
       }
 
       if (_rawVocabs.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Es konnten keine Wörter im Bild erkannt werden.")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text("Es konnten keine Wörter im Bild erkannt werden.")));
         resetState(ImageTarget.both);
         return;
       }
 
       List<VocabularyType> recognizedVocabs = [];
       for (int i = 0; i < _rawVocabs.length; i++) {
-        String vocab = OcrEngine.correctRecognizedString(_rawVocabs[i].getText());
-        String translation = OcrEngine.correctRecognizedString(_rawTranslations[i].getText());
+        String vocab =
+            OcrEngine.correctRecognizedString(_rawVocabs[i].getText());
+        String translation =
+            OcrEngine.correctRecognizedString(_rawTranslations[i].getText());
 
-        recognizedVocabs.add(VocabularyType(vocabulary: vocab, translation: translation));
+        recognizedVocabs
+            .add(VocabularyType(vocabulary: vocab, translation: translation));
       }
 
-      Navigator.of(context)
-          .pushReplacement(MaterialPageRoute(builder: (context) => ActivityScanResult(vocabularyData: recognizedVocabs)));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) =>
+              ActivityScanResult(vocabularyData: recognizedVocabs)));
     }
   }
 
@@ -294,5 +381,25 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
 
     // refresh the ui
     setState(() => {});
+  }
+
+  Future<void> requestCameraPermission() async {
+    final status = await Permission.camera.request();
+
+    if (status.isDenied) {
+      Navigator.pop(context);
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings();
+    }
+  }
+
+  Future<void> requestGalleryPermission() async {
+    final status = await Permission.mediaLibrary.request();
+
+    if (status.isDenied) {
+      Navigator.pop(context);
+    } else if (status.isPermanentlyDenied) {
+      openAppSettings();
+    }
   }
 }
