@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scanq_multiplatform/common/brand_colors.dart';
@@ -22,10 +24,12 @@ class _ActivityQuizSelectState extends State<ActivityQuizSelect> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: BrandColors.colorPrimary,
-      statusBarIconBrightness: Brightness.light,
-    ));
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: BrandColors.colorPrimary,
+        statusBarIconBrightness: Brightness.light,
+      ));
+    }
 
     return Scaffold(
         backgroundColor: BrandColors.colorPrimary,
@@ -43,11 +47,14 @@ class _ActivityQuizSelectState extends State<ActivityQuizSelect> {
 
   @override
   void dispose() {
-    // Reset to default when leaving this screen
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+    if (Platform.isAndroid) {
+      // Reset to default when leaving this screen
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ));
+    }
+
     super.dispose();
   }
 

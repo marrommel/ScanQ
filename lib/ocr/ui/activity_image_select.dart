@@ -1,16 +1,15 @@
 import 'dart:io';
 
-import 'package:document_scanner_flutter/configs/configs.dart';
-import 'package:document_scanner_flutter/document_scanner_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../common/transparent_app_bar.dart';
 import '../../common/vocabulary_type.dart';
 import '../data/recognized_word.dart';
 import '../logic/ocr_engine.dart';
 import 'activity_remove_bounding_boxes.dart';
+import 'activity_scan_image.dart';
 import 'activity_scan_result.dart';
 
 class ActivityImageSelect extends StatefulWidget {
@@ -102,7 +101,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                   if (imageBytes != null) {
                     _callBoundingBoxActivity(imageBytes, target);
                   } else {
-                    _imageSourceDialog(target);
+                    _pickImage(target);
                   }
                 },
                 child: ClipRRect(
@@ -127,7 +126,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                           ),
                           SizedBox(height: 30),
                           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                            ElevatedButton(onPressed: () => _imageSourceDialog(target), child: Text("Bild wählen")),
+                            ElevatedButton(onPressed: () => _pickImage(target), child: Text("Bild wählen")),
                           ]),
                         ]))),
           ]),
@@ -153,68 +152,35 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     return Image.memory(imageBytes, fit: BoxFit.cover, height: 200);
   }
 
-  void _imageSourceDialog(ImageTarget target) {
-    showDialog(
-        context: context,
-        barrierDismissible: true,
-        useSafeArea: true,
-        builder: (BuildContext context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-            backgroundColor: Colors.white,
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.image_rounded, size: 50),
-                      ElevatedButton(onPressed: () => _pickGallery(target), child: Text("Galerie")),
-                    ],
-                  ),
-                  SizedBox(width: 40),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.camera_alt, size: 50),
-                      ElevatedButton(onPressed: () => _pickCamera(target), child: Text("Kamera")),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
-
-  Future<void> _pickGallery(ImageTarget target) async {
-    // request the required permission
-    requestGalleryPermission();
-
+  Future<void> _pickImage(ImageTarget target) async {
     File? image;
     try {
-      image = await DocumentScannerFlutter.launch(context, source: ScannerFileSource.GALLERY);
+      final Uint8List? scannedImageBytes = await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ActivityScanImage()),
+      );
+
+      if (scannedImageBytes != null) {
+        final tempDir = await getTemporaryDirectory();
+        final file = await File('${tempDir.path}/fghfgzhj.png').create();
+        file.writeAsBytesSync(scannedImageBytes);
+
+        image = file;
+        print("TAP_ success! Image saved to: ${image?.path}");
+      } else {
+        print("TAP_ User cancelled the scan or no image was returned.");
+        image = null; // Ensure image is null if no image is returned
+      }
     } on PlatformException {
+      print("TAP_ Failed to get document path or operation cancelled!");
+      image = null; // Ensure image is null in case of an exception
       // 'Failed to get document path or operation cancelled!';
     }
 
-    if (image != null) _processImage(target, image.path);
-  }
-
-  Future<void> _pickCamera(ImageTarget target) async {
-    // request the required permission
-    requestCameraPermission();
-
-    File? image;
-    try {
-      image = await DocumentScannerFlutter.launch(context, source: ScannerFileSource.CAMERA);
-      // `scannedDoc` will be the image file scanned from scanner
-    } on PlatformException {
-      // 'Failed to get document path or operation cancelled!';
-    }
-
-    if (image != null) _processImage(target, image.path);
+    if (image != null)
+      _processImage(target, image.path);
+    else
+      print("TAP_ User cancelled the scan or no image was returned.");
   }
 
   Future<void> _processImage(ImageTarget target, String imagePath) async {
@@ -235,10 +201,6 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
 
       // call the OCR Engine to extract vocabulary form the image
       _rawVocabs = await ocrEngine.extractWords();
-
-      // TODO: check if this is sufficiently replaced by function call above
-      // reset the set for manually removed vocabs
-      //_removedVocabs = {};
     } else if (target == ImageTarget.translation) {
       // if no vocabulary image has been provided, assume it is a translation image
       // update the translations image view once the image is loaded
@@ -246,10 +208,6 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
 
       // call the OCR Engine to extract translation form the image
       _rawTranslations = await ocrEngine.extractWords();
-
-      // TODO: check if this is sufficiently replaced by function call above
-      //reset the set for manually removed translations
-      //_removedTranslations = {};
     } else {
       throw Exception("INVALID IMAGE TARGET HAS BEEN PASSED!");
     }
@@ -358,25 +316,5 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
 
     // refresh the ui
     setState(() => {});
-  }
-
-  Future<void> requestCameraPermission() async {
-    final status = await Permission.camera.request();
-
-    if (status.isDenied) {
-      Navigator.pop(context);
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
-    }
-  }
-
-  Future<void> requestGalleryPermission() async {
-    final status = await Permission.mediaLibrary.request();
-
-    if (status.isDenied) {
-      Navigator.pop(context);
-    } else if (status.isPermanentlyDenied) {
-      openAppSettings();
-    }
   }
 }

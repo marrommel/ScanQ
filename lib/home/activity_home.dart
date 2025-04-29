@@ -73,7 +73,7 @@ System: ${iosInfo.systemName}
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 10, 15, 30),
+      padding: const EdgeInsets.fromLTRB(15, 10, 15, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -99,7 +99,7 @@ System: ${iosInfo.systemName}
                 _buildImageButton(context, 'assets/icon/home_quiz.png', 'Quiz', ActivityQuizSelect()),
               ],
               null),
-          _buildFeedbackCard(_sendFeedbackMail, _openFeedbackSurvey),
+          _buildFeedbackCard(_openFeedbackSurvey, _sendFeedbackMail),
         ],
       ),
     );
@@ -184,7 +184,7 @@ System: ${iosInfo.systemName}
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text('Feedback geben', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  child: const Text('Feedback', style: TextStyle(color: Colors.white, fontSize: 16)),
                 ),
                 ElevatedButton(
                   onPressed: onContactTap,
@@ -193,7 +193,7 @@ System: ${iosInfo.systemName}
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text('Kontakt aufnehmen', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  child: const Text('Kontakt', style: TextStyle(color: Colors.white, fontSize: 16)),
                 ),
               ],
             ),

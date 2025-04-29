@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -101,10 +102,12 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: BrandColors.colorPrimary,
-      statusBarIconBrightness: Brightness.light,
-    ));
+    if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: BrandColors.colorPrimary,
+        statusBarIconBrightness: Brightness.light,
+      ));
+    }
 
     double headingFontSize = 20;
 
@@ -359,11 +362,14 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
 
   @override
   void dispose() {
-    // Reset to default when leaving this screen
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+    if (Platform.isAndroid) {
+      // Reset to default when leaving this screen
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ));
+    }
+
     super.dispose();
   }
 }
