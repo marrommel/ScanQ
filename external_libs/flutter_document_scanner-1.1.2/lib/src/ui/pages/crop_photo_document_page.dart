@@ -101,20 +101,20 @@ class _CropPhotoDocumentPageState extends State<CropPhotoDocumentPage> {
                   dotUtils: DotUtils(minDistanceDots: widget.cropPhotoDocumentStyle.minDistanceDots),
                   imageUtils: ImageUtils(),
                 )..add(
-                  CropAreaInitialized(
-                    areaInitial: context.read<AppBloc>().state.contourInitial,
-                    defaultAreaInitial: widget.cropPhotoDocumentStyle.defaultAreaInitial,
-                    image: imageFile,
-                    screenSize: screenSize,
-                    //positionImage: margins,
-                    positionImage: Rect.fromLTRB(
+                    CropAreaInitialized(
+                      areaInitial: context.read<AppBloc>().state.contourInitial,
+                      defaultAreaInitial: widget.cropPhotoDocumentStyle.defaultAreaInitial,
+                      image: imageFile,
+                      screenSize: screenSize,
+                      positionImage: margins,
+                      /*positionImage: Rect.fromLTRB(
                       widget.cropPhotoDocumentStyle.left,
                       widget.cropPhotoDocumentStyle.top,
                       widget.cropPhotoDocumentStyle.right,
                       widget.cropPhotoDocumentStyle.bottom,
+                    ),*/
                     ),
                   ),
-                ),
                 child: _CropView(
                   cropPhotoDocumentStyle: widget.cropPhotoDocumentStyle,
                   image: imageFile,
@@ -213,11 +213,11 @@ class _CropViewState extends State<_CropView> {
           listener: (context, state) {
             if (state.imageCropped != null) {
               context.read<AppBloc>().add(
-                AppLoadCroppedPhoto(
-                  image: state.imageCropped!,
-                  area: state.areaParsed!,
-                ),
-              );
+                    AppLoadCroppedPhoto(
+                      image: state.imageCropped!,
+                      area: state.areaParsed!,
+                    ),
+                  );
             }
           },
         ),
@@ -226,14 +226,14 @@ class _CropViewState extends State<_CropView> {
         fit: StackFit.expand,
         children: [
           Positioned(
-            /*top: computedTop,
+            top: computedTop,
             bottom: computedBottom,
             left: computedLeft,
-            right: computedRight,*/
-            top: widget.cropPhotoDocumentStyle.top,
+            right: computedRight,
+            /* top: widget.cropPhotoDocumentStyle.top,
             bottom: widget.cropPhotoDocumentStyle.bottom,
             left: widget.cropPhotoDocumentStyle.left,
-            right: widget.cropPhotoDocumentStyle.right,
+            right: widget.cropPhotoDocumentStyle.right,*/
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -278,12 +278,12 @@ class _CropViewState extends State<_CropView> {
                     return GestureDetector(
                       onPanUpdate: (details) {
                         context.read<CropBloc>().add(
-                          CropDotMoved(
-                            deltaX: details.delta.dx,
-                            deltaY: details.delta.dy,
-                            dotPosition: DotPosition.all,
-                          ),
-                        );
+                              CropDotMoved(
+                                deltaX: details.delta.dx,
+                                deltaY: details.delta.dy,
+                                dotPosition: DotPosition.all,
+                              ),
+                            );
                       },
                       child: Container(
                         color: Colors.transparent,
@@ -304,12 +304,12 @@ class _CropViewState extends State<_CropView> {
                       child: GestureDetector(
                         onPanUpdate: (details) {
                           context.read<CropBloc>().add(
-                            CropDotMoved(
-                              deltaX: details.delta.dx,
-                              deltaY: details.delta.dy,
-                              dotPosition: DotPosition.topLeft,
-                            ),
-                          );
+                                CropDotMoved(
+                                  deltaX: details.delta.dx,
+                                  deltaY: details.delta.dy,
+                                  dotPosition: DotPosition.topLeft,
+                                ),
+                              );
                         },
                         child: Container(
                           color: Colors.transparent,
@@ -343,12 +343,12 @@ class _CropViewState extends State<_CropView> {
                       child: GestureDetector(
                         onPanUpdate: (details) {
                           context.read<CropBloc>().add(
-                            CropDotMoved(
-                              deltaX: details.delta.dx,
-                              deltaY: details.delta.dy,
-                              dotPosition: DotPosition.topRight,
-                            ),
-                          );
+                                CropDotMoved(
+                                  deltaX: details.delta.dx,
+                                  deltaY: details.delta.dy,
+                                  dotPosition: DotPosition.topRight,
+                                ),
+                              );
                         },
                         child: Container(
                           color: Colors.transparent,
@@ -382,12 +382,12 @@ class _CropViewState extends State<_CropView> {
                       child: GestureDetector(
                         onPanUpdate: (details) {
                           context.read<CropBloc>().add(
-                            CropDotMoved(
-                              deltaX: details.delta.dx,
-                              deltaY: details.delta.dy,
-                              dotPosition: DotPosition.bottomLeft,
-                            ),
-                          );
+                                CropDotMoved(
+                                  deltaX: details.delta.dx,
+                                  deltaY: details.delta.dy,
+                                  dotPosition: DotPosition.bottomLeft,
+                                ),
+                              );
                         },
                         child: Container(
                           color: Colors.transparent,
@@ -421,12 +421,12 @@ class _CropViewState extends State<_CropView> {
                       child: GestureDetector(
                         onPanUpdate: (details) {
                           context.read<CropBloc>().add(
-                            CropDotMoved(
-                              deltaX: details.delta.dx,
-                              deltaY: details.delta.dy,
-                              dotPosition: DotPosition.bottomRight,
-                            ),
-                          );
+                                CropDotMoved(
+                                  deltaX: details.delta.dx,
+                                  deltaY: details.delta.dy,
+                                  dotPosition: DotPosition.bottomRight,
+                                ),
+                              );
                         },
                         child: Container(
                           color: Colors.transparent,
