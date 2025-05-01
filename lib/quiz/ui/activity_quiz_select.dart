@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:scanq_multiplatform/common/brand_colors.dart';
+import 'package:scanq_multiplatform/common/data/brand_colors.dart';
+import 'package:scanq_multiplatform/common/ui/widget_floating_add_button.dart';
 import 'package:scanq_multiplatform/quiz/ui/activity_quiz_settings.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_offset_card.dart';
 
@@ -33,6 +34,7 @@ class _ActivityQuizSelectState extends State<ActivityQuizSelect> {
 
     return Scaffold(
         backgroundColor: BrandColors.colorPrimary,
+        floatingActionButton: FloatingAddButton(),
         body: OffsetCard(
           heading: "Quiz auswählen",
           children: [
@@ -89,7 +91,7 @@ class _ActivityQuizSelectState extends State<ActivityQuizSelect> {
               isDisabled ? const SizedBox(width: 1) : Image.asset(quizIcons[mode.index], width: 60, height: 60),
               const SizedBox(height: 8),
               Text(
-                isDisabled ? 'Weitere Quiz bald verfügbar' : quizNames[mode.index],
+                isDisabled ? 'Weitere Quiz in Entwicklung' : quizNames[mode.index],
                 maxLines: 3,
                 textAlign: TextAlign.center,
                 style: TextStyle(

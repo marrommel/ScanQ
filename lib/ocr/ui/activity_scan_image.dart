@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_document_scanner/flutter_document_scanner.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../common/brand_colors.dart';
-import '../../common/permission_handler.dart';
+import '../../common/data/brand_colors.dart';
+import '../../common/logic/permission_handler.dart';
 
 class ActivityScanImage extends StatefulWidget {
   const ActivityScanImage({super.key});

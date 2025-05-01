@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../../common/brand_colors.dart';
+import '../../../common/data/brand_colors.dart';
 
 class TopCurve extends StatelessWidget {
   const TopCurve({super.key});

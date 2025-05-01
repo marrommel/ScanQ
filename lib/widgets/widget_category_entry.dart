@@ -6,7 +6,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/database/database.dart';
 import 'package:scanq_multiplatform/layouts/activity_vocabulary_book.dart';
 
-import '../common/brand_colors.dart';
+import '../common/data/brand_colors.dart';
 
 enum CategoryOptions { optionDelete, optionEdit }
 

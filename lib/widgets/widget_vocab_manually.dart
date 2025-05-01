@@ -4,8 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/database/database.dart';
 
-import '../common/brand_colors.dart';
-import '../common/tools.dart';
+import '../common/data/brand_colors.dart';
+import '../common/logic/tools.dart';
 
 class VocabManually extends StatefulWidget {
   const VocabManually({super.key});

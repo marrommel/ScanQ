@@ -7,14 +7,14 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:scanq_multiplatform/common/brand_colors.dart';
-import 'package:scanq_multiplatform/common/extensions.dart';
+import 'package:scanq_multiplatform/common/data/brand_colors.dart';
+import 'package:scanq_multiplatform/common/logic/extensions.dart';
 import 'package:scanq_multiplatform/database/database.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_mode.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_offset_card.dart';
 
-import '../../common/widget_vertical_slider.dart';
+import '../../common/ui/widget_vertical_slider.dart';
 
 class ActivityQuizSettings extends StatefulWidget {
   final QuizMode quizMode;
@@ -27,7 +27,8 @@ class ActivityQuizSettings extends StatefulWidget {
 
 enum TtsSpeed { fast, normal, slow }
 
-// vokabeln leer => buttons to scan / eingeben, anzahl umbenneen, kategorien ausgrauen im m/c bei weniger als 4
+// vokabeln leer => buttons to scan / eingeben, anzahl umbenneen,
+// TODO: Kategorien ausgrauen im m/c bei weniger als 4
 
 class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
   List<Category> categories = [];
@@ -209,7 +210,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Anzahl: ',
+                          text: 'Anzahl\nVokablen: ',
                           style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold),
                         ),
                         TextSpan(
@@ -244,7 +245,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Tempo', style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
+                    Text('Vorlese-\nTempo', style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 5),
                     _buildSpeedOption(TtsSpeed.fast, 'assets/icon/speed_fast.svg'),
                     _buildSpeedOption(TtsSpeed.normal, 'assets/icon/speed_normal.svg'),
@@ -262,7 +263,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Richtung', style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
+                      Text('Übersetzungs-\nrichtung', style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 5),
                       Image.asset('assets/image/germany.png', width: 55),
                       Icon(

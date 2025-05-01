@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:scanq_multiplatform/common/brand_colors.dart';
+import 'package:scanq_multiplatform/common/data/brand_colors.dart';
 
 class VerticalSlider extends StatelessWidget {
   final double value;

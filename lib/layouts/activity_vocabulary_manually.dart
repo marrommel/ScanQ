@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scanq_multiplatform/widgets/widget_vocab_manually.dart';
 
-import '../common/transparent_app_bar.dart';
+import '../common/ui/transparent_app_bar.dart';
 
 class ActivityVocabularyManually extends StatelessWidget {
   const ActivityVocabularyManually({super.key});

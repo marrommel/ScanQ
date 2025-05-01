@@ -1,7 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
-import '../common/vocabulary_type.dart';
+import '../common/data/vocabulary_type.dart';
 
 class VocabularyTable extends StatefulWidget {
   final List<VocabularyType> data;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scanq_multiplatform/widgets/widget_create_category.dart';
 
-import '../common/transparent_app_bar.dart';
+import '../common/ui/transparent_app_bar.dart';
 
 class ActivityCreateCategory extends StatelessWidget {
   const ActivityCreateCategory({super.key});

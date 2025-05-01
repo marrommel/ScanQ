@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:scanq_multiplatform/common/brand_colors.dart';
+import 'package:scanq_multiplatform/common/data/brand_colors.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 
 import '../data/quiz_item.dart';

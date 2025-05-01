@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:scanq_multiplatform/common/brand_colors.dart';
+import 'package:scanq_multiplatform/common/data/brand_colors.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_metadata.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_mode.dart';

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../common/transparent_app_bar.dart';
-import '../../common/vocabulary_type.dart';
+import '../../common/ui/transparent_app_bar.dart';
+import '../../common/data/vocabulary_type.dart';
 import '../data/recognized_word.dart';
 import '../logic/ocr_engine.dart';
 import 'activity_remove_bounding_boxes.dart';
@@ -162,19 +162,13 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
 
       if (scannedImageBytes != null) {
         final tempDir = await getTemporaryDirectory();
-        final file = await File('${tempDir.path}/fghfgzhj.png').create();
+        final file = await File('${tempDir.path}/temp_scan.png').create();
         file.writeAsBytesSync(scannedImageBytes);
 
         image = file;
-        print("TAP_ success! Image saved to: ${image?.path}");
-      } else {
-        print("TAP_ User cancelled the scan or no image was returned.");
-        image = null; // Ensure image is null if no image is returned
       }
     } on PlatformException {
       print("TAP_ Failed to get document path or operation cancelled!");
-      image = null; // Ensure image is null in case of an exception
-      // 'Failed to get document path or operation cancelled!';
     }
 
     if (image != null)

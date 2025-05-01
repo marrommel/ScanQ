@@ -3,10 +3,10 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:scanq_multiplatform/common/tools.dart';
+import 'package:scanq_multiplatform/common/logic/tools.dart';
 import 'package:scanq_multiplatform/database/database.dart';
 
-import '../common/brand_colors.dart';
+import '../common/data/brand_colors.dart';
 
 class ActivityQuizSettings extends StatefulWidget {
   final String? language;

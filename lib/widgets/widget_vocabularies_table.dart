@@ -4,7 +4,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/speech/voice_output.dart';
 import 'package:scanq_multiplatform/widgets/widget_edit_vocabulary.dart';
 
-import '../common/brand_colors.dart';
+import '../common/data/brand_colors.dart';
 import '../database/database.dart';
 
 enum VocabularyOptions { optionDelete, optionEdit, optionMarkFavourite, optionReadOut }

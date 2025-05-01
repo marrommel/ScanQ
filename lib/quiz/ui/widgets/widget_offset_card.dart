@@ -16,7 +16,7 @@ class OffsetCard extends StatefulWidget {
     Key? key,
     required this.heading,
     required this.children,
-    this.topOffset = 70,
+    this.topOffset = 50,
     this.borderRadius = 40,
     this.headingFontSize = 22,
     this.headingColor = Colors.white,

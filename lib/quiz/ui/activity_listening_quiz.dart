@@ -6,7 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_quiz_header.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_top_curve.dart';
 
-import '../../common/brand_colors.dart';
+import '../../common/data/brand_colors.dart';
 import '../data/quiz_config.dart';
 import '../data/quiz_item.dart';
 import '../data/quiz_metadata.dart';

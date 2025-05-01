@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/database/database.dart';
 
-import '../common/tools.dart';
+import '../common/logic/tools.dart';
 
 // TODO: rework this (maximized height, save button as external logic)
 

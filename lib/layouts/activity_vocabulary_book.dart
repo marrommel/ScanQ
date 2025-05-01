@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:scanq_multiplatform/common/extensions.dart';
+import 'package:scanq_multiplatform/common/logic/extensions.dart';
 import 'package:scanq_multiplatform/speech/voice_output.dart';
 import 'package:scanq_multiplatform/widgets/widget_vocabularies_table.dart';
 
-import '../common/brand_colors.dart';
-import '../common/transparent_app_bar.dart';
+import '../common/data/brand_colors.dart';
+import '../common/ui/transparent_app_bar.dart';
 import '../database/database.dart';
 
 class VocabularyBook extends StatefulWidget {

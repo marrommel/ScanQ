@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/widgets/widget_vocabulary_table.dart';
 
-import '../../common/brand_colors.dart';
-import '../../common/transparent_app_bar.dart';
-import '../../common/vocabulary_type.dart';
+import '../../common/data/brand_colors.dart';
+import '../../common/ui/transparent_app_bar.dart';
+import '../../common/data/vocabulary_type.dart';
 import '../../database/database.dart';
 import '../logic/widget_save_scanned_vocabs.dart';
 
