@@ -58,7 +58,7 @@ dependencies:
   collection: ^1.17.1
   # cunning_document_scanner: ^1.2.3
   ## document_scanner_flutter: ^0.2.7
-  flutter_document_scanner: ^1.1.0
+  # flutter_document_scanner: ^1.1.0
   image: ^4.0.15
   sentry_flutter: ^8.14.1
   flutter_modular: ^6.3.4
@@ -68,6 +68,10 @@ dependencies:
   device_info_plus: ^11.3.0
   quickalert: ^1.1.0
   permission_handler: ^11.0.1
+  flutter_speed_dial: ^7.0.0
+
+  flutter_document_scanner:
+    path: external_libs/flutter_document_scanner-1.1.2
 
   #url_launcher_web: any
   #flutter_web_plugins: any

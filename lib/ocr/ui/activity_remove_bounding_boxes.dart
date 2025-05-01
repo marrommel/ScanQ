@@ -47,13 +47,6 @@ class _ActivityRemoveBoundingBoxesState extends State<ActivityRemoveBoundingBoxe
   Future<Uint8List> _capturePngBytes() async {
     RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
 
-    // TODO: check if this can be removed
-    // if (boundary.debugNeedsPaint) {
-    //   print("Boundary needs paint; delaying...");
-    //   await Future.delayed(Duration(milliseconds: 100));
-    //   return _capturePngBytes(); // Retry
-    // }
-
     ui.Image image = await boundary.toImage();
     ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
 

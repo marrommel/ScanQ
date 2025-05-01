@@ -58,9 +58,60 @@ class _ActivityScanImageState extends State<ActivityScanImage> {
     }
   }
 
-  void _cropAndSave() {
-    Uint8List? imageBytes = _controller.pictureCropped;
-    Navigator.pop(context, imageBytes);
+  Container _createSelectionUi() {
+    return Container(
+      constraints: BoxConstraints.expand(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                SizedBox(width: 20, height: 70),
+                Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+                SizedBox(width: 10),
+                Text(
+                  "Zurück",
+                  style: TextStyle(fontSize: 20, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            "Wie möchtest du\nVokabeln einscannen?",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
+          ),
+          ElevatedButton(
+            onPressed: () => _loadImage(ImageSource.camera),
+            style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(Colors.white)),
+            child: Text(
+              "Kamera",
+              style: TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Text(
+            "oder",
+            style: TextStyle(fontSize: 35, color: Colors.white70, fontWeight: FontWeight.bold),
+          ),
+          ElevatedButton(
+            onPressed: () => _loadImage(ImageSource.gallery),
+            style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(Colors.white)),
+            child: Text(
+              "Galerie",
+              style: TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
+            ),
+          ),
+          SizedBox(height: 100),
+        ],
+      ),
+    );
   }
 
   @override
@@ -79,59 +130,7 @@ class _ActivityScanImageState extends State<ActivityScanImage> {
             messageCroppingPicture: "Zuschneiden...",
             hideDefaultBottomNavigation: true,
             showCameraPreview: false,
-            widgetInsteadOfCameraPreview: Container(
-              constraints: BoxConstraints.expand(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(width: 20, height: 70),
-                        Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          "Zurück",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    "Wie möchtest du\nVokabeln einscannen?",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _loadImage(ImageSource.camera),
-                    style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(Colors.white)),
-                    child: Text(
-                      "Kamera",
-                      style: TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Text(
-                    "oder",
-                    style: TextStyle(fontSize: 35, color: Colors.white70, fontWeight: FontWeight.bold),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _loadImage(ImageSource.gallery),
-                    style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(Colors.white)),
-                    child: Text(
-                      "Galerie",
-                      style: TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  SizedBox(height: 100),
-                ],
-              ),
-            ),
+            widgetInsteadOfCameraPreview: _createSelectionUi(),
           ),
           cropPhotoDocumentStyle: CropPhotoDocumentStyle(
             textButtonSave: "Weiter",

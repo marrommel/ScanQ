@@ -184,10 +184,6 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
   }
 
   Future<void> _processImage(ImageTarget target, String imagePath) async {
-    // load the image using the cunning document scanner
-    //final imagePath = await CunningDocumentScanner.getPictures(
-    //  noOfPages: 1, isGalleryImportAllowed: true);
-
     // initialise the OCR engine for the selected image
     final OcrEngine ocrEngine = OcrEngine(imagePath: imagePath);
 
