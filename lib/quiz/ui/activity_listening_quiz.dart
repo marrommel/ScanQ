@@ -51,6 +51,15 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
   void initState() {
     super.initState();
 
+    // set iOS audio category to ensure audio plays even in silent mode
+    _flutterTts.setIosAudioCategory(
+      IosTextToSpeechAudioCategory.playback,
+      [
+        IosTextToSpeechAudioCategoryOptions.defaultToSpeaker,
+        IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+      ],
+    );
+
     _flutterTts.setLanguage("en-US");
     _flutterTts.setSpeechRate(0.8 - widget.config.speechRate * 0.25);
     _flutterTts.setCompletionHandler(() {

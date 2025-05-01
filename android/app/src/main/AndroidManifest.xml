@@ -33,9 +33,9 @@
     </queries>
 
     <application
-        android:label="flutter_scanq"
+        android:label="ScanQ (beta)"
         android:usesCleartextTraffic="true"
-        android:name="ScanQ (beta)"
+        android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
