@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:scanq_multiplatform/common/data/brand_colors.dart';
+import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 import 'package:scanq_multiplatform/widgets/widget_category_entry.dart';
 
 import '../database/database.dart';

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 import 'package:scanq_multiplatform/speech/voice_output.dart';
 import 'package:scanq_multiplatform/widgets/widget_edit_vocabulary.dart';
 

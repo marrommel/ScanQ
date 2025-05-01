@@ -1,10 +1,10 @@
 import 'package:drift/drift.dart' hide Column;
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/common/logic/tools.dart';
 import 'package:scanq_multiplatform/database/database.dart';
+import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 
 import '../common/data/brand_colors.dart';
 
