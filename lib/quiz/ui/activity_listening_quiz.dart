@@ -57,11 +57,12 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
       [
         IosTextToSpeechAudioCategoryOptions.defaultToSpeaker,
         IosTextToSpeechAudioCategoryOptions.allowBluetooth,
+        IosTextToSpeechAudioCategoryOptions.mixWithOthers
       ],
     );
 
     _flutterTts.setLanguage("en-US");
-    _flutterTts.setSpeechRate(0.8 - widget.config.speechRate * 0.25);
+    _flutterTts.setSpeechRate(0.6 - widget.config.speechRate * 0.2);
     _flutterTts.setCompletionHandler(() {
       setState(() => _isPlaying = false);
     });

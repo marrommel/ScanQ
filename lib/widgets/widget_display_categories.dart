@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:lottie/lottie.dart';
 import 'package:scanq_multiplatform/common/data/brand_colors.dart';
 import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 import 'package:scanq_multiplatform/widgets/widget_category_entry.dart';
@@ -13,8 +12,6 @@ class CategoriesOverview extends StatelessWidget {
 
   Stream<List<CategoryEntry>> getcategoryEntries(final Database db) =>
       db.allCategories().map((Category category) => CategoryEntry(category: category)).watch();
-
-  bool _isDialogShown = false;
 
   @override
   Widget build(BuildContext context) {
@@ -37,23 +34,40 @@ class CategoriesOverview extends StatelessWidget {
                     child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: snapshot.data!))
               ]);
             } else {
-              Future.microtask(() {
-                QuickAlert.show(
-                    context: context,
-                    type: QuickAlertType.info,
-                    barrierColor: BrandColors.colorPrimary,
-                    text:
-                        "Du hast noch keine Vokabeln gespeichert. Scanne oder tippe neue Vokabeln ein, um die Übersicht zu öffnen.",
-                    confirmBtnColor: Color(0xFFFFC847),
-                    confirmBtnText: "OK",
-                    title: "Vokabeln hinzufügen");
-              });
-
-              _isDialogShown = true;
-
-              // close the underlying activity
-              Navigator.pop(context);
-              return const SizedBox(height: 1);
+              // return a hint that is visible if the user cancels the dialog with back button
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 220,
+                    width: 220,
+                    child: Lottie.asset(
+                      "assets/animation/empty_ghost.json",
+                      fit: BoxFit.contain,
+                      repeat: true,
+                    ),
+                  ),
+                  const Text(
+                    "Keine Kategorien gefunden",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      color: BrandColors.colorPrimaryDark,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Klicke auf das + Symbol unten rechts, um deine erste Kategorie zu erstellen.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              );
             }
           } else {
             return Column(
