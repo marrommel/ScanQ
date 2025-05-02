@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:scanq_multiplatform/common/ui/widget_dialog_no_vocabulary.dert.dart';
 import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 import 'package:scanq_multiplatform/speech/voice_output.dart';
 import 'package:scanq_multiplatform/widgets/widget_edit_vocabulary.dart';
@@ -137,7 +138,7 @@ class _VocabulariesTable extends State<VocabulariesTable> {
         stream: getVocabularyRows(db),
         builder: (BuildContext context, AsyncSnapshot<List<TableRow>> snapshot) {
           if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return Container(
                   decoration: BoxDecoration(
                       border: Border.all(color: BrandColors.colorPrimaryDark, width: 2.0),
@@ -146,11 +147,15 @@ class _VocabulariesTable extends State<VocabulariesTable> {
                   padding: const EdgeInsets.all(5.0),
                   child: Table(defaultColumnWidth: const FlexColumnWidth(), children: snapshot.data!));
             } else {
-              return Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(color: BrandColors.colorPrimaryDark, width: 2.0),
-                      borderRadius: const BorderRadius.all(Radius.circular(5))),
-                  child: Text(AppLocalizations.of(context)!.noDataFound));
+              // show a dialog with options to add a vocabulary for the empty category
+              DialogNoVocabulary.show(
+                context,
+                intentionText: "\"${widget.category.categoryName}\" zu öffnen",
+                categoryId: widget.category.id,
+              );
+
+              // show an empty screen
+              return SizedBox.shrink();
             }
           } else {
             return Container(

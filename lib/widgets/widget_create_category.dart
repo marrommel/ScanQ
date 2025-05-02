@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/common/data/brand_colors.dart';
 import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
+import 'package:scanq_multiplatform/layouts/activity_vocabulary_manually.dart';
 
 import '../database/database.dart';
 
 const List<String> categoryLanguages = <String>["en", "la", "fr", "it", "es"];
-// const List<String> categoryLanguages = <String>["en"];
 
 class CreateCategory extends StatefulWidget {
-  const CreateCategory({super.key});
+  final bool onlyOnce;
+
+  const CreateCategory({super.key, required this.onlyOnce});
 
   @override
   State<CreateCategory> createState() => _CreateCategoryState();
@@ -38,7 +40,7 @@ class _CreateCategoryState extends State<CreateCategory> {
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: BrandColors.colorPrimaryDark))),
       Form(
           key: _createCategoryFormKey,
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
             TextFormField(
                 decoration:
                     InputDecoration(border: const UnderlineInputBorder(), labelText: AppLocalizations.of(context)!.categoryName),
@@ -71,6 +73,7 @@ class _CreateCategoryState extends State<CreateCategory> {
                         categoryLanguage = value as String;
                       });
                     })),*/
+            SizedBox(height: 30),
             ElevatedButton(
                 onPressed: () async {
                   if (_createCategoryFormKey.currentState!.validate()) {
@@ -79,8 +82,13 @@ class _CreateCategoryState extends State<CreateCategory> {
                       await db.createCategory(categoryName, categoryLanguage);
 
                       if (mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text(AppLocalizations.of(context)!.categoryCreatedText(categoryName))));
+                        if (widget.onlyOnce) {
+                          Navigator.pushReplacement(
+                              context, MaterialPageRoute(builder: (context) => ActivityVocabularyManually()));
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text(AppLocalizations.of(context)!.categoryCreatedText(categoryName))));
+                        }
                       }
 
                       categoryName = "";

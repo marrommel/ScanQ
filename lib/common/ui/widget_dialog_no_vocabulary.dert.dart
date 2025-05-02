@@ -13,6 +13,7 @@ class DialogNoVocabulary {
     String? customText,
     bool showScanOption = true,
     bool showEnterManuallyOption = true,
+    int? categoryId,
   }) {
     final String displayText =
         customText ?? "Du hast noch keine Vokabeln gespeichert. Scanne oder tippe neue Vokabeln ein, um $intentionText.";
@@ -26,29 +27,30 @@ class DialogNoVocabulary {
         barrierColor: BrandColors.colorPrimary,
         disableBackBtn: false,
         barrierDismissible: false,
-        confirmBtnColor: Color(0xFFFFC847),
+        confirmBtnColor: Colors.black.withAlpha(200),
         confirmBtnText: "Zurück",
+        confirmBtnTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
         onConfirmBtnTap: () {
           Navigator.of(context).pop(); // Close the dialog
           Navigator.of(context).pop(); // Close the underlying screen
         },
-        widget: _buildOptions(context, showScanOption, showEnterManuallyOption),
+        widget: _buildOptions(context, categoryId, showScanOption, showEnterManuallyOption),
       );
     });
   }
 
-  static Widget _buildOptions(BuildContext context, bool showScanOption, bool showEnterManuallyOption) {
+  static Widget _buildOptions(BuildContext context, int? categoryId, bool showScanOption, bool showEnterManuallyOption) {
     List<Widget> buttons = [];
 
     if (showScanOption) {
       buttons.add(
         ElevatedButton(
-          style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.black87)),
+          style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Color(0xFFFBB307))),
           onPressed: () {
             Navigator.of(context).pop();
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ActivityImageSelect()));
           },
-          child: Text("Einscannen"),
+          child: Text("Einscannen", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         ),
       );
     }
@@ -56,12 +58,13 @@ class DialogNoVocabulary {
     if (showEnterManuallyOption) {
       buttons.add(
         ElevatedButton(
-          style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Colors.black87)),
+          style: ButtonStyle(backgroundColor: WidgetStateProperty.all(Color(0xFFFBB307))),
           onPressed: () {
             Navigator.of(context).pop();
-            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ActivityVocabularyManually()));
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => ActivityVocabularyManually(categoryId: categoryId)));
           },
-          child: Text("Eintippen"),
+          child: Text("Eintippen", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         ),
       );
     }

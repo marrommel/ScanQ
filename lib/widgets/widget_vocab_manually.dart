@@ -6,9 +6,12 @@ import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 
 import '../common/data/brand_colors.dart';
 import '../common/logic/tools.dart';
+import '../layouts/activity_create_category.dart';
 
 class VocabManually extends StatefulWidget {
-  const VocabManually({super.key});
+  final int? categoryId;
+
+  const VocabManually({super.key, this.categoryId});
 
   @override
   State<VocabManually> createState() => _VocabManually();
@@ -26,7 +29,16 @@ class _VocabManually extends State<VocabManually> {
   final _createVocabFormKey = GlobalKey<FormState>();
 
   Stream<List<DropdownMenuItem<String>>> getCategoryOptions(final Database db) => db.allCategories().map((Category category) {
-        selectedValueCombination ??= "${category.id};${category.categoryLanguage}";
+        if (widget.categoryId != null) {
+          // select the provided category
+          if (category.id == widget.categoryId) {
+            selectedValueCombination = "${category.id};${category.categoryLanguage}";
+          }
+        } else {
+          // if no category is selected, select the first one
+          selectedValueCombination ??= "${category.id};${category.categoryLanguage}";
+        }
+
         return DropdownMenuItem<String>(value: "${category.id};${category.categoryLanguage}", child: Text(category.categoryName));
       }).watch();
 
@@ -46,7 +58,7 @@ class _VocabManually extends State<VocabManually> {
         stream: getCategoryOptions(db),
         builder: (context, AsyncSnapshot<List<DropdownMenuItem<String>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 header,
                 Form(
@@ -71,7 +83,7 @@ class _VocabManually extends State<VocabManually> {
                           decoration: InputDecoration(
                               border: const UnderlineInputBorder(),
                               labelText: AppLocalizations.of(context)!.sourceLanguage,
-                              icon: getFlagByCountryCode("DE")),
+                              icon: getFlagByLanguageCode("DE")),
                           validator: (String? value) {
                             if (value == null || value.isEmpty) {
                               return AppLocalizations.of(context)!.fieldMustntBeEmpty;
@@ -115,9 +127,16 @@ class _VocabManually extends State<VocabManually> {
                     ]))
               ]);
             } else {
-              return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [header, Text(AppLocalizations.of(context)!.noDataFound)]);
+              // redirect to create a category
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => ActivityCreateCategory(onlyOnce: true)),
+                );
+              });
+
+              // return an empty screen of no categories are found
+              return SizedBox.shrink();
             }
           } else {
             return Column(
