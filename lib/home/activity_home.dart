@@ -84,14 +84,6 @@ System: ${iosInfo.systemName}
             style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.teal, fontFamily: "ScanQFont"),
           ),
           _buildCard(
-              'Neue Vokabeln',
-              context,
-              [
-                _buildImageButton(context, 'assets/icon/home_scan.png', 'Scannen', ActivityImageSelect()),
-                _buildImageButton(context, 'assets/icon/home_manually.png', 'Eingeben', ActivityVocabularyManually()),
-              ],
-              _buildButton(context, 'Neue Kategorie erstellen', ActivityCreateCategory())),
-          _buildCard(
               'Meine Vokabeln',
               context,
               [
@@ -99,6 +91,14 @@ System: ${iosInfo.systemName}
                 _buildImageButton(context, 'assets/icon/home_quiz.png', 'Quiz', ActivityQuizSelect()),
               ],
               null),
+          _buildCard(
+              'Vokabeln hinzufügen',
+              context,
+              [
+                _buildImageButton(context, 'assets/icon/home_scan.png', 'Scannen', ActivityImageSelect()),
+                _buildImageButton(context, 'assets/icon/home_manually.png', 'Eingeben', ActivityVocabularyManually()),
+              ],
+              _buildButton(context, 'Neue Kategorie erstellen', ActivityCreateCategory())),
           _buildFeedbackCard(_openFeedbackSurvey, _sendFeedbackMail),
         ],
       ),

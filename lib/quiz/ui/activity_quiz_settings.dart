@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:scanq_multiplatform/common/data/brand_colors.dart';
 import 'package:scanq_multiplatform/common/logic/extensions.dart';
 import 'package:scanq_multiplatform/database/database.dart';
@@ -14,6 +12,7 @@ import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_mode.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_offset_card.dart';
 
+import '../../common/ui/widget_dialog_no_vocabulary.dert.dart';
 import '../../common/ui/widget_vertical_slider.dart';
 
 class ActivityQuizSettings extends StatefulWidget {
@@ -27,7 +26,6 @@ class ActivityQuizSettings extends StatefulWidget {
 
 enum TtsSpeed { fast, normal, slow }
 
-// vokabeln leer => buttons to scan / eingeben, anzahl umbenneen,
 // TODO: Kategorien ausgrauen im m/c bei weniger als 4
 
 class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
@@ -46,7 +44,6 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
   bool onlyUntrained = false;
 
   bool _isDataLoaded = false;
-  bool _isDialogShown = false;
 
   Future<void> _loadCategories() async {
     final Database db = Modular.get<Database>();
@@ -121,22 +118,11 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
     }
 
     // display a warning dialog if the user has no categories with vocabulary
-    if (categories.isEmpty && !_isDialogShown) {
-      Future.microtask(() {
-        QuickAlert.show(
-            context: context,
-            type: QuickAlertType.info,
-            barrierColor: BrandColors.colorPrimary,
-            text: "Du hast noch keine Vokabeln gespeichert. Scanne oder tippe neue Vokabeln ein, um ein Quiz zu starten.",
-            confirmBtnColor: Color(0xFFFFC847),
-            confirmBtnText: "OK",
-            title: "Vokabeln hinzufügen");
-      });
+    if (categories.isEmpty) {
+      DialogNoVocabulary.show(context, intentionText: "ein Quiz zu starten");
 
-      _isDialogShown = true;
-
-      // close the underlying activity
-      if (mounted) Navigator.pop(context);
+      // show an empty screen
+      return SizedBox.shrink();
     }
 
     return Scaffold(
