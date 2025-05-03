@@ -25,6 +25,11 @@ class _VocabularyTableState extends State<VocabularyTable> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // check once if the form is valid
+      _notifyFormValidity();
+    });
+
     return Form(
       key: _editScanResultFormKey,
       child: Table(

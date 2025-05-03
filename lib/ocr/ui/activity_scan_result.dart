@@ -21,10 +21,10 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
   bool createNewCategory = false;
   int? categoryId;
 
+  bool isValid = false;
+
   @override
   Widget build(BuildContext context) {
-    bool isValid = false;
-
     return Scaffold(
       appBar: TransparentAppBar(showWaringOnClose: true),
       body: Center(
@@ -49,7 +49,6 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
                     onValidityChanged: (valid) {
                       setState(() {
                         isValid = valid;
-                        print("TAP_ isValid: $isValid");
                       });
                     },
                   ),
