@@ -103,26 +103,21 @@ class _EditVocabulary extends State<EditVocabulary> {
                   }),
               SizedBox(height: 30),
               ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor:
-                        isValid ? WidgetStateProperty.all(BrandColors.colorPrimary) : WidgetStateProperty.all(Colors.black38),
-                  ),
-                  onPressed: () async {
-                    // disable button if no change was made
-                    if (!isValid) return;
+                  onPressed: !isValid
+                      ? null
+                      : () async {
+                          // save changes to database
+                          final Database db = Modular.get<Database>();
+                          if (vocabLocal != widget.vocabulary.vocLocal) {
+                            await db.changeVocLocal(vocabLocal, widget.vocabulary.id);
+                          }
+                          if (vocabForeign != widget.vocabulary.vocForeign) {
+                            await db.changeVocForeign(vocabForeign, widget.vocabulary.id);
+                          }
 
-                    // save changes to database
-                    final Database db = Modular.get<Database>();
-                    if (vocabLocal != widget.vocabulary.vocLocal) {
-                      await db.changeVocLocal(vocabLocal, widget.vocabulary.id);
-                    }
-                    if (vocabForeign != widget.vocabulary.vocForeign) {
-                      await db.changeVocForeign(vocabForeign, widget.vocabulary.id);
-                    }
-
-                    // close the dialog
-                    Navigator.of(context).pop();
-                  },
+                          // close the dialog
+                          Navigator.of(context).pop();
+                        },
                   child: Text(AppLocalizations.of(context)!.save))
             ]))
       ],

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:scanq_multiplatform/widgets/widget_vocabulary_table.dart';
+import 'package:scanq_multiplatform/ocr/ui/widget_scan_result_table.dart';
 
 import '../../common/data/brand_colors.dart';
 import '../../common/data/vocabulary_type.dart';
@@ -43,7 +43,7 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  VocabularyTable(
+                  ScanResultTable(
                     data: widget.vocabularyData,
                     editable: true,
                     onValidityChanged: (valid) {

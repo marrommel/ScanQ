@@ -20,7 +20,10 @@ class ActivityCreateCategory extends StatelessWidget {
             Material(
                 elevation: 3,
                 borderRadius: const BorderRadius.all(Radius.circular(5)),
-                child: Container(padding: const EdgeInsets.all(20), child: CreateCategory(onlyOnce: this.onlyOnce)))
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: CreateCategory(onlyOnce: onlyOnce),
+                )),
           ]),
         ),
       ),

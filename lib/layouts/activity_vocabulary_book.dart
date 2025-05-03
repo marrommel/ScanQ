@@ -3,7 +3,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/common/logic/extensions.dart';
 import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 import 'package:scanq_multiplatform/speech/voice_output.dart';
-import 'package:scanq_multiplatform/widgets/widget_vocabularies_table.dart';
+import 'package:scanq_multiplatform/widgets/widget_vocabulary_table.dart';
 
 import '../common/data/brand_colors.dart';
 import '../common/ui/transparent_app_bar.dart';
@@ -86,7 +86,7 @@ class _VocabularyBook extends State<VocabularyBook> {
                                 const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: BrandColors.colorPrimaryDark)),
                         //getButtonReadingAction(),
                         SizedBox(height: 20),
-                        VocabulariesTable(category: widget.category)
+                        VocabularyTable(category: widget.category)
                       ]))))
         ]));
   }

@@ -5,6 +5,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/database/database.dart';
 import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 import 'package:scanq_multiplatform/layouts/activity_vocabulary_book.dart';
+import 'package:scanq_multiplatform/widgets/widget_create_category.dart';
 
 import '../common/data/brand_colors.dart';
 
@@ -45,7 +46,7 @@ class _CategoryEntry extends State<CategoryEntry> {
     if (option != null) {
       switch (option) {
         case CategoryOptions.optionEdit:
-          // TODO: implement!
+          _openEditDialog(context, widget.category);
           break;
         case CategoryOptions.optionDelete:
           if (mounted) {
@@ -55,6 +56,24 @@ class _CategoryEntry extends State<CategoryEntry> {
           break;
       }
     }
+  }
+
+  void _openEditDialog(BuildContext context, Category category) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        useSafeArea: true,
+        builder: (BuildContext context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+            backgroundColor: Colors.white,
+            insetPadding: const EdgeInsets.all(20),
+            child: Padding(
+              padding: EdgeInsets.all(20),
+              child: CreateCategory(onlyOnce: false, editCategory: widget.category),
+            ),
+          );
+        });
   }
 
   Stream<CategoryLearnInfoResult> getCategoryLearnInfo(final Database db) =>

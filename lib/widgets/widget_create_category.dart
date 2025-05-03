@@ -10,16 +10,22 @@ const List<String> categoryLanguages = <String>["en", "la", "fr", "it", "es"];
 
 class CreateCategory extends StatefulWidget {
   final bool onlyOnce;
+  final Category? editCategory;
 
-  const CreateCategory({super.key, required this.onlyOnce});
+  const CreateCategory({super.key, required this.onlyOnce, this.editCategory});
 
   @override
   State<CreateCategory> createState() => _CreateCategoryState();
 }
 
 class _CreateCategoryState extends State<CreateCategory> {
+  bool isValid = false;
+
   String categoryName = "";
   String categoryLanguage = "en";
+
+  String initialCategoryName = "";
+  int categoryId = -1;
 
   final _createCategoryFormKey = GlobalKey<FormState>();
 
@@ -33,10 +39,24 @@ class _CreateCategoryState extends State<CreateCategory> {
       AppLocalizations.of(context)!.spanish
     ];
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+    // get name and id of the category to edit
+    final bool editMode = widget.editCategory != null;
+    if (editMode) {
+      initialCategoryName = widget.editCategory!.categoryName;
+      categoryId = widget.editCategory!.id;
+    }
+
+    // update the validity of the form
+    if (editMode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        isValid = _createCategoryFormKey.currentState!.validate();
+      });
+    }
+
+    return Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Text(AppLocalizations.of(context)!.addCategory,
+          child: Text(editMode ? "\"$initialCategoryName\" bearbeiten" : AppLocalizations.of(context)!.addCategory,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: BrandColors.colorPrimaryDark))),
       Form(
           key: _createCategoryFormKey,
@@ -44,7 +64,10 @@ class _CreateCategoryState extends State<CreateCategory> {
             TextFormField(
                 decoration:
                     InputDecoration(border: const UnderlineInputBorder(), labelText: AppLocalizations.of(context)!.categoryName),
-                onChanged: (_) => _createCategoryFormKey.currentState!.validate(),
+                onChanged: (_) => setState(() {
+                      isValid = _createCategoryFormKey.currentState!.validate();
+                    }),
+                initialValue: editMode ? initialCategoryName : null,
                 validator: (name) {
                   if (name == null || name.trim().isEmpty) {
                     return AppLocalizations.of(context)!.pleaseEnterAName;
@@ -76,28 +99,19 @@ class _CreateCategoryState extends State<CreateCategory> {
                     })),*/
             SizedBox(height: 30),
             ElevatedButton(
-                onPressed: () async {
-                  if (_createCategoryFormKey.currentState!.validate()) {
-                    if (categoryName.trim().isNotEmpty) {
-                      final db = Modular.get<Database>();
-                      await db.createCategory(categoryName, categoryLanguage);
-
-                      if (mounted) {
-                        if (widget.onlyOnce) {
-                          Navigator.pushReplacement(
-                              context, MaterialPageRoute(builder: (context) => ActivityVocabularyManually()));
+                onPressed: !isValid
+                    ? null
+                    : () async {
+                        if (editMode) {
+                          await _editCategory();
                         } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(AppLocalizations.of(context)!.categoryCreatedText(categoryName))));
+                          await _createCategory();
                         }
-                      }
-
-                      categoryName = "";
-                      _createCategoryFormKey.currentState?.reset();
-                    }
-                  }
-                },
+                      },
                 style: ButtonStyle(backgroundColor: WidgetStateProperty.resolveWith<Color>((Set<WidgetState> states) {
+                  // return grey for disabled button
+                  if (!isValid) return Colors.grey[500]!;
+
                   if (states.contains(WidgetState.pressed) || states.contains(WidgetState.hovered)) {
                     return BrandColors.colorPrimaryDark;
                   } else {
@@ -107,5 +121,35 @@ class _CreateCategoryState extends State<CreateCategory> {
                 child: Text(AppLocalizations.of(context)!.save))
           ]))
     ]);
+  }
+
+  Future<void> _editCategory() async {
+    // only save if the category name has changed
+    if (initialCategoryName != categoryName) {
+      final db = Modular.get<Database>();
+      await db.renameCategory(categoryName.trim(), categoryId);
+    }
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("\"$categoryName\" gespeichert.")));
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> _createCategory() async {
+    final db = Modular.get<Database>();
+    await db.createCategory(categoryName.trim(), categoryLanguage);
+
+    if (mounted) {
+      if (widget.onlyOnce) {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ActivityVocabularyManually()));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.categoryCreatedText(categoryName))));
+      }
+    }
+
+    categoryName = "";
+    _createCategoryFormKey.currentState?.reset();
   }
 }
