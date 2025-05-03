@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_item.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_mode.dart';
 
+import '../../database/database.dart';
 import '../ui/activity_quiz_result.dart';
 
 class QuizMetadata {
@@ -58,8 +60,19 @@ class QuizMetadata {
     } else {
       isCorrect = quizItem.correctAnswer.toLowerCase() == answer.toLowerCase();
     }
-    // increment the score if the right answer was given
-    if (isCorrect) _score++;
+
+    // update the answer count in db
+    final Database db = Modular.get<Database>();
+    if (isCorrect) {
+      // increment the score if the right answer was given
+      _score++;
+
+      // increment the right answer count in the database
+      db.addRightAnswer(quizItem.vocId);
+    } else {
+      // increment the right answer count in the database
+      db.addWrongAnswer(quizItem.vocId);
+    }
 
     // return if a point has been scored
     return isCorrect;

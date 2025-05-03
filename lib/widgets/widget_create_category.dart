@@ -44,11 +44,12 @@ class _CreateCategoryState extends State<CreateCategory> {
             TextFormField(
                 decoration:
                     InputDecoration(border: const UnderlineInputBorder(), labelText: AppLocalizations.of(context)!.categoryName),
+                onChanged: (_) => _createCategoryFormKey.currentState!.validate(),
                 validator: (name) {
-                  if (name == null || name.isEmpty) {
+                  if (name == null || name.trim().isEmpty) {
                     return AppLocalizations.of(context)!.pleaseEnterAName;
-                  } else if (name.length > 25) {
-                    return "Bitte gib einen kürzeren Namen für deine Kategorie ein.";
+                  } else if (name.trim().length > 25) {
+                    return "Max. 25 Zeichen erlaubt";
                   } else {
                     categoryName = name;
                     return null;
@@ -77,7 +78,7 @@ class _CreateCategoryState extends State<CreateCategory> {
             ElevatedButton(
                 onPressed: () async {
                   if (_createCategoryFormKey.currentState!.validate()) {
-                    if (categoryName.isNotEmpty) {
+                    if (categoryName.trim().isNotEmpty) {
                       final db = Modular.get<Database>();
                       await db.createCategory(categoryName, categoryLanguage);
 

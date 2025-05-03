@@ -86,6 +86,7 @@ class _VocabulariesTable extends State<VocabulariesTable> {
           return Dialog(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
             backgroundColor: Colors.white,
+            insetPadding: const EdgeInsets.all(20),
             child: Padding(
               padding: EdgeInsets.all(20),
               child: EditVocabulary(category: widget.category, vocabulary: vocabulary),
@@ -107,26 +108,24 @@ class _VocabulariesTable extends State<VocabulariesTable> {
               child: GestureDetector(
                   onTapDown: _getTapPosition,
                   onLongPress: () => _showContextMenu(context, vocabulary),
-                  child: Expanded(
-                      child: Container(
-                          color: rowBackgroundColor,
-                          margin: const EdgeInsets.only(right: 2, bottom: 4),
-                          child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(vocabulary.vocForeign,
-                                  style: const TextStyle(color: BrandColors.colorText, fontSize: 18))))))),
+                  child: Container(
+                      color: rowBackgroundColor,
+                      margin: const EdgeInsets.only(right: 2, bottom: 4),
+                      child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child:
+                              Text(vocabulary.vocForeign, style: const TextStyle(color: BrandColors.colorText, fontSize: 18)))))),
           TableCell(
               child: GestureDetector(
                   onTapDown: _getTapPosition,
                   onLongPress: () => _showContextMenu(context, vocabulary),
-                  child: Expanded(
-                      child: Container(
-                          color: rowBackgroundColor,
-                          margin: const EdgeInsets.only(left: 2, bottom: 4),
-                          child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(vocabulary.vocLocal,
-                                  style: const TextStyle(color: BrandColors.colorText, fontSize: 18)))))))
+                  child: Container(
+                      color: rowBackgroundColor,
+                      margin: const EdgeInsets.only(left: 2, bottom: 4),
+                      child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child:
+                              Text(vocabulary.vocLocal, style: const TextStyle(color: BrandColors.colorText, fontSize: 18)))))),
         ]);
       }).watch();
 

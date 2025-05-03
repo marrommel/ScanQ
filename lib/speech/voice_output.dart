@@ -70,7 +70,7 @@ class VoiceOutput {
   }
 
   Future speak(final String text, final Function? onComplete) async {
-    if (text.isNotEmpty) {
+    if (text.trim().isNotEmpty) {
       await tts.setVolume(volume);
       await tts.setSpeechRate(rate);
       await tts.setPitch(pitch);

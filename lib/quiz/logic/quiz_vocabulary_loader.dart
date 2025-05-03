@@ -31,9 +31,9 @@ class QuizVocabularyLoader {
     // Generate a set of quiz questions
     for (Vocabulary vocab in vocabularyList) {
       if (config.reverseTranslation) {
-        quizQuestionList.add(QuizItem(vocab.vocForeign, vocab.vocLocal));
+        quizQuestionList.add(QuizItem(vocab.id, vocab.vocForeign, vocab.vocLocal));
       } else {
-        quizQuestionList.add(QuizItem(vocab.vocLocal, vocab.vocForeign));
+        quizQuestionList.add(QuizItem(vocab.id, vocab.vocLocal, vocab.vocForeign));
       }
     }
 
@@ -50,10 +50,10 @@ class QuizVocabularyLoader {
     for (Vocabulary vocab in vocabularyList) {
       if (config.reverseTranslation) {
         Set<String> wrongAnswers = _getWrongAnswers(vocabularyList, vocab.vocLocal);
-        multipleChoiceList.add(MultipleChoiceItem(vocab.vocForeign, vocab.vocLocal, wrongAnswers));
+        multipleChoiceList.add(MultipleChoiceItem(vocab.id, vocab.vocForeign, vocab.vocLocal, wrongAnswers));
       } else {
         Set<String> wrongAnswers = _getWrongAnswers(vocabularyList, vocab.vocForeign);
-        multipleChoiceList.add(MultipleChoiceItem(vocab.vocLocal, vocab.vocForeign, wrongAnswers));
+        multipleChoiceList.add(MultipleChoiceItem(vocab.id, vocab.vocLocal, vocab.vocForeign, wrongAnswers));
       }
     }
 

@@ -65,21 +65,17 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: const OutlineInputBorder(),
-                          labelText: "Kategorie erstellen",
+                      DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          hint: Text(AppLocalizations.of(context)!.category),
+                          items: snapshot.data,
+                          value: selectedValueCombination,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedValueCombination = value as String;
+                            });
+                          },
                         ),
-                        validator: (name) {
-                          if (name == null) {
-                            return AppLocalizations.of(context)!.pleaseEnterAName;
-                          } else if (name.length > 50) {
-                            return "Bitte wähle einen kürzeren Namen für die Kategorie.";
-                          } else {
-                            categoryName = name;
-                            return null;
-                          }
-                        },
                       ),
                       Row(
                         children: [
@@ -106,17 +102,22 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                           ),
                         ],
                       ),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          hint: Text(AppLocalizations.of(context)!.category),
-                          items: snapshot.data,
-                          value: selectedValueCombination,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValueCombination = value as String;
-                            });
-                          },
+                      TextFormField(
+                        decoration: InputDecoration(
+                          border: const OutlineInputBorder(),
+                          labelText: "Kategorie erstellen",
                         ),
+                        onChanged: (_) => _createCategoryFormKey.currentState!.validate(),
+                        validator: (name) {
+                          if (name == null) {
+                            return AppLocalizations.of(context)!.pleaseEnterAName;
+                          } else if (name.trim().length > 25) {
+                            return "Max. 25 Zeichen erlaubt";
+                          } else {
+                            categoryName = name;
+                            return null;
+                          }
+                        },
                       ),
                       SizedBox(height: 20),
                       ElevatedButton(
@@ -124,7 +125,7 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                           if (_createCategoryFormKey.currentState!.validate()) {
                             widget.onAccept(
                               selectedCategoryId,
-                              categoryName.isNotEmpty ? categoryName : "",
+                              categoryName.trim().isNotEmpty ? categoryName : "",
                             );
                             Navigator.of(context).pop();
                           }

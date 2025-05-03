@@ -3,8 +3,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:scanq_multiplatform/widgets/widget_vocabulary_table.dart';
 
 import '../../common/data/brand_colors.dart';
-import '../../common/ui/transparent_app_bar.dart';
 import '../../common/data/vocabulary_type.dart';
+import '../../common/ui/transparent_app_bar.dart';
 import '../../database/database.dart';
 import '../logic/widget_save_scanned_vocabs.dart';
 
@@ -23,8 +23,10 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
 
   @override
   Widget build(BuildContext context) {
+    bool isValid = false;
+
     return Scaffold(
-      appBar: TransparentAppBar(),
+      appBar: TransparentAppBar(showWaringOnClose: true),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -41,9 +43,18 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
                     ),
                   ),
                   SizedBox(height: 20),
-                  VocabularyTable(data: widget.vocabularyData, editable: true),
+                  VocabularyTable(
+                    data: widget.vocabularyData,
+                    editable: true,
+                    onValidityChanged: (valid) {
+                      setState(() {
+                        isValid = valid;
+                        print("TAP_ isValid: $isValid");
+                      });
+                    },
+                  ),
                   SizedBox(height: 30),
-                  ElevatedButton(onPressed: _saveVocabs, child: Text("speichern")),
+                  ElevatedButton(onPressed: isValid ? _saveVocabs : null, child: Text("speichern")),
                   SizedBox(height: 30),
                 ],
               )),
@@ -67,7 +78,7 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
                 language: "en",
                 onAccept: (id, name) async {
                   final Database db = Modular.get<Database>();
-                  if (name.isNotEmpty) {
+                  if (name.trim().isNotEmpty) {
                     await db.createCategory(name, "en");
                     Category newCategory = await db.lastlyInsertedCategory().getSingle();
 

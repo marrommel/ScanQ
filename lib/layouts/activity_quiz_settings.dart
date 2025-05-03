@@ -37,7 +37,7 @@ class _ActivityQuizSettings extends State<ActivityQuizSettings> {
 
   Stream<List<DropdownMenuItem<String>>> getCategoryOptions(final Database db) {
     Selectable<Category> options;
-    if (widget.language != null && widget.language!.isNotEmpty) {
+    if (widget.language != null && widget.language!.trim().isNotEmpty) {
       options = db.allCategoriesWithLang(widget.language!);
     } else {
       options = db.allCategories();
@@ -46,7 +46,7 @@ class _ActivityQuizSettings extends State<ActivityQuizSettings> {
     return options.map((Category category) {
       final String optionValue = "${category.id};${category.categoryLanguage}";
       selectedValueCombination ??= optionValue;
-      if (widget.language != null && widget.language!.isNotEmpty) {
+      if (widget.language != null && widget.language!.trim().isNotEmpty) {
         return DropdownMenuItem<String>(value: optionValue, child: Text(category.categoryName));
       } else {
         return DropdownMenuItem<String>(

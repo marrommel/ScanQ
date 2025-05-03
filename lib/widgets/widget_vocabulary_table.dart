@@ -7,10 +7,13 @@ class VocabularyTable extends StatefulWidget {
   final List<VocabularyType> data;
   final bool editable;
 
+  final void Function(bool)? onValidityChanged;
+
   const VocabularyTable({
     super.key,
     required this.data,
     this.editable = false,
+    this.onValidityChanged,
   });
 
   @override
@@ -18,44 +21,57 @@ class VocabularyTable extends StatefulWidget {
 }
 
 class _VocabularyTableState extends State<VocabularyTable> {
+  final _editScanResultFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    return Table(
-      border: TableBorder.symmetric(
-        outside: BorderSide(width: 2, color: Color(0xFFEAECEF)), // Outer border
-        inside: BorderSide.none, // No inner borders
+    return Form(
+      key: _editScanResultFormKey,
+      child: Table(
+        border: TableBorder.symmetric(
+          outside: BorderSide(width: 2, color: Color(0xFFEAECEF)), // Outer border
+          inside: BorderSide.none, // No inner borders
+        ),
+        columnWidths: const {
+          0: FlexColumnWidth(1), // Vocabulary column
+          1: FlexColumnWidth(1), // Translation column
+        },
+        children: widget.data.mapIndexed((i, scanResult) {
+          return TableRow(
+            decoration: BoxDecoration(
+              color: (i % 2) == 0 ? Color(0xFFf9f9f9) : Colors.white,
+            ),
+            children: [
+              _vocabTableCell(
+                editable: widget.editable,
+                value: scanResult.vocabulary,
+                onChanged: (value) {
+                  setState(() {
+                    // check if the form is valid
+                    _notifyFormValidity();
+
+                    // store the input
+                    scanResult.vocabulary = value;
+                  });
+                },
+              ),
+              _vocabTableCell(
+                editable: widget.editable,
+                value: scanResult.translation,
+                onChanged: (value) {
+                  setState(() {
+                    // check if the form is valid
+                    _notifyFormValidity();
+
+                    // store the input
+                    scanResult.translation = value;
+                  });
+                },
+              ),
+            ],
+          );
+        }).toList(),
       ),
-      columnWidths: const {
-        0: FlexColumnWidth(1), // Vocabulary column
-        1: FlexColumnWidth(1), // Translation column
-      },
-      children: widget.data.mapIndexed((i, scanResult) {
-        return TableRow(
-          decoration: BoxDecoration(
-            color: (i % 2) == 0 ? Color(0xFFf9f9f9) : Colors.white,
-          ),
-          children: [
-            _vocabTableCell(
-              editable: widget.editable,
-              value: scanResult.vocabulary,
-              onChanged: (value) {
-                setState(() {
-                  scanResult.vocabulary = value;
-                });
-              },
-            ),
-            _vocabTableCell(
-              editable: widget.editable,
-              value: scanResult.translation,
-              onChanged: (value) {
-                setState(() {
-                  scanResult.translation = value;
-                });
-              },
-            ),
-          ],
-        );
-      }).toList(),
     );
   }
 
@@ -69,10 +85,29 @@ class _VocabularyTableState extends State<VocabularyTable> {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15),
         child: TextFormField(
-          style: const TextStyle(color: Colors.black),
-          decoration: const InputDecoration(
+          style: TextStyle(color: Colors.black),
+          decoration: InputDecoration(
             border: InputBorder.none,
+            errorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.red, width: 2),
+              borderRadius: BorderRadius.all(Radius.circular(8)),
+            ),
+            errorStyle: const TextStyle(fontWeight: FontWeight.w700),
           ),
+          validator: (value) {
+            if (value == null || value.trim().isEmpty) {
+              return "Darf nicht leer sein";
+            } else if (value.length > 100) {
+              return "Max. 100 Zeichen";
+            }
+
+            // return null if the input is valid
+            return null;
+          },
           maxLines: null,
           enabled: editable,
           initialValue: value,
@@ -80,5 +115,12 @@ class _VocabularyTableState extends State<VocabularyTable> {
         ),
       ),
     );
+  }
+
+  void _notifyFormValidity() {
+    if (widget.onValidityChanged != null) {
+      final isValid = _editScanResultFormKey.currentState?.validate() ?? false;
+      widget.onValidityChanged!(isValid);
+    }
   }
 }

@@ -84,9 +84,12 @@ class _VocabManually extends State<VocabManually> {
                               border: const UnderlineInputBorder(),
                               labelText: AppLocalizations.of(context)!.sourceLanguage,
                               icon: getFlagByLanguageCode("DE")),
+                          onChanged: (_) => _createVocabFormKey.currentState!.validate(),
                           validator: (String? value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return AppLocalizations.of(context)!.fieldMustntBeEmpty;
+                            } else if (value.trim().length > 100) {
+                              return "Max. 100 Zeichen erlaubt";
                             } else {
                               vocabLocal = value;
                               return null;
@@ -97,9 +100,12 @@ class _VocabManually extends State<VocabManually> {
                               border: const UnderlineInputBorder(),
                               labelText: AppLocalizations.of(context)!.targetLanguage,
                               icon: getFlagByLanguageCode(selectedCategoryLang)),
+                          onChanged: (_) => _createVocabFormKey.currentState!.validate(),
                           validator: (String? value) {
-                            if (value == null || value.isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return AppLocalizations.of(context)!.fieldMustntBeEmpty;
+                            } else if (value.trim().length > 100) {
+                              return "Max. 100 Zeichen erlaubt";
                             } else {
                               vocabForeign = value;
                               return null;
@@ -109,7 +115,7 @@ class _VocabManually extends State<VocabManually> {
                       ElevatedButton(
                           onPressed: () async {
                             if (_createVocabFormKey.currentState!.validate()) {
-                              if (vocabLocal.isNotEmpty && vocabForeign.isNotEmpty && selectedCategory != 0) {
+                              if (vocabLocal.trim().isNotEmpty && vocabForeign.isNotEmpty && selectedCategory != 0) {
                                 await db.createVocabulary(vocabLocal, vocabForeign, selectedCategory, false);
 
                                 if (mounted) {

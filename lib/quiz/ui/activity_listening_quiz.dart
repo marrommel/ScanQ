@@ -127,7 +127,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
     if (_metadata.isAnswered) return;
 
     final currentQuestion = _metadata.quizItem;
-    if (currentQuestion.correctAnswer.isNotEmpty) {
+    if (currentQuestion.correctAnswer.trim().isNotEmpty) {
       _inputController.text = _metadata.hintLetter;
       _metadata.useHint = true;
       setState(() => {});
@@ -291,7 +291,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
                                               style: const TextStyle(color: Colors.black, fontSize: 18),
                                             );
                                           } else {
-                                            if (text.isEmpty) {
+                                            if (text.trim().isEmpty) {
                                               _inputController.text = _metadata.hintLetter;
                                             }
                                             return TextSpan(

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:scanq_multiplatform/common/data/brand_colors.dart';
@@ -176,7 +177,7 @@ class _ActivityQuizResultState extends State<ActivityQuizResult> {
                           ),
                           const SizedBox(height: 20),
                           const Text(
-                            "Details",
+                            "Deine Antworten",
                             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 20),
@@ -229,7 +230,10 @@ class _QuestionItemState extends State<QuestionItem> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-          title: Text("${widget.index + 1}. ${widget.result.givenAnswer}",
+          title: AutoSizeText("${widget.index + 1}. ${widget.result.givenAnswer}",
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
+              minFontSize: 15,
               style: TextStyle(
                 color: isCorrect ? Colors.green : Colors.red,
                 fontWeight: FontWeight.bold,
@@ -243,26 +247,63 @@ class _QuestionItemState extends State<QuestionItem> {
           },
         ),
         if (expanded)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.result.question,
-                  style: TextStyle(fontSize: 15),
-                ),
-                if (!isCorrect)
-                  Text(
-                    "Richtige Antwort: ${widget.result.correctAnswer}",
-                    style: TextStyle(fontSize: 15),
+          Container(
+            decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(10)),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: 90,
+                        child: Text(
+                          "Frage:",
+                          style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      Expanded(
+                        child: AutoSizeText(
+                          widget.result.question,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          maxLines: 3,
+                          minFontSize: 13,
+                          style: TextStyle(fontSize: 17),
+                        ),
+                      ),
+                    ],
                   ),
-                // TODO: Add highlight vocab option
-                // TextButton(
-                //   onPressed: () {},
-                //   child: const Text("Vokabel hervorheben"),
-                // ),
-              ],
+                  if (!isCorrect) SizedBox(height: 5),
+                  if (!isCorrect)
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 90,
+                          child: Text(
+                            "Lösung:",
+                            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        AutoSizeText(
+                          widget.result.correctAnswer,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          maxLines: 3,
+                          minFontSize: 13,
+                          style: TextStyle(fontSize: 17),
+                        ),
+                      ],
+                    ),
+                  // TODO: Add highlight vocab option
+                  // TextButton(
+                  //   onPressed: () {},
+                  //   child: const Text("Vokabel hervorheben"),
+                  // ),
+                ],
+              ),
             ),
           ),
       ],

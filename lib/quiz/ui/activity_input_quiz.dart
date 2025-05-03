@@ -65,7 +65,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
 
   void _onSubmitAnswer() {
     final String userAnswer = _inputController.text.trim();
-    if (_metadata.isAnswered || userAnswer.isEmpty) return;
+    if (_metadata.isAnswered || userAnswer.trim().isEmpty) return;
 
     // give a point for a correct answer
     _metadata.incrementScoreIfCorrect(userAnswer);
@@ -85,7 +85,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
     if (_metadata.isAnswered) return;
 
     final currentQuestion = _metadata.quizItem;
-    if (currentQuestion.correctAnswer.isNotEmpty) {
+    if (currentQuestion.correctAnswer.trim().isNotEmpty) {
       _inputController.text = _metadata.hintLetter;
       submitButtonText = "weiter";
       _metadata.useHint = true;
@@ -240,7 +240,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
                                                 style: const TextStyle(color: Colors.black, fontSize: 18),
                                               );
                                             } else {
-                                              if (text.isEmpty) _inputController.text = _metadata.hintLetter;
+                                              if (text.trim().isEmpty) _inputController.text = _metadata.hintLetter;
                                               return TextSpan(
                                                 children: [
                                                   TextSpan(

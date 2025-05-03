@@ -104,7 +104,7 @@ flutter:
   fonts:
     - family: ScanQFont
       fonts:
-        - asset: assets/font/ScanQ.ttf
+        - asset: assets/font/scanQ.ttf
 
   assets:
     - assets/icon/
