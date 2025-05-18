@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../../common/data/vocabulary_type.dart';
+import '../../gen/l10n/app_localizations.dart';
 
 class ScanResultTable extends StatefulWidget {
   final List<VocabularyType> data;
@@ -105,9 +106,9 @@ class _ScanResultTableState extends State<ScanResultTable> {
           ),
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return "Darf nicht leer sein";
+              return AppLocalizations.of(context)!.mayNotBeEmpty;
             } else if (value.length > 100) {
-              return "Max. 100 Zeichen";
+              return AppLocalizations.of(context)!.max100CharsAllowed;
             }
 
             // return null if the input is valid

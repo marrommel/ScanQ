@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
+import '../../gen/l10n/app_localizations.dart';
 import '../../layouts/activity_create_category.dart';
 import '../../layouts/activity_vocabulary_manually.dart';
 import '../../ocr/ui/activity_image_select.dart';
@@ -26,19 +27,19 @@ class FloatingAddButton extends StatelessWidget {
       children: [
         _buildSpeedDialChild(
           context,
-          label: 'Vokabeln einscannen',
+          label: AppLocalizations.of(context)!.scanVocabulary,
           icon: Icons.camera_alt_outlined,
           targetPage: ActivityImageSelect(),
         ),
         _buildSpeedDialChild(
           context,
-          label: 'Vokabeln eintippen',
+          label: AppLocalizations.of(context)!.typeVocabs,
           icon: Icons.edit,
           targetPage: ActivityVocabularyManually(),
         ),
         _buildSpeedDialChild(
           context,
-          label: 'Kategorie erstellen',
+          label: AppLocalizations.of(context)!.createCategory,
           icon: Icons.category_outlined,
           targetPage: ActivityCreateCategory(),
         ),
@@ -47,11 +48,11 @@ class FloatingAddButton extends StatelessWidget {
   }
 
   SpeedDialChild _buildSpeedDialChild(
-      BuildContext context, {
-        required String label,
-        required IconData icon,
-        required Widget targetPage,
-      }) {
+    BuildContext context, {
+    required String label,
+    required IconData icon,
+    required Widget targetPage,
+  }) {
     return SpeedDialChild(
       labelWidget: Card(
         color: Colors.white,

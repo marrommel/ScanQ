@@ -56,9 +56,6 @@ dependencies:
   google_mlkit_text_recognition: ^0.15.0
   image_picker: ^1.1.2
   collection: ^1.17.1
-  # cunning_document_scanner: ^1.2.3
-  ## document_scanner_flutter: ^0.2.7
-  # flutter_document_scanner: ^1.1.0
   image: ^4.0.15
   sentry_flutter: ^8.14.1
   flutter_modular: ^6.3.4
@@ -81,7 +78,7 @@ dev_dependencies:
 
   #Dependencies for drift (DB)
   drift_dev: ^2.1.0
-  build_runner: ^2.2.0
+  build_runner: ^2.4.15
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

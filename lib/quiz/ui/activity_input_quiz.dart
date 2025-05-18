@@ -7,6 +7,7 @@ import 'package:scanq_multiplatform/quiz/ui/widgets/widget_quiz_header.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_top_curve.dart';
 
 import '../../common/data/brand_colors.dart';
+import '../../gen/l10n/app_localizations.dart';
 import '../data/quiz_config.dart';
 import '../data/quiz_item.dart';
 import '../data/quiz_metadata.dart';
@@ -35,7 +36,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
   Timer? _timer;
 
   /// Submit button label changes as the user types and after an answer is given
-  String submitButtonText = "Später antworten";
+  String submitButtonText = "";
 
   /// Submit button will be disabled while the input is empty if this is the last question
   bool isSkipButtonEnabled = true;
@@ -47,6 +48,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
   void initState() {
     super.initState();
     _loadVocabulary();
+    submitButtonText = AppLocalizations.of(context)!.answerLater;
   }
 
   Future<void> _loadVocabulary() async {
@@ -70,7 +72,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
     // give a point for a correct answer
     _metadata.incrementScoreIfCorrect(userAnswer);
 
-    submitButtonText = _metadata.isLast ? "Beenden" : "Nächste Frage";
+    submitButtonText = _metadata.isLast ? AppLocalizations.of(context)!.end : AppLocalizations.of(context)!.nextQuestion;
     setState(() => {});
 
     // Move to next question after 0.8 seconds if correct and after 1.5 seconds if wrong
@@ -87,7 +89,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
     final currentQuestion = _metadata.quizItem;
     if (currentQuestion.correctAnswer.trim().isNotEmpty) {
       _inputController.text = _metadata.hintLetter;
-      submitButtonText = "weiter";
+      submitButtonText = AppLocalizations.of(context)!.next;
       _metadata.useHint = true;
       setState(() => {});
     }
@@ -104,7 +106,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
     }
 
     // reset the skip button
-    submitButtonText = _metadata.isLast ? "Beenden" : "Später antworten";
+    submitButtonText = _metadata.isLast ? AppLocalizations.of(context)!.end : AppLocalizations.of(context)!.answerLater;
 
     // reset the input field, hint, etc.
     _inputController.clear();
@@ -119,7 +121,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
     if (_metadata.isAnswered) return;
 
     bool isInputFilled = _inputController.text.trim().isNotEmpty;
-    final newText = isInputFilled ? "weiter" : "Später antworten";
+    final newText = isInputFilled ? AppLocalizations.of(context)!.next : AppLocalizations.of(context)!.answerLater;
 
     isSkipButtonEnabled = !_metadata.isLast || isInputFilled;
     submitButtonText = newText;
@@ -150,10 +152,10 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
           children: [
             QuizHeader(metadata: _metadata),
             const Spacer(),
-            const Text(
-              "Übersetze",
+            Text(
+              AppLocalizations.of(context)!.translate,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, color: Colors.grey),
+              style: const TextStyle(fontSize: 20, color: Colors.grey),
             ),
             const SizedBox(height: 5),
             Padding(
@@ -207,7 +209,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
                               readOnly: _metadata.isAnswered,
                               enabled: !_metadata.isAnswered,
                               decoration: InputDecoration(
-                                hintText: "Deine Antwort...",
+                                hintText: AppLocalizations.of(context)!.yourAnswer,
                                 hintStyle: const TextStyle(fontSize: 18),
                                 contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                                 fillColor: _metadata.isAnswered ? (isCorrect ? Colors.green : Colors.red) : Colors.white,
@@ -279,7 +281,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                               ),
                               child: Text(
-                                "Nächste Frage",
+                                AppLocalizations.of(context)!.nextQuestion,
                                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                               ),
                             )
@@ -298,7 +300,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                 ),
                                 child: Text(
-                                  "Später",
+                                  AppLocalizations.of(context)!.later,
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -311,7 +313,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                                 ),
                                 child: Text(
-                                  "Antworten",
+                                  AppLocalizations.of(context)!.answer,
                                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                               ),
@@ -324,7 +326,7 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
                         TextButton(
                           onPressed: (_metadata.hintUsed) ? null : _showHint,
                           child: Text(
-                            "Hinweis anzeigen",
+                            AppLocalizations.of(context)!.showHint,
                             style: TextStyle(
                               color: (_metadata.hintUsed) ? Colors.white54 : Colors.white,
                               fontSize: 18,

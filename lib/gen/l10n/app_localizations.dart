@@ -304,6 +304,486 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'means'**
   String get means;
+
+  /// No description provided for @max100Chars.
+  ///
+  /// In en, this message translates to:
+  /// **'Max. 100 characters'**
+  String get max100Chars;
+
+  /// No description provided for @max100CharsAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 100 characters allowed'**
+  String get max100CharsAllowed;
+
+  /// No description provided for @max25CharsAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'Up to 25 characters allowed'**
+  String get max25CharsAllowed;
+
+  /// No description provided for @cancelScanWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel the scan?\n\n(Note: Scanned vocabulary will be lost)'**
+  String get cancelScanWarning;
+
+  /// No description provided for @chooseScanMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'How would you like to scan vocabulary?'**
+  String get chooseScanMedium;
+
+  /// No description provided for @endScan.
+  ///
+  /// In en, this message translates to:
+  /// **'End scanning'**
+  String get endScan;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @addVocabularies.
+  ///
+  /// In en, this message translates to:
+  /// **'Add vocabularies'**
+  String get addVocabularies;
+
+  /// No description provided for @toContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'continue'**
+  String get toContinue;
+
+  /// No description provided for @customNoVocabDialogText.
+  ///
+  /// In en, this message translates to:
+  /// **'You haven\'t saved any vocabularies yet. Scan or type new vocabularies'**
+  String get customNoVocabDialogText;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @scanTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get scanTitle;
+
+  /// No description provided for @tapManuallyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Typing'**
+  String get tapManuallyTitle;
+
+  /// No description provided for @betaThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for trying the beta version of ScanQ! Do you have suggestions or encountered any issues?'**
+  String get betaThanks;
+
+  /// No description provided for @feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get feedback;
+
+  /// No description provided for @contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get contact;
+
+  /// No description provided for @saveVocabs.
+  ///
+  /// In en, this message translates to:
+  /// **'Save vocabularies'**
+  String get saveVocabs;
+
+  /// No description provided for @createCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Create category'**
+  String get createCategory;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get or;
+
+  /// No description provided for @next.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get next;
+
+  /// No description provided for @matchingCountOfTransAndVocabs.
+  ///
+  /// In en, this message translates to:
+  /// **'Different number of vocabularies and translations!'**
+  String get matchingCountOfTransAndVocabs;
+
+  /// No description provided for @noWordsDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'No words could be detected in the image.'**
+  String get noWordsDetected;
+
+  /// No description provided for @removePhonetics.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove phonetics'**
+  String get removePhonetics;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @camera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get camera;
+
+  /// No description provided for @gallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get gallery;
+
+  /// No description provided for @cropping.
+  ///
+  /// In en, this message translates to:
+  /// **'Cropping...'**
+  String get cropping;
+
+  /// No description provided for @scannedVocabs.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanned vocabularies'**
+  String get scannedVocabs;
+
+  /// No description provided for @savedVocabsSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabularies saved successfully!'**
+  String get savedVocabsSuccessfully;
+
+  /// No description provided for @mayNotBeEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Must not be empty'**
+  String get mayNotBeEmpty;
+
+  /// No description provided for @mpcQuizName.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple Choice'**
+  String get mpcQuizName;
+
+  /// No description provided for @inputQuizName.
+  ///
+  /// In en, this message translates to:
+  /// **'Input Quiz'**
+  String get inputQuizName;
+
+  /// No description provided for @listeningQuizName.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening Quiz'**
+  String get listeningQuizName;
+
+  /// No description provided for @mpcQuizName2.
+  ///
+  /// In en, this message translates to:
+  /// **'Multiple\nChoice'**
+  String get mpcQuizName2;
+
+  /// No description provided for @inputQuizName2.
+  ///
+  /// In en, this message translates to:
+  /// **'Input'**
+  String get inputQuizName2;
+
+  /// No description provided for @listeningQuizName2.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening'**
+  String get listeningQuizName2;
+
+  /// No description provided for @answerLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer later'**
+  String get answerLater;
+
+  /// No description provided for @end.
+  ///
+  /// In en, this message translates to:
+  /// **'End'**
+  String get end;
+
+  /// No description provided for @nextQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Next question'**
+  String get nextQuestion;
+
+  /// No description provided for @translate.
+  ///
+  /// In en, this message translates to:
+  /// **'Translate'**
+  String get translate;
+
+  /// No description provided for @yourAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answer...'**
+  String get yourAnswer;
+
+  /// No description provided for @later.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get later;
+
+  /// No description provided for @answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer'**
+  String get answer;
+
+  /// No description provided for @showHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Show hint'**
+  String get showHint;
+
+  /// No description provided for @categoryTooTiny.
+  ///
+  /// In en, this message translates to:
+  /// **'The selected category doesn\'t have enough vocabularies. Please choose one with at least 4 vocabularies.'**
+  String get categoryTooTiny;
+
+  /// No description provided for @repeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat'**
+  String get repeat;
+
+  /// No description provided for @yourAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answers'**
+  String get yourAnswers;
+
+  /// No description provided for @questionColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Question:'**
+  String get questionColon;
+
+  /// No description provided for @answerColon.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer:'**
+  String get answerColon;
+
+  /// No description provided for @selectQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Select quiz'**
+  String get selectQuiz;
+
+  /// No description provided for @moreQuizInDevelopment.
+  ///
+  /// In en, this message translates to:
+  /// **'More quizzes in development'**
+  String get moreQuizInDevelopment;
+
+  /// No description provided for @intentionQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'to start a quiz'**
+  String get intentionQuiz;
+
+  /// No description provided for @readingSpeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading\nspeed'**
+  String get readingSpeed;
+
+  /// No description provided for @saved.
+  ///
+  /// In en, this message translates to:
+  /// **'saved'**
+  String get saved;
+
+  /// No description provided for @noCategoriesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories found'**
+  String get noCategoriesFound;
+
+  /// No description provided for @instructionAddCategroy.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the + symbol at the bottom right to create your first category.'**
+  String get instructionAddCategroy;
+
+  /// No description provided for @quiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Quiz'**
+  String get quiz;
+
+  /// No description provided for @categoryNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Category not found'**
+  String get categoryNotFound;
+
+  /// No description provided for @editSmall.
+  ///
+  /// In en, this message translates to:
+  /// **'edit'**
+  String get editSmall;
+
+  /// No description provided for @toOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'to open'**
+  String get toOpen;
+
+  /// No description provided for @selectImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Select image'**
+  String get selectImage;
+
+  /// No description provided for @vocabLearn.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn Vocabularies'**
+  String get vocabLearn;
+
+  /// No description provided for @myVocabs.
+  ///
+  /// In en, this message translates to:
+  /// **'My Vocabularies'**
+  String get myVocabs;
+
+  /// No description provided for @createNewCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Create new category'**
+  String get createNewCategory;
+
+  /// No description provided for @typeVocabs.
+  ///
+  /// In en, this message translates to:
+  /// **'Type vocabularies'**
+  String get typeVocabs;
+
+  /// No description provided for @dontRemove.
+  ///
+  /// In en, this message translates to:
+  /// **'Please do not remove'**
+  String get dontRemove;
+
+  /// No description provided for @feedbackMailHeader.
+  ///
+  /// In en, this message translates to:
+  /// **'My feedback on the beta version of ScanQ'**
+  String get feedbackMailHeader;
+
+  /// No description provided for @overview.
+  ///
+  /// In en, this message translates to:
+  /// **'Overview'**
+  String get overview;
+
+  /// No description provided for @scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get scan;
+
+  /// No description provided for @translations.
+  ///
+  /// In en, this message translates to:
+  /// **'Translations'**
+  String get translations;
+
+  /// No description provided for @vocabs.
+  ///
+  /// In en, this message translates to:
+  /// **'Vocabularies'**
+  String get vocabs;
+
+  /// No description provided for @countOfVocabs.
+  ///
+  /// In en, this message translates to:
+  /// **'Number\nof vocabularies: '**
+  String get countOfVocabs;
+
+  /// No description provided for @translationDirection.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation\ndirection'**
+  String get translationDirection;
+
+  /// No description provided for @further.
+  ///
+  /// In en, this message translates to:
+  /// **'Further'**
+  String get further;
+
+  /// No description provided for @checkCaseCorrectness.
+  ///
+  /// In en, this message translates to:
+  /// **'Evaluate case sensitivity'**
+  String get checkCaseCorrectness;
+
+  /// No description provided for @allowHints.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow hints'**
+  String get allowHints;
+
+  /// No description provided for @autoContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto continue'**
+  String get autoContinue;
+
+  /// No description provided for @onlyUnlearned.
+  ///
+  /// In en, this message translates to:
+  /// **'Only unlearned vocabularies'**
+  String get onlyUnlearned;
+
+  /// No description provided for @startQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Start quiz'**
+  String get startQuiz;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

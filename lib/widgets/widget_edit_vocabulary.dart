@@ -6,8 +6,6 @@ import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 import '../common/data/brand_colors.dart';
 import '../common/logic/tools.dart';
 
-// TODO: rework this (maximized height, save button as external logic)
-
 class EditVocabulary extends StatefulWidget {
   final Category category;
   final Vocabulary vocabulary;
@@ -65,7 +63,7 @@ class _EditVocabulary extends State<EditVocabulary> {
                         isValidTrans = false;
                         vocabLocal = value.trim();
                       });
-                      return "Max. 100 Zeichen erlaubt";
+                      return AppLocalizations.of(context)!.max100Chars;
                     } else {
                       setState(() {
                         isValidTrans = true;
@@ -92,7 +90,7 @@ class _EditVocabulary extends State<EditVocabulary> {
                         isValidVoc = false;
                         vocabForeign = value.trim();
                       });
-                      return "Max. 100 Zeichen erlaubt";
+                      return AppLocalizations.of(context)!.max100CharsAllowed;
                     } else {
                       setState(() {
                         isValidVoc = true;

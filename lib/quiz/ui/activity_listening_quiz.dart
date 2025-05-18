@@ -7,6 +7,7 @@ import 'package:scanq_multiplatform/quiz/ui/widgets/widget_quiz_header.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_top_curve.dart';
 
 import '../../common/data/brand_colors.dart';
+import '../../gen/l10n/app_localizations.dart';
 import '../data/quiz_config.dart';
 import '../data/quiz_item.dart';
 import '../data/quiz_metadata.dart';
@@ -36,7 +37,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
   bool _isPlaying = false;
 
   // Submit button label changes as the user types and after an answer is given
-  String submitButtonText = "Später antworten";
+  String submitButtonText = "";
 
   // Submit button will be disabled while the input is empty if this is the last question
   bool isSubmitButtonEnabled = true;
@@ -50,6 +51,8 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
   @override
   void initState() {
     super.initState();
+
+    submitButtonText = AppLocalizations.of(context)!.answerLater;
 
     // set iOS audio category to ensure audio plays even in silent mode
     _flutterTts.setIosAudioCategory(
@@ -112,7 +115,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
     final String userAnswer = _inputController.text.trim();
     _metadata.incrementScoreIfCorrect(userAnswer);
 
-    submitButtonText = _metadata.isLast ? "Beenden" : "Nächste Frage";
+    submitButtonText = _metadata.isLast ? AppLocalizations.of(context)!.end : AppLocalizations.of(context)!.nextQuestion;
     setState(() => {});
 
     // Move to next question after 0.8 seconds if correct and 1.5 seconds if wrong
@@ -146,7 +149,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
     }
 
     // Reset the skip button
-    submitButtonText = _metadata.isLast ? "Beenden" : "Später antworten";
+    submitButtonText = _metadata.isLast ? AppLocalizations.of(context)!.end : AppLocalizations.of(context)!.answerLater;
 
     // Reset the input field, hint, etc.
     _inputController.clear();
@@ -164,7 +167,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
     if (_metadata.isAnswered) return;
 
     bool isInputFilled = _inputController.text.trim().isNotEmpty;
-    final newText = isInputFilled ? "weiter" : "Später antworten";
+    final newText = isInputFilled ? AppLocalizations.of(context)!.next : AppLocalizations.of(context)!.answerLater;
 
     isSubmitButtonEnabled = !_metadata.isLast || isInputFilled;
     submitButtonText = newText;
@@ -259,7 +262,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
                             readOnly: _metadata.isAnswered,
                             enabled: !_metadata.isAnswered,
                             decoration: InputDecoration(
-                              hintText: "Deine Antwort...",
+                              hintText: AppLocalizations.of(context)!.yourAnswer,
                               hintStyle: const TextStyle(fontSize: 18),
                               contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                               fillColor: _metadata.isAnswered ? (isCorrect ? Colors.green : Colors.red) : Colors.white,
@@ -360,7 +363,7 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
                       TextButton(
                         onPressed: (_metadata.hintUsed) ? null : _showHint,
                         child: Text(
-                          "Hinweis anzeigen",
+                          AppLocalizations.of(context)!.showHint,
                           style: TextStyle(
                             color: (_metadata.hintUsed) ? Colors.white54 : Colors.white,
                             fontSize: 18,

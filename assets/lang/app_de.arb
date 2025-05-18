@@ -1,76 +1,117 @@
 {
   "addCategory": "Kategorie hinzufügen",
-
   "categoryName": "Name der Kategorie",
-
   "english": "Englisch",
-
   "latin": "Lateinisch",
-
   "french": "Französisch",
-
   "italian": "Italienisch",
-
   "spanish": "Spanisch",
-
   "pleaseEnterAName": "Bitte gib einen Namen ein.",
-
   "language": "Sprache",
-
   "categoryCreatedText": "Die Kategorie \"{categoryName}\" wurde erfolgreich erstellt.",
-
   "save": "Speichern",
-
-
   "savedCategories": "Gespeicherte Kategorien",
-
   "noDataFound": "Keine Daten gefunden.",
-
-
   "addVocabulary": "Vokabel hinzufügen",
-
   "scanVocabulary": "Vokabeln einscannen",
-
   "category": "Kategorie",
-
   "sourceLanguage": "Ausgangssprache",
-
   "targetLanguage": "Zielsprache",
-
   "fieldMustntBeEmpty": "Dieses Feld darf nicht leer sein.",
-
   "vocabSaved": "Vokabel gespeichert",
-
-
   "edit": "Bearbeiten",
-
   "delete": "Löschen",
-
   "markAsFavourite": "Als Favorit markieren",
-
   "unmarkAsFavourite": "Als Favorit entfernen",
-
   "readOut": "Vorlesen",
-
   "xOfXVocabsLearned": "{vocabsTotal,plural, =1{{vocabsLearned} von {vocabsTotal} Vokabel gelernt} other{{vocabsLearned} von {vocabsTotal} Vokabeln gelernt}}",
-
   "noVocabulariesYet": "Noch keine Vokabeln",
-
-
   "quizSettings": "Quiz-Einstellungen",
-
   "quizSeedOptionRandom": "zufällig",
-
   "quizSeedOptionOnlyUnlearned": "nur ungelernte",
-
   "quizSeedOptionSmart": "intelligent",
-
-
   "editVocabulary": "Vokabel bearbeiten",
-
   "readOutVocabularyBook": "Vokabelbuch vorlesen",
-
   "stopReadingOut": "Vorlesen beenden",
-
-  "means": "bedeutet"
+  "means": "bedeutet",
+  "max100Chars": "Maximal 100 Zeichen",
+  "max100CharsAllowed": "Maximal 100 Zeichen erlaubt",
+  "max25CharsAllowed": "Maximal 25 Zeichen erlaubt",
+  "cancelScanWarning": "Bist du sicher, dass du das Einscannen abbrechen willst?\n\n(Hinweis: Die eingescannten Vokabeln gehen verloren)",
+  "chooseScanMedium": "Wie möchtest du\nVokabeln einscannen?",
+  "endScan": "Einscannen beenden",
+  "no": "Nein",
+  "yes": "Ja",
+  "addVocabularies": "Vokabeln hinzufügen",
+  "toContinue": "fortzufahren",
+  "customNoVocabDialogText": "Du hast noch keine Vokabeln gespeichert. Scanne oder tippe neue Vokabeln ein, um",
+  "back": "Zurück",
+  "scanTitle": "Einscannen",
+  "tapManuallyTitle": "Eintippen",
+  "betaThanks": "Vielen Dank, dass du die Beta-Version von ScanQ ausprobierst! Hast du Verbesserungen oder gab es Probleme?",
+  "feedback": "Feedback",
+  "contact": "Kontakt",
+  "saveVocabs": "Vokabeln speichern",
+  "createCategory": "Kategorie erstellen",
+  "or": "oder",
+  "next": "Weiter",
+  "matchingCountOfTransAndVocabs": "Unterschiedliche Anzahl von Vokabeln und Übersetzungen!",
+  "noWordsDetected": "Es konnten keine Wörter im Bild erkannt werden.",
+  "removePhonetics": "Lautschriften entfernen",
+  "close": "Schließen",
+  "camera": "Kamera",
+  "gallery": "Galerie",
+  "cropping": "Zuschneiden...",
+  "scannedVocabs": "Eingescannte Vokabeln",
+  "savedVocabsSuccessfully": "Vokabeln erfolgreich gespeichert!",
+  "mayNotBeEmpty": "Darf nicht leer sein",
+  "mpcQuizName": "Multiple-Choice",
+  "inputQuizName": "Eingabe-Quiz",
+  "listeningQuizName": "Zuhören-Quiz",
+  "mpcQuizName2": "Multiple\nChoice",
+  "inputQuizName2": "Eingabe",
+  "listeningQuizName2": "Zuhören",
+  "answerLater": "Später antworten",
+  "end": "Beenden",
+  "nextQuestion": "Nächste Frage",
+  "translate": "Übersetze",
+  "yourAnswer": "Deine Antwort...",
+  "later": "Später",
+  "answer": "Antworten",
+  "showHint": "Hinweis anzeigen",
+  "categoryTooTiny": "Die ausgewählte Kategorie hat nicht genug Vokabeln. Bitte wähle eine Kategorie mit mindestens 4 Vokablen aus.",
+  "repeat": "Wiederholen",
+  "yourAnswers": "Deine Antworten",
+  "questionColon": "Frage:",
+  "answerColon": "Lösung:",
+  "selectQuiz": "Quiz auswählen",
+  "moreQuizInDevelopment": "Weitere Quiz in Entwicklung",
+  "intentionQuiz": "ein Quiz zu starten",
+  "readingSpeed": "Vorlese-\nTempo",
+  "saved": "gespeichert",
+  "noCategoriesFound": "Keine Kategorien gefunden",
+  "instructionAddCategroy": "Klicke auf das + Symbol unten rechts, um deine erste Kategorie zu erstellen.",
+  "quiz": "Quiz",
+  "categoryNotFound": "Kategorie nicht gefunden",
+  "editSmall": "bearbeiten",
+  "toOpen": "zu öffnen",
+  "selectImage": "Bild wählen",
+  "vocabLearn": "Vokabeln lernen",
+  "myVocabs": "Meine Vokabeln",
+  "createNewCategory": "Neue Kategorie erstellen",
+  "typeVocabs": "Vokabeln eintippen",
+  "dontRemove": "Bitte nicht entferen",
+  "feedbackMailHeader": "Mein Feedback zur Beta-Version von ScanQ",
+  "overview": "Übersicht",
+  "scan": "Scannen",
+  "translations": "Übersetzungen",
+  "vocabs": "Vokabeln",
+  "countOfVocabs": "Anzahl\nVokablen: ",
+  "translationDirection": "Übersetzungs-\nrichtung",
+  "further": "Weiteres",
+  "checkCaseCorrectness": "Groß- und Kleinschreibung bewerten",
+  "allowHints": "Hinweise erlauben",
+  "autoContinue": "Automatisch weiter",
+  "onlyUnlearned": "Nur ungelernte Vokabeln",
+  "startQuiz": "Quiz starten"
 }

@@ -6,6 +6,7 @@ import '../../common/data/brand_colors.dart';
 import '../../common/data/vocabulary_type.dart';
 import '../../common/ui/transparent_app_bar.dart';
 import '../../database/database.dart';
+import '../../gen/l10n/app_localizations.dart';
 import '../logic/widget_save_scanned_vocabs.dart';
 
 class ActivityScanResult extends StatefulWidget {
@@ -35,7 +36,7 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
                 children: [
                   SizedBox(height: 60),
                   Text(
-                    "Eingescannte Vokabeln",
+                    AppLocalizations.of(context)!.scannedVocabs,
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
@@ -53,7 +54,7 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
                     },
                   ),
                   SizedBox(height: 30),
-                  ElevatedButton(onPressed: isValid ? _saveVocabs : null, child: Text("speichern")),
+                  ElevatedButton(onPressed: isValid ? _saveVocabs : null, child: Text(AppLocalizations.of(context)!.save)),
                   SizedBox(height: 30),
                 ],
               )),
@@ -92,7 +93,8 @@ class _ActivityScanResultState extends State<ActivityScanResult> {
 
                   if (context.mounted) {
                     Navigator.pop(context);
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Vokabeln erfolgreich gespeichert!")));
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.savedVocabsSuccessfully)));
                   }
                 },
               ),

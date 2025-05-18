@@ -10,10 +10,12 @@ import 'package:scanq_multiplatform/ocr/ui/activity_image_select.dart';
 import 'package:scanq_multiplatform/quiz/ui/activity_quiz_select.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../gen/l10n/app_localizations.dart';
+
 class ActivityHome extends StatelessWidget {
   const ActivityHome({super.key});
 
-  Future<void> _sendFeedbackMail() async {
+  Future<void> _sendFeedbackMail(BuildContext context) async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
     String deviceData = "Unknown Device";
 
@@ -23,7 +25,7 @@ class ActivityHome extends StatelessWidget {
     if (Platform.isAndroid) {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       deviceData = """
-********* Bitte nicht entferen ********
+********* ${AppLocalizations.of(context)!.dontRemove} ********
 *************************************
 
 Date: $date                     
@@ -34,12 +36,12 @@ SDK: ${androidInfo.version.sdkInt}
 ABIs: ${androidInfo.supportedAbis.join(', ')}
 
 *************************************
-********* Bitte nicht entferen ********
+********* ${AppLocalizations.of(context)!.dontRemove} ********
     """;
     } else if (Platform.isIOS) {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       deviceData = """
-********* Bitte nicht entferen ********
+********* ${AppLocalizations.of(context)!.dontRemove} ********
 *************************************
 
 Date: $date 
@@ -49,14 +51,14 @@ IOS: ${iosInfo.systemVersion}
 System: ${iosInfo.systemName}
 
 *************************************
-********* Bitte nicht entferen ********
+********* ${AppLocalizations.of(context)!.dontRemove} ********
     """;
     }
 
     final Uri emailUri = Uri(
       scheme: 'mailto',
       path: 'rommelbendel@gmail.com',
-      query: Uri.encodeFull('subject=$header&body=$deviceData\n\nMein Feedback zur Beta-Version von ScanQ: '),
+      query: Uri.encodeFull('subject=$header&body=$deviceData\n\n${AppLocalizations.of(context)!.feedbackMailHeader}: '),
     );
     if (await canLaunchUrl(emailUri)) {
       await launchUrl(emailUri);
@@ -84,22 +86,25 @@ System: ${iosInfo.systemName}
             style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold, color: Colors.teal, fontFamily: "ScanQFont"),
           ),
           _buildCard(
-              'Meine Vokabeln',
+              AppLocalizations.of(context)!.myVocabs,
               context,
               [
-                _buildImageButton(context, 'assets/icon/home_overview.png', 'Übersicht', ActivityCategoryOverview()),
-                _buildImageButton(context, 'assets/icon/home_quiz.png', 'Quiz', ActivityQuizSelect()),
+                _buildImageButton(
+                    context, 'assets/icon/home_overview.png', AppLocalizations.of(context)!.overview, ActivityCategoryOverview()),
+                _buildImageButton(context, 'assets/icon/home_quiz.png', AppLocalizations.of(context)!.quiz, ActivityQuizSelect()),
               ],
               null),
           _buildCard(
-              'Vokabeln hinzufügen',
+              AppLocalizations.of(context)!.addVocabularies,
               context,
               [
-                _buildImageButton(context, 'assets/icon/home_scan.png', 'Scannen', ActivityImageSelect()),
-                _buildImageButton(context, 'assets/icon/home_manually.png', 'Eingeben', ActivityVocabularyManually()),
+                _buildImageButton(
+                    context, 'assets/icon/home_scan.png', AppLocalizations.of(context)!.scan, ActivityImageSelect()),
+                _buildImageButton(context, 'assets/icon/home_manually.png', AppLocalizations.of(context)!.tapManuallyTitle,
+                    ActivityVocabularyManually()),
               ],
-              _buildButton(context, 'Neue Kategorie erstellen', ActivityCreateCategory())),
-          _buildFeedbackCard(_openFeedbackSurvey, _sendFeedbackMail),
+              _buildButton(context, AppLocalizations.of(context)!.createNewCategory, ActivityCreateCategory())),
+          _buildFeedbackCard(context, _openFeedbackSurvey, () => _sendFeedbackMail(context)),
         ],
       ),
     );
@@ -161,7 +166,7 @@ System: ${iosInfo.systemName}
   }
 
   /// Feedback Card Section
-  Widget _buildFeedbackCard(VoidCallback onFeedbackTap, VoidCallback onContactTap) {
+  Widget _buildFeedbackCard(BuildContext context, VoidCallback onFeedbackTap, VoidCallback onContactTap) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -170,9 +175,7 @@ System: ${iosInfo.systemName}
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-                "Vielen Dank, dass du die Beta-Version von ScanQ ausprobierst! Hast du Verbesserungen oder gab es Probleme?",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
+            Text(AppLocalizations.of(context)!.betaThanks, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -184,7 +187,7 @@ System: ${iosInfo.systemName}
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text('Feedback', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  child: Text(AppLocalizations.of(context)!.feedback, style: TextStyle(color: Colors.white, fontSize: 16)),
                 ),
                 ElevatedButton(
                   onPressed: onContactTap,
@@ -193,7 +196,7 @@ System: ${iosInfo.systemName}
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text('Kontakt', style: TextStyle(color: Colors.white, fontSize: 16)),
+                  child: Text(AppLocalizations.of(context)!.contact, style: TextStyle(color: Colors.white, fontSize: 16)),
                 ),
               ],
             ),

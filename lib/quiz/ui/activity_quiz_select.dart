@@ -7,6 +7,7 @@ import 'package:scanq_multiplatform/common/ui/widget_floating_add_button.dart';
 import 'package:scanq_multiplatform/quiz/ui/activity_quiz_settings.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_offset_card.dart';
 
+import '../../gen/l10n/app_localizations.dart';
 import '../data/quiz_mode.dart';
 
 void main() {
@@ -36,7 +37,7 @@ class _ActivityQuizSelectState extends State<ActivityQuizSelect> {
         backgroundColor: BrandColors.colorPrimary,
         floatingActionButton: FloatingAddButton(),
         body: OffsetCard(
-          heading: "Quiz auswählen",
+          heading: AppLocalizations.of(context)!.selectQuiz,
           children: [
             Wrap(
               runSpacing: 20,
@@ -64,7 +65,11 @@ class _ActivityQuizSelectState extends State<ActivityQuizSelect> {
     bool isSelected = (_selectedMode == mode);
     bool isDisabled = (mode == QuizMode.comingSoon);
 
-    List<String> quizNames = ["Multiple\nChoice", "Eingabe", "Zuhören"];
+    List<String> quizNames = [
+      AppLocalizations.of(context)!.mpcQuizName2,
+      AppLocalizations.of(context)!.inputQuizName2,
+      AppLocalizations.of(context)!.listeningQuizName2
+    ];
     List<String> quizIcons = ["assets/icon/multiple_choice.png", "assets/icon/pencil.png", "assets/icon/headphones.png"];
 
     return GestureDetector(
@@ -91,7 +96,7 @@ class _ActivityQuizSelectState extends State<ActivityQuizSelect> {
               isDisabled ? const SizedBox(width: 1) : Image.asset(quizIcons[mode.index], width: 60, height: 60),
               const SizedBox(height: 8),
               Text(
-                isDisabled ? 'Weitere Quiz in Entwicklung' : quizNames[mode.index],
+                isDisabled ? AppLocalizations.of(context)!.moreQuizInDevelopment : quizNames[mode.index],
                 maxLines: 3,
                 textAlign: TextAlign.center,
                 style: TextStyle(

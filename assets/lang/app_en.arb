@@ -3,29 +3,20 @@
   "@addCategory": {
     "description": "The heading of the 'Add category' section"
   },
-
   "categoryName": "Category name",
   "@categoryName": {
     "description": "Hint for filling out the corresponding form field"
   },
-
   "english": "English",
-
   "latin": "Latin",
-
   "french": "French",
-
   "italian": "Italian",
-
   "spanish": "Spanish",
-
   "pleaseEnterAName": "Please enter a name.",
   "@pleaseEnterAName": {
     "description": "This text is displayed if the 'Category name' field validation fails"
   },
-
   "language": "language",
-
   "categoryCreatedText": "Category \"{categoryName}\" has been created successfully.",
   "@categoryCreatedText": {
     "description": "This is the text for the SnackBar shown when a new category has been created",
@@ -36,42 +27,24 @@
       }
     }
   },
-
   "save": "Save",
-
-
   "savedCategories": "Saved categories",
-
   "noDataFound": "No data found.",
-
-
   "addVocabulary": "Add vocabulary",
   "scanVocabulary": "Scan vocabulary",
   "@addVocabulary": {
     "description": "The heading of the sectiont to add a vocab manually"
   },
-
   "category": "Category",
-
   "sourceLanguage": "Source language",
-
   "targetLanguage": "Target language",
-
   "fieldMustntBeEmpty": "This field mustn't be Empty.",
-
   "vocabSaved": "Vocabulary saved",
-
-
   "edit": "Edit",
-
   "delete": "Delete",
-
   "markAsFavourite": "Mark as favourite",
-
   "unmarkAsFavourite": "Unmark as favourite",
-
   "readOut": "Read out",
-
   "xOfXVocabsLearned": "{vocabsTotal,plural, =1{{vocabsLearned} of {vocabsTotal} vocabulary learned} other{{vocabsLearned} of {vocabsTotal} vocabularies learned}} ",
   "@xOfXVocabsLearned": {
     "description": "This text is to be shown below the name of a category in the category overview",
@@ -84,24 +57,93 @@
       }
     }
   },
-
   "noVocabulariesYet": "No vocabularies yet",
-
-
   "quizSettings": "Quiz settings",
-
   "quizSeedOptionRandom": "random",
-
   "quizSeedOptionOnlyUnlearned": "only unlearned",
-
   "quizSeedOptionSmart": "smart",
-
-
   "editVocabulary": "Edit vocabulary",
-
   "readOutVocabularyBook": "Read out vocabulary book",
-
   "stopReadingOut": "Stop reading out",
-
-  "means": "means"
+  "means": "means",
+  "max100Chars": "Max. 100 characters",
+  "max100CharsAllowed": "Up to 100 characters allowed",
+  "max25CharsAllowed": "Up to 25 characters allowed",
+  "cancelScanWarning": "Are you sure you want to cancel the scan?\n\n(Note: Scanned vocabulary will be lost)",
+  "chooseScanMedium": "How would you like to scan vocabulary?",
+  "endScan": "End scanning",
+  "no": "No",
+  "yes": "Yes",
+  "addVocabularies": "Add vocabularies",
+  "toContinue": "continue",
+  "customNoVocabDialogText": "You haven't saved any vocabularies yet. Scan or type new vocabularies",
+  "back": "Back",
+  "scanTitle": "Scan",
+  "tapManuallyTitle": "Typing",
+  "betaThanks": "Thank you for trying the beta version of ScanQ! Do you have suggestions or encountered any issues?",
+  "feedback": "Feedback",
+  "contact": "Contact",
+  "saveVocabs": "Save vocabularies",
+  "createCategory": "Create category",
+  "or": "or",
+  "next": "Next",
+  "matchingCountOfTransAndVocabs": "Different number of vocabularies and translations!",
+  "noWordsDetected": "No words could be detected in the image.",
+  "removePhonetics": "Remove phonetics",
+  "close": "Close",
+  "camera": "Camera",
+  "gallery": "Gallery",
+  "cropping": "Cropping...",
+  "scannedVocabs": "Scanned vocabularies",
+  "savedVocabsSuccessfully": "Vocabularies saved successfully!",
+  "mayNotBeEmpty": "Must not be empty",
+  "mpcQuizName": "Multiple Choice",
+  "inputQuizName": "Input Quiz",
+  "listeningQuizName": "Listening Quiz",
+  "mpcQuizName2": "Multiple\nChoice",
+  "inputQuizName2": "Input",
+  "listeningQuizName2": "Listening",
+  "answerLater": "Answer later",
+  "end": "End",
+  "nextQuestion": "Next question",
+  "translate": "Translate",
+  "yourAnswer": "Your answer...",
+  "later": "Later",
+  "answer": "Answer",
+  "showHint": "Show hint",
+  "categoryTooTiny": "The selected category doesn't have enough vocabularies. Please choose one with at least 4 vocabularies.",
+  "repeat": "Repeat",
+  "yourAnswers": "Your answers",
+  "questionColon": "Question:",
+  "answerColon": "Answer:",
+  "selectQuiz": "Select quiz",
+  "moreQuizInDevelopment": "More quizzes in development",
+  "intentionQuiz": "to start a quiz",
+  "readingSpeed": "Reading\nspeed",
+  "saved": "saved",
+  "noCategoriesFound": "No categories found",
+  "instructionAddCategroy": "Tap the + symbol at the bottom right to create your first category.",
+  "quiz": "Quiz",
+  "categoryNotFound": "Category not found",
+  "editSmall": "edit",
+  "toOpen": "to open",
+  "selectImage": "Select image",
+  "vocabLearn": "Learn Vocabularies",
+  "myVocabs": "My Vocabularies",
+  "createNewCategory": "Create new category",
+  "typeVocabs": "Type vocabularies",
+  "dontRemove": "Please do not remove",
+  "feedbackMailHeader": "My feedback on the beta version of ScanQ",
+  "overview": "Overview",
+  "scan": "Scan",
+  "translations": "Translations",
+  "vocabs": "Vocabularies",
+  "countOfVocabs": "Number\nof vocabularies: ",
+  "translationDirection": "Translation\ndirection",
+  "further": "Further",
+  "checkCaseCorrectness": "Evaluate case sensitivity",
+  "allowHints": "Allow hints",
+  "autoContinue": "Auto continue",
+  "onlyUnlearned": "Only unlearned vocabularies",
+  "startQuiz": "Start quiz"
 }

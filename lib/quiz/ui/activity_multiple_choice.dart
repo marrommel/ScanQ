@@ -10,6 +10,7 @@ import 'package:scanq_multiplatform/quiz/data/quiz_mode.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_quiz_header.dart';
 import 'package:scanq_multiplatform/quiz/ui/widgets/widget_top_curve.dart';
 
+import '../../gen/l10n/app_localizations.dart';
 import '../data/multiple_choice_item.dart';
 import '../logic/quiz_vocabulary_loader.dart';
 
@@ -36,12 +37,14 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
   bool _isVocabulariesEnough = true;
 
   /// Skip button will show different text if the question has already been answerd.
-  String skipText = "Später antworten";
+  String skipText = "";
 
   @override
   void initState() {
     super.initState();
     _loadVocabulary();
+
+    skipText = AppLocalizations.of(context)!.answerLater;
   }
 
   Future<void> _loadVocabulary() async {
@@ -72,7 +75,7 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
     _metadata.incrementScoreIfCorrect(choice);
 
     // replace the skip button with a next button
-    skipText = "Weiter";
+    skipText = AppLocalizations.of(context)!.next;
 
     // update the ui
     setState(() => {});
@@ -93,7 +96,7 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
     }
 
     // reset the skip button
-    skipText = "Später antworten";
+    skipText = AppLocalizations.of(context)!.answerLater;
 
     // update the ui
     setState(() => {});
@@ -119,13 +122,13 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
             Padding(
               padding: EdgeInsets.all(30),
               child: Text(
-                "Die ausgewählte Kategorie hat nicht genug Vokabeln. Bitte wähle eine Kategorie mit mindestens 4 Vokablen aus.",
+                AppLocalizations.of(context)!.categoryTooTiny,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: 20),
-            ElevatedButton(onPressed: Navigator.of(context).pop, child: Text("Beenden")),
+            ElevatedButton(onPressed: Navigator.of(context).pop, child: Text(AppLocalizations.of(context)!.end)),
             SizedBox(height: 120),
           ],
         ),
@@ -141,7 +144,7 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
           QuizHeader(metadata: _metadata),
           Spacer(),
           Text(
-            "Übersetze",
+            AppLocalizations.of(context)!.translate,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20, color: Colors.grey),
           ),

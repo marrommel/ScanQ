@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:scanq_multiplatform/ocr/logic/widget_bounding_box_image.dart';
 
+import '../../gen/l10n/app_localizations.dart';
 import '../data/recognized_word.dart';
 
 class ActivityRemoveBoundingBoxes extends StatefulWidget {
@@ -73,8 +74,8 @@ class _ActivityRemoveBoundingBoxesState extends State<ActivityRemoveBoundingBoxe
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 80),
-              const Text(
-                "Lautschriften entfernen",
+              Text(
+                AppLocalizations.of(context)!.removePhonetics,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
@@ -98,7 +99,7 @@ class _ActivityRemoveBoundingBoxesState extends State<ActivityRemoveBoundingBoxe
                   Uint8List updatedImageBytes = await _capturePngBytes();
                   Navigator.pop(context, {"box_selections": _removedWordIndexes, "updated_image": updatedImageBytes});
                 },
-                child: const Text("schließen"),
+                child: Text(AppLocalizations.of(context)!.close),
               ),
               const SizedBox(height: 30),
             ],

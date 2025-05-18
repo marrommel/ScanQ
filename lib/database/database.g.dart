@@ -4562,7 +4562,7 @@ final class $VocabulariesReferences
 
   $CategoriesProcessedTableManager get categoryId {
     final manager = $CategoriesTableManager($_db, $_db.categories)
-        .filter((f) => f.id($_item.categoryId!));
+        .filter((f) => f.id($_item.categoryId));
     final item = $_typedResult.readTableOrNull(_categoryIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(

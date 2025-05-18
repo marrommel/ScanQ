@@ -42,7 +42,7 @@ class MainMenu extends StatelessWidget {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ActivityQuizSelect()));
           },
           icon: const Icon(Icons.quiz_outlined),
-          label: Text("Quiz")),
+          label: Text(AppLocalizations.of(context)!.quiz)),
 
       //   TextButton.icon(
       //       onPressed: () {

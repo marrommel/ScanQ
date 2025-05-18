@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../common/ui/transparent_app_bar.dart';
 import '../../common/data/vocabulary_type.dart';
+import '../../common/ui/transparent_app_bar.dart';
+import '../../gen/l10n/app_localizations.dart';
 import '../data/recognized_word.dart';
 import '../logic/ocr_engine.dart';
 import 'activity_remove_bounding_boxes.dart';
@@ -64,7 +65,7 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
             ),
           ),
           child: Text(
-            "weiter",
+            AppLocalizations.of(context)!.next,
             style: TextStyle(fontSize: 18),
           ),
         ),
@@ -79,11 +80,11 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
     Uint8List? imageBytes;
 
     if (language == ScanLanguages.german) {
-      heading = 'Übersetzungen:';
+      heading = "${AppLocalizations.of(context)!.translations}:";
       target = ImageTarget.translation;
       imageBytes = _translationImageBytes;
     } else {
-      heading = 'Vokabeln:';
+      heading = "${AppLocalizations.of(context)!.vocabs}:";
       target = ImageTarget.vocabulary;
       imageBytes = _vocabImageBytes;
     }
@@ -126,7 +127,8 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
                           ),
                           SizedBox(height: 30),
                           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-                            ElevatedButton(onPressed: () => _pickImage(target), child: Text("Bild wählen")),
+                            ElevatedButton(
+                                onPressed: () => _pickImage(target), child: Text(AppLocalizations.of(context)!.selectImage)),
                           ]),
                         ]))),
           ]),
@@ -263,13 +265,13 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
 
       if (_rawVocabs.length != _rawTranslations.length) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Unterschiedliche Anzahl von Vokabeln und Übersetzungen!")));
+            .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.matchingCountOfTransAndVocabs)));
         resetState(ImageTarget.both);
         return;
       }
 
       if (_rawVocabs.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Es konnten keine Wörter im Bild erkannt werden.")));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.noWordsDetected)));
         resetState(ImageTarget.both);
         return;
       }

@@ -48,20 +48,20 @@ class CategoriesOverview extends StatelessWidget {
                       repeat: true,
                     ),
                   ),
-                  const Text(
-                    "Keine Kategorien gefunden",
+                  Text(
+                    AppLocalizations.of(context)!.noCategoriesFound,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       color: BrandColors.colorPrimaryDark,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Klicke auf das + Symbol unten rechts, um deine erste Kategorie zu erstellen.",
+                  Text(
+                    AppLocalizations.of(context)!.instructionAddCategroy,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w500,
                     ),

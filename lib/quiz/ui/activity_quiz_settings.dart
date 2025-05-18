@@ -14,6 +14,7 @@ import 'package:scanq_multiplatform/quiz/ui/widgets/widget_offset_card.dart';
 
 import '../../common/ui/widget_dialog_no_vocabulary.dert.dart';
 import '../../common/ui/widget_vertical_slider.dart';
+import '../../gen/l10n/app_localizations.dart';
 
 class ActivityQuizSettings extends StatefulWidget {
   final QuizMode quizMode;
@@ -119,7 +120,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
 
     // display a warning dialog if the user has no categories with vocabulary
     if (categories.isEmpty) {
-      DialogNoVocabulary.show(context, intentionText: "ein Quiz zu starten");
+      DialogNoVocabulary.show(context, intentionText: AppLocalizations.of(context)!.intentionQuiz);
 
       // show an empty screen
       return SizedBox.shrink();
@@ -128,10 +129,11 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
     return Scaffold(
       backgroundColor: BrandColors.colorPrimary,
       body: OffsetCard(
-        heading: widget.quizMode.title,
+        heading: widget.quizMode.title(context),
         children: [
           if (languages.length > 1) ...[
-            Text('Sprache', style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
+            Text(AppLocalizations.of(context)!.language,
+                style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
             Wrap(
               spacing: 8.0,
               children: languages.map((lang) {
@@ -157,7 +159,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
             ),
           ],
           const SizedBox(height: 10),
-          Text('Kategorie', style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
+          Text(AppLocalizations.of(context)!.category, style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
           Wrap(
             spacing: 8.0,
             children: categoryNames.map((category) {
@@ -196,7 +198,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
                     TextSpan(
                       children: [
                         TextSpan(
-                          text: 'Anzahl\nVokablen: ',
+                          text: AppLocalizations.of(context)!.countOfVocabs,
                           style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold),
                         ),
                         TextSpan(
@@ -231,7 +233,8 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Vorlese-\nTempo', style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
+                    Text(AppLocalizations.of(context)!.readingSpeed,
+                        style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 5),
                     _buildSpeedOption(TtsSpeed.fast, 'assets/icon/speed_fast.svg'),
                     _buildSpeedOption(TtsSpeed.normal, 'assets/icon/speed_normal.svg'),
@@ -249,7 +252,8 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text('Übersetzungs-\nrichtung', style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
+                      Text(AppLocalizations.of(context)!.translationDirection,
+                          style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 5),
                       Image.asset('assets/image/germany.png', width: 55),
                       Icon(
@@ -268,10 +272,10 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
             height: 60,
             thickness: 1.5,
           ),
-          Text('Weiteres', style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
+          Text(AppLocalizations.of(context)!.further, style: TextStyle(fontSize: headingFontSize, fontWeight: FontWeight.bold)),
           if (widget.quizMode == QuizMode.INPUT || widget.quizMode == QuizMode.LISTENING)
             CheckboxListTile(
-              title: const Text('Groß- und Kleinschreibung bewerten'),
+              title: Text(AppLocalizations.of(context)!.checkCaseCorrectness),
               value: caseSensitive,
               onChanged: (value) {
                 setState(() {
@@ -281,7 +285,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
             ),
           if (widget.quizMode == QuizMode.INPUT || widget.quizMode == QuizMode.LISTENING)
             CheckboxListTile(
-              title: const Text('Hinweise erlauben'),
+              title: Text(AppLocalizations.of(context)!.allowHints),
               value: hintsEnabled,
               onChanged: (value) {
                 setState(() {
@@ -291,7 +295,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
             ),
           CheckboxListTile(
             //TODO ADD IMPLEMENTAION
-            title: const Text('Automatisch weiter'),
+            title: Text(AppLocalizations.of(context)!.autoContinue),
             value: autoContinue,
             onChanged: (value) {
               setState(() {
@@ -300,7 +304,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
             },
           ),
           CheckboxListTile(
-            title: const Text('Nur ungelernte Vokabeln'),
+            title: Text(AppLocalizations.of(context)!.onlyUnlearned),
             value: onlyUntrained,
             onChanged: (value) {
               setState(() {
@@ -320,7 +324,8 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
               }
 
               if (categoryId == -1) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Kategorie nicht gefunden!")));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.categoryNotFound)));
               }
 
               QuizConfig quizConfig = QuizConfig(categoryId, quizCount.round(), reverseTranslation, caseSensitive, hintsEnabled,
@@ -336,8 +341,8 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 15),
             ),
-            child: const Text(
-              'Quiz starten',
+            child: Text(
+              AppLocalizations.of(context)!.startQuiz,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ),

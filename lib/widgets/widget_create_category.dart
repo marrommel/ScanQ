@@ -56,7 +56,10 @@ class _CreateCategoryState extends State<CreateCategory> {
     return Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.start, children: [
       Container(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Text(editMode ? "\"$initialCategoryName\" bearbeiten" : AppLocalizations.of(context)!.addCategory,
+          child: Text(
+              editMode
+                  ? "\"$initialCategoryName\" ${AppLocalizations.of(context)!.editSmall}"
+                  : AppLocalizations.of(context)!.addCategory,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: BrandColors.colorPrimaryDark))),
       Form(
           key: _createCategoryFormKey,
@@ -72,7 +75,7 @@ class _CreateCategoryState extends State<CreateCategory> {
                   if (name == null || name.trim().isEmpty) {
                     return AppLocalizations.of(context)!.pleaseEnterAName;
                   } else if (name.trim().length > 25) {
-                    return "Max. 25 Zeichen erlaubt";
+                    return AppLocalizations.of(context)!.max25CharsAllowed;
                   } else {
                     categoryName = name;
                     return null;
@@ -131,7 +134,8 @@ class _CreateCategoryState extends State<CreateCategory> {
     }
 
     if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("\"$categoryName\" gespeichert.")));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("\"$categoryName\" ${AppLocalizations.of(context)!.saved}.")));
       Navigator.pop(context);
     }
   }

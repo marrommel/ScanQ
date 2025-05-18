@@ -6,6 +6,7 @@ import 'package:lottie/lottie.dart';
 import 'package:scanq_multiplatform/common/data/brand_colors.dart';
 import 'package:scanq_multiplatform/quiz/data/quiz_config.dart';
 
+import '../../gen/l10n/app_localizations.dart';
 import '../data/quiz_item.dart';
 import '../data/quiz_mode.dart';
 
@@ -112,8 +113,8 @@ class _ActivityQuizResultState extends State<ActivityQuizResult> {
                             ),
                           ),
                           onPressed: () => Navigator.pop(context),
-                          child: const Text("Beenden",
-                              style: TextStyle(
+                          child: Text(AppLocalizations.of(context)!.end,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -132,8 +133,8 @@ class _ActivityQuizResultState extends State<ActivityQuizResult> {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(builder: (context) => widget.quizMode.activity(widget.quizConfig))),
                           },
-                          child: const Text("Wiederholen",
-                              style: TextStyle(
+                          child: Text(AppLocalizations.of(context)!.repeat,
+                              style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -176,8 +177,8 @@ class _ActivityQuizResultState extends State<ActivityQuizResult> {
                             ),
                           ),
                           const SizedBox(height: 20),
-                          const Text(
-                            "Deine Antworten",
+                          Text(
+                            AppLocalizations.of(context)!.yourAnswers,
                             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 20),
@@ -260,7 +261,7 @@ class _QuestionItemState extends State<QuestionItem> {
                       SizedBox(
                         width: 90,
                         child: Text(
-                          "Frage:",
+                          AppLocalizations.of(context)!.questionColon,
                           style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -283,7 +284,7 @@ class _QuestionItemState extends State<QuestionItem> {
                         SizedBox(
                           width: 90,
                           child: Text(
-                            "Lösung:",
+                            AppLocalizations.of(context)!.answerColon,
                             style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                           ),
                         ),

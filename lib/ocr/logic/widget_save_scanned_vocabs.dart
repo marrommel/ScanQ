@@ -51,7 +51,7 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Text(
-                    "Vokablen speichern",
+                    AppLocalizations.of(context)!.saveVocabs,
                     style: const TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -88,8 +88,8 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: const Text(
-                              "oder",
+                            child: Text(
+                              AppLocalizations.of(context)!.or,
                               style: TextStyle(fontSize: 18, color: Colors.black45),
                             ),
                           ),
@@ -105,14 +105,14 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                       TextFormField(
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
-                          labelText: "Kategorie erstellen",
+                          labelText: AppLocalizations.of(context)!.createCategory,
                         ),
                         onChanged: (_) => _createCategoryFormKey.currentState!.validate(),
                         validator: (name) {
                           if (name == null) {
                             return AppLocalizations.of(context)!.pleaseEnterAName;
                           } else if (name.trim().length > 25) {
-                            return "Max. 25 Zeichen erlaubt";
+                            return AppLocalizations.of(context)!.max25CharsAllowed;
                           } else {
                             categoryName = name;
                             return null;
@@ -141,7 +141,7 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                             },
                           ),
                         ),
-                        child: Text("Speichern"),
+                        child: Text(AppLocalizations.of(context)!.save),
                       ),
                     ],
                   ),

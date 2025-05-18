@@ -89,7 +89,7 @@ class _VocabManually extends State<VocabManually> {
                             if (value == null || value.trim().isEmpty) {
                               return AppLocalizations.of(context)!.fieldMustntBeEmpty;
                             } else if (value.trim().length > 100) {
-                              return "Max. 100 Zeichen erlaubt";
+                              return AppLocalizations.of(context)!.max100CharsAllowed;
                             } else {
                               vocabLocal = value;
                               return null;
@@ -105,7 +105,7 @@ class _VocabManually extends State<VocabManually> {
                             if (value == null || value.trim().isEmpty) {
                               return AppLocalizations.of(context)!.fieldMustntBeEmpty;
                             } else if (value.trim().length > 100) {
-                              return "Max. 100 Zeichen erlaubt";
+                              return AppLocalizations.of(context)!.max100CharsAllowed;
                             } else {
                               vocabForeign = value;
                               return null;

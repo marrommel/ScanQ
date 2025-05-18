@@ -46,7 +46,7 @@ class _VocabulariesTable extends State<VocabularyTable> {
               // show a dialog with options to add a vocabulary for the empty category
               DialogNoVocabulary.show(
                 context,
-                intentionText: "\"${widget.category.categoryName}\" zu öffnen",
+                intentionText: "\"${widget.category.categoryName}\" ${AppLocalizations.of(context)!.toOpen}",
                 categoryId: widget.category.id,
               );
 

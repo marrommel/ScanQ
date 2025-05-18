@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_document_scanner/flutter_document_scanner.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:scanq_multiplatform/gen/l10n/app_localizations.dart';
 
 import '../../common/data/brand_colors.dart';
 import '../../common/logic/permission_handler.dart';
@@ -77,14 +78,14 @@ class _ActivityScanImageState extends State<ActivityScanImage> {
                 ),
                 SizedBox(width: 10),
                 Text(
-                  "Zurück",
+                  AppLocalizations.of(context)!.back,
                   style: TextStyle(fontSize: 20, color: Colors.white),
                 ),
               ],
             ),
           ),
           Text(
-            "Wie möchtest du\nVokabeln einscannen?",
+            AppLocalizations.of(context)!.chooseScanMedium,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),
           ),
@@ -92,19 +93,19 @@ class _ActivityScanImageState extends State<ActivityScanImage> {
             onPressed: () => _loadImage(ImageSource.camera),
             style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(Colors.white)),
             child: Text(
-              "Kamera",
+              AppLocalizations.of(context)!.camera,
               style: TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
             ),
           ),
           Text(
-            "oder",
+            AppLocalizations.of(context)!.or,
             style: TextStyle(fontSize: 35, color: Colors.white70, fontWeight: FontWeight.bold),
           ),
           ElevatedButton(
             onPressed: () => _loadImage(ImageSource.gallery),
             style: ButtonStyle(backgroundColor: WidgetStateProperty.all<Color>(Colors.white)),
             child: Text(
-              "Galerie",
+              AppLocalizations.of(context)!.gallery,
               style: TextStyle(fontSize: 20, color: Colors.black87, fontWeight: FontWeight.bold),
             ),
           ),
@@ -127,20 +128,20 @@ class _ActivityScanImageState extends State<ActivityScanImage> {
           },
           generalStyles: GeneralStyles(
             baseColor: BrandColors.colorPrimary,
-            messageCroppingPicture: "Zuschneiden...",
+            messageCroppingPicture: AppLocalizations.of(context)!.cropping,
             hideDefaultBottomNavigation: true,
             showCameraPreview: false,
             widgetInsteadOfCameraPreview: _createSelectionUi(),
           ),
           cropPhotoDocumentStyle: CropPhotoDocumentStyle(
-            textButtonSave: "Weiter",
+            textButtonSave: AppLocalizations.of(context)!.next,
             dotRadius: 3,
             dotSize: 30,
             minDistanceDots: 50,
             maskColor: Colors.black.withAlpha(128),
           ),
           editPhotoDocumentStyle: EditPhotoDocumentStyle(
-            textButtonSave: "Speichern",
+            textButtonSave: AppLocalizations.of(context)!.save,
             hideBottomBarDefault: true,
           ),
         ),

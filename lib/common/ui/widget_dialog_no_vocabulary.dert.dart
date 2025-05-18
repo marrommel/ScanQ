@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quickalert/quickalert.dart';
 
+import '../../gen/l10n/app_localizations.dart';
 import '../../layouts/activity_vocabulary_manually.dart';
 import '../../ocr/ui/activity_image_select.dart';
 import '../data/brand_colors.dart';
@@ -8,15 +9,18 @@ import '../data/brand_colors.dart';
 class DialogNoVocabulary {
   static void show(
     BuildContext context, {
-    String title = "Vokabeln hinzufügen",
-    String intentionText = "fortzufahren",
+    String? title,
+    String? intentionText,
     String? customText,
     bool showScanOption = true,
     bool showEnterManuallyOption = true,
     int? categoryId,
   }) {
-    final String displayText =
-        customText ?? "Du hast noch keine Vokabeln gespeichert. Scanne oder tippe neue Vokabeln ein, um $intentionText.";
+    final loc = AppLocalizations.of(context)!;
+
+    title = title ?? loc.addVocabularies;
+    intentionText = intentionText ?? loc.toContinue;
+    final String displayText = customText ?? '${loc.customNoVocabDialogText} $intentionText.';
 
     Future.microtask(() {
       QuickAlert.show(
@@ -28,7 +32,7 @@ class DialogNoVocabulary {
         disableBackBtn: false,
         barrierDismissible: false,
         confirmBtnColor: Colors.black.withAlpha(200),
-        confirmBtnText: "Zurück",
+        confirmBtnText: loc.back,
         confirmBtnTextStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
         onConfirmBtnTap: () {
           Navigator.of(context).pop(); // Close the dialog
@@ -50,7 +54,7 @@ class DialogNoVocabulary {
             Navigator.of(context).pop();
             Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => ActivityImageSelect()));
           },
-          child: Text("Einscannen", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          child: Text(AppLocalizations.of(context)!.scanTitle, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         ),
       );
     }
@@ -64,7 +68,8 @@ class DialogNoVocabulary {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (_) => ActivityVocabularyManually(categoryId: categoryId)));
           },
-          child: Text("Eintippen", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+          child:
+              Text(AppLocalizations.of(context)!.tapManuallyTitle, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
         ),
       );
     }

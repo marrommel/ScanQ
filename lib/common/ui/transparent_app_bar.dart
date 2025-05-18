@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../gen/l10n/app_localizations.dart';
+
 class TransparentAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showWaringOnClose;
 
@@ -31,20 +33,19 @@ class TransparentAppBar extends StatelessWidget implements PreferredSizeWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Einscannen beenden"),
-          content: const Text(
-              "Bist du sicher, dass du das Einscannen abbrechen willst?\n\n(Hinweis: Die eingescannten Vokabeln gehen verloren)"),
+          title: Text(AppLocalizations.of(context)!.endScan),
+          content: Text(AppLocalizations.of(context)!.cancelScanWarning),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(), // Cancel
-              child: const Text("Nein"),
+              child: Text(AppLocalizations.of(context)!.no),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close dialog
                 Navigator.of(context).pop(); // Go back
               },
-              child: const Text("Ja"),
+              child: Text(AppLocalizations.of(context)!.yes),
             ),
           ],
         );
