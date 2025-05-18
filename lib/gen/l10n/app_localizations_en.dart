@@ -262,7 +262,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryTooTiny => 'The selected category doesn\'t have enough vocabularies. Please choose one with at least 4 vocabularies.';
 
   @override
-  String get repeat => 'Repeat';
+  String get repeat => 'Play again';
 
   @override
   String get yourAnswers => 'Your answers';
@@ -301,7 +301,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryNotFound => 'Category not found';
 
   @override
-  String get editSmall => 'edit';
+  String get rename => 'will be renamed';
 
   @override
   String get toOpen => 'to open';

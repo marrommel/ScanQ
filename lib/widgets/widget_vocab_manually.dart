@@ -22,6 +22,10 @@ class _VocabManually extends State<VocabManually> {
   String vocabForeign = "";
   String? selectedValueCombination;
 
+  // prevent validators from being triggered when the form is reset
+  bool firstChangeVoc = false;
+  bool firstChangeTrans = false;
+
   int get selectedCategory => int.parse(selectedValueCombination!.split(";")[0]);
 
   String get selectedCategoryLang => selectedValueCombination!.split(";")[1];
@@ -84,7 +88,13 @@ class _VocabManually extends State<VocabManually> {
                               border: const UnderlineInputBorder(),
                               labelText: AppLocalizations.of(context)!.sourceLanguage,
                               icon: getFlagByLanguageCode("DE")),
-                          onChanged: (_) => _createVocabFormKey.currentState!.validate(),
+                          onChanged: (value) {
+                            if (firstChangeTrans) {
+                              firstChangeTrans = false;
+                            } else {
+                              _createVocabFormKey.currentState!.validate();
+                            }
+                          },
                           validator: (String? value) {
                             if (value == null || value.trim().isEmpty) {
                               return AppLocalizations.of(context)!.fieldMustntBeEmpty;
@@ -100,7 +110,13 @@ class _VocabManually extends State<VocabManually> {
                               border: const UnderlineInputBorder(),
                               labelText: AppLocalizations.of(context)!.targetLanguage,
                               icon: getFlagByLanguageCode(selectedCategoryLang)),
-                          onChanged: (_) => _createVocabFormKey.currentState!.validate(),
+                          onChanged: (value) {
+                            if (firstChangeVoc) {
+                              firstChangeVoc = false;
+                            } else {
+                              _createVocabFormKey.currentState!.validate();
+                            }
+                          },
                           validator: (String? value) {
                             if (value == null || value.trim().isEmpty) {
                               return AppLocalizations.of(context)!.fieldMustntBeEmpty;
@@ -125,6 +141,8 @@ class _VocabManually extends State<VocabManually> {
 
                                 vocabLocal = "";
                                 vocabForeign = "";
+                                firstChangeTrans = true;
+                                firstChangeVoc = true;
                                 _createVocabFormKey.currentState?.reset();
                               }
                             }

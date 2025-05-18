@@ -584,7 +584,7 @@ abstract class AppLocalizations {
   /// No description provided for @repeat.
   ///
   /// In en, this message translates to:
-  /// **'Repeat'**
+  /// **'Play again'**
   String get repeat;
 
   /// No description provided for @yourAnswers.
@@ -659,11 +659,11 @@ abstract class AppLocalizations {
   /// **'Category not found'**
   String get categoryNotFound;
 
-  /// No description provided for @editSmall.
+  /// No description provided for @rename.
   ///
   /// In en, this message translates to:
-  /// **'edit'**
-  String get editSmall;
+  /// **'will be renamed'**
+  String get rename;
 
   /// No description provided for @toOpen.
   ///

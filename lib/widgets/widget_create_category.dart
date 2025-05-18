@@ -20,6 +20,7 @@ class CreateCategory extends StatefulWidget {
 
 class _CreateCategoryState extends State<CreateCategory> {
   bool isValid = false;
+  bool firstChange = false;
 
   String categoryName = "";
   String categoryLanguage = "en";
@@ -58,7 +59,7 @@ class _CreateCategoryState extends State<CreateCategory> {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text(
               editMode
-                  ? "\"$initialCategoryName\" ${AppLocalizations.of(context)!.editSmall}"
+                  ? "\"$initialCategoryName\" ${AppLocalizations.of(context)!.rename}"
                   : AppLocalizations.of(context)!.addCategory,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: BrandColors.colorPrimaryDark))),
       Form(
@@ -67,9 +68,15 @@ class _CreateCategoryState extends State<CreateCategory> {
             TextFormField(
                 decoration:
                     InputDecoration(border: const UnderlineInputBorder(), labelText: AppLocalizations.of(context)!.categoryName),
-                onChanged: (_) => setState(() {
+                onChanged: (value) {
+                  if (firstChange) {
+                    firstChange = false;
+                  } else {
+                    setState(() {
                       isValid = _createCategoryFormKey.currentState!.validate();
-                    }),
+                    });
+                  }
+                },
                 initialValue: editMode ? initialCategoryName : null,
                 validator: (name) {
                   if (name == null || name.trim().isEmpty) {
@@ -154,6 +161,7 @@ class _CreateCategoryState extends State<CreateCategory> {
     }
 
     categoryName = "";
+    firstChange = true;
     _createCategoryFormKey.currentState?.reset();
   }
 }

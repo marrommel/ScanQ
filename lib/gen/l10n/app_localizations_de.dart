@@ -301,7 +301,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get categoryNotFound => 'Kategorie nicht gefunden';
 
   @override
-  String get editSmall => 'bearbeiten';
+  String get rename => 'umbenennen';
 
   @override
   String get toOpen => 'zu öffnen';

@@ -38,7 +38,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
   String selectedCategory = "";
   double quizCount = 10;
   TtsSpeed ttsSpeed = TtsSpeed.normal;
-  bool reverseTranslation = true;
+  bool reverseTranslation = false;
   bool caseSensitive = true;
   bool hintsEnabled = true;
   bool autoContinue = true;
@@ -257,7 +257,7 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
                       const SizedBox(height: 5),
                       Image.asset('assets/image/germany.png', width: 55),
                       Icon(
-                        reverseTranslation ? Icons.arrow_downward : Icons.arrow_upward,
+                        reverseTranslation ? Icons.arrow_upward : Icons.arrow_downward,
                         size: 40,
                       ),
                       Image.asset('assets/image/usa.png', width: 55),
@@ -327,6 +327,9 @@ class _ActivityQuizSettingsState extends State<ActivityQuizSettings> {
                 ScaffoldMessenger.of(context)
                     .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.categoryNotFound)));
               }
+
+              // force vocabs (instead of translations) to be read aloud
+              if (widget.quizMode == QuizMode.LISTENING) reverseTranslation = true;
 
               QuizConfig quizConfig = QuizConfig(categoryId, quizCount.round(), reverseTranslation, caseSensitive, hintsEnabled,
                   autoContinue, onlyUntrained, ttsSpeed);
