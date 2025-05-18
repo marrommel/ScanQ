@@ -52,8 +52,6 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
   void initState() {
     super.initState();
 
-    submitButtonText = AppLocalizations.of(context)!.answerLater;
-
     // set iOS audio category to ensure audio plays even in silent mode
     _flutterTts.setIosAudioCategory(
       IosTextToSpeechAudioCategory.playback,
@@ -71,6 +69,12 @@ class _ActivityListeningQuizState extends State<ActivityListeningQuiz> {
     });
 
     _loadVocabulary();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    submitButtonText = AppLocalizations.of(context)!.answerLater;
   }
 
   Future<void> _loadVocabulary() async {

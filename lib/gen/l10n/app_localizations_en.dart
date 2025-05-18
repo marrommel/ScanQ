@@ -322,7 +322,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get typeVocabs => 'Type vocabularies';
 
   @override
-  String get dontRemove => 'Please do not remove';
+  String get dontRemove => 'Please don\'t remove';
 
   @override
   String get feedbackMailHeader => 'My feedback on the beta version of ScanQ';
@@ -340,7 +340,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vocabs => 'Vocabularies';
 
   @override
-  String get countOfVocabs => 'Number\nof vocabularies: ';
+  String get countOfVocabs => 'Number of\nvocabularies: ';
 
   @override
   String get translationDirection => 'Translation\ndirection';

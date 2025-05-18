@@ -704,7 +704,7 @@ abstract class AppLocalizations {
   /// No description provided for @dontRemove.
   ///
   /// In en, this message translates to:
-  /// **'Please do not remove'**
+  /// **'Please don\'t remove'**
   String get dontRemove;
 
   /// No description provided for @feedbackMailHeader.
@@ -740,7 +740,7 @@ abstract class AppLocalizations {
   /// No description provided for @countOfVocabs.
   ///
   /// In en, this message translates to:
-  /// **'Number\nof vocabularies: '**
+  /// **'Number of\nvocabularies: '**
   String get countOfVocabs;
 
   /// No description provided for @translationDirection.

@@ -36,14 +36,18 @@ class _ActivityMultipleChoiceState extends State<ActivityMultipleChoice> {
   /// Boolean to indicate if the quiz data contains enough vocabularies.
   bool _isVocabulariesEnough = true;
 
-  /// Skip button will show different text if the question has already been answerd.
+  /// Skip button will show different text if the question has already been answered.
   String skipText = "";
 
   @override
   void initState() {
     super.initState();
     _loadVocabulary();
+  }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     skipText = AppLocalizations.of(context)!.answerLater;
   }
 

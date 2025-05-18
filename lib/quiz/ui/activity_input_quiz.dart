@@ -48,6 +48,11 @@ class _ActivityInputQuizState extends State<ActivityInputQuiz> {
   void initState() {
     super.initState();
     _loadVocabulary();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     submitButtonText = AppLocalizations.of(context)!.answerLater;
   }
 
