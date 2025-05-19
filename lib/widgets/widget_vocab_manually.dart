@@ -43,7 +43,17 @@ class _VocabManually extends State<VocabManually> {
           selectedValueCombination ??= "${category.id};${category.categoryLanguage}";
         }
 
-        return DropdownMenuItem<String>(value: "${category.id};${category.categoryLanguage}", child: Text(category.categoryName));
+        return DropdownMenuItem<String>(
+          value: "${category.id};${category.categoryLanguage}",
+          child: SizedBox(
+            width: 120,
+            child: Text(
+              maxLines: 1,
+              category.categoryName,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        );
       }).watch();
 
   @override

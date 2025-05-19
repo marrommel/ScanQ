@@ -44,6 +44,14 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
       builder: (context, AsyncSnapshot<List<DropdownMenuItem<String>>> snapshot) {
         if (snapshot.connectionState == ConnectionState.active || snapshot.connectionState == ConnectionState.done) {
           if (snapshot.hasData) {
+            final categories = snapshot.data;
+
+            // ensure that select category is not shown if no categories exist
+            bool categoriesExist = false;
+            if (snapshot.data != null) {
+              categoriesExist = snapshot.data!.isNotEmpty;
+            }
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
@@ -65,43 +73,45 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          hint: Text(AppLocalizations.of(context)!.category),
-                          items: snapshot.data,
-                          value: selectedValueCombination,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValueCombination = value as String;
-                            });
-                          },
+                      if (categoriesExist)
+                        DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            hint: Text(AppLocalizations.of(context)!.category),
+                            items: categories,
+                            value: selectedValueCombination,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValueCombination = value as String;
+                              });
+                            },
+                          ),
                         ),
-                      ),
-                      Row(
-                        children: [
-                          const Expanded(
-                            child: Divider(
-                              height: 60,
-                              thickness: 2,
-                              color: Colors.black26,
+                      if (categoriesExist)
+                        Row(
+                          children: [
+                            const Expanded(
+                              child: Divider(
+                                height: 60,
+                                thickness: 2,
+                                color: Colors.black26,
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Text(
-                              AppLocalizations.of(context)!.or,
-                              style: TextStyle(fontSize: 18, color: Colors.black45),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              child: Text(
+                                AppLocalizations.of(context)!.or,
+                                style: TextStyle(fontSize: 18, color: Colors.black45),
+                              ),
                             ),
-                          ),
-                          const Expanded(
-                            child: Divider(
-                              height: 60,
-                              thickness: 2,
-                              color: Colors.black26,
+                            const Expanded(
+                              child: Divider(
+                                height: 60,
+                                thickness: 2,
+                                color: Colors.black26,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ],
+                        ),
                       TextFormField(
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
@@ -109,7 +119,7 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                         ),
                         onChanged: (_) => _createCategoryFormKey.currentState!.validate(),
                         validator: (name) {
-                          if (name == null) {
+                          if (name == null || name.trim().isEmpty) {
                             return AppLocalizations.of(context)!.pleaseEnterAName;
                           } else if (name.trim().length > 25) {
                             return AppLocalizations.of(context)!.max25CharsAllowed;
@@ -122,9 +132,13 @@ class _SaveScannedVocabsState extends State<SaveScannedVocabs> {
                       SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
+                          // only assign a category id if categories exist
+                          int categoryId = -1;
+                          if (categoriesExist) categoryId = selectedCategoryId;
+
                           if (_createCategoryFormKey.currentState!.validate()) {
                             widget.onAccept(
-                              selectedCategoryId,
+                              categoryId,
                               categoryName.trim().isNotEmpty ? categoryName : "",
                             );
                             Navigator.of(context).pop();

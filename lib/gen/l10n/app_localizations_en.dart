@@ -277,7 +277,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get selectQuiz => 'Select quiz';
 
   @override
-  String get moreQuizInDevelopment => 'More quizzes in development';
+  String get moreQuizInDevelopment => 'More quiz modes in development';
 
   @override
   String get intentionQuiz => 'to start a quiz';

@@ -614,7 +614,7 @@ abstract class AppLocalizations {
   /// No description provided for @moreQuizInDevelopment.
   ///
   /// In en, this message translates to:
-  /// **'More quizzes in development'**
+  /// **'More quiz modes in development'**
   String get moreQuizInDevelopment;
 
   /// No description provided for @intentionQuiz.

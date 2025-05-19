@@ -1,4 +1,4 @@
-package com.rommelbendel.flutter_scanq;
+package com.rommelbendel.scanQ;
 
 import io.flutter.embedding.android.FlutterActivity;
 

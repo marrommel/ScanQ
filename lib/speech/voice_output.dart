@@ -64,7 +64,7 @@ class VoiceOutput {
     }
 
     tts.setErrorHandler((message) {
-      developer.log(message, name: "com.rommelbendel.scanq_multiplatform.speech");
+      developer.log(message, name: "com.rommelbendel.scanQ.speech");
       ttsState = TtsState.stopped;
     });
   }
