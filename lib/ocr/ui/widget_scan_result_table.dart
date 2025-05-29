@@ -115,6 +115,7 @@ class _ScanResultTableState extends State<ScanResultTable> {
             return null;
           },
           maxLines: null,
+          autocorrect: true,
           enabled: editable,
           initialValue: value,
           onChanged: onChanged,

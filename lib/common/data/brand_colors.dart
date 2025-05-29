@@ -25,5 +25,6 @@ class BrandColors {
   static const Color colorTableBackground = Color(0xFFB8FBE2);
   static const Color colorTableCell = Color(0xFF3B9875);
   static const Color colorText = Color(0xFFFFFFFF);
+  static const Color colorTextDark = Color(0xFFFFFFFF);
   static const Color colorMarked = Color(0xFF9B59B6);
 }

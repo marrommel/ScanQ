@@ -1,0 +1,48 @@
+CREATE TABLE IF NOT EXISTS languages(
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    language_name VARCHAR(200) NOT NULL,
+    language_code VARCHAR(4) NOT NULL,
+    translator_available BOOL NOT NULL DEFAULT FALSE,
+    ocr_available BOOL NOT NULL DEFAULT FALSE,
+    voice_recognition_available BOOL NOT NULL DEFAULT FALSE
+) AS Language;
+
+-- Logs for all INSERT, UPDATE and DELETE Statements against 'languages'
+CREATE TABLE IF NOT EXISTS languages_log (
+    log_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    action_name VARCHAR(10) NOT NULL,
+    action_timestamp DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    affected_id INTEGER NOT NULL,
+    language_name_new VARCHAR(200),
+    language_code_new VARCHAR(4),
+    translator_available_new BOOL,
+    ocr_available_new BOOL,
+    voice_recognition_available_new BOOL,
+    language_name_old VARCHAR(200),
+    language_code_old VARCHAR(4),
+    translator_available_old BOOL,
+    ocr_available_old BOOL,
+    voice_recognition_available_old BOOL
+);
+
+-- common SQL queries against 'languages'
+allLanguages: SELECT * FROM languages;
+languageById: SELECT * FROM languages WHERE id = :target_id;
+languageByCode: SELECT * FROM languages WHERE language_code = :code;
+allLanguagesWithTranslators: SELECT * FROM languages WHERE translator_available = TRUE;
+allLanguagesWithOCR: SELECT * FROM languages WHERE ocr_available = TRUE;
+allLanguagesWithVoiceRecognition: SELECT * FROM languages WHERE voice_recognition_available = TRUE;
+createLanguage:
+INSERT INTO languages(language_name, language_code, translator_available, ocr_available, voice_recognition_available)
+VALUES (:language_name, :language_code, :translator, :ocr, :voice_recognition);
+updateLanguage:
+UPDATE languages
+SET language_name = :language_name,
+    language_code = :language_code,
+    translator_available = :translator,
+    ocr_available = :ocr,
+    voice_recognition_available = :voice_recognition
+WHERE id = :id;
+deleteLanguage: DELETE FROM languages WHERE id = :target_id;
+lastlyInsertedLanguage: SELECT * FROM languages ORDER BY id DESC LIMIT 1;
+fullLog: SELECT * FROM languages_log;

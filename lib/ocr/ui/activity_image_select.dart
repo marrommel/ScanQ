@@ -249,8 +249,6 @@ class _ActivityImageSelectState extends State<ActivityImageSelect> {
       word.resetSelection();
     }
 
-    // TODO: removedWords is always one behind, maybe last selected word is not in list.  [BUG]
-    // TODO: Two separate problems or related? Check if approach using call by reference is wrong
     // select only those words that are selected in the current scan result
     for (int id in removedWords) {
       scanRes[id].selectWord();

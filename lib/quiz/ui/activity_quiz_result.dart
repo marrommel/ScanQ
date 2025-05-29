@@ -40,9 +40,9 @@ class _ActivityQuizResultState extends State<ActivityQuizResult> {
 
   void _setAnimation() {
     int mistakes = widget.totalQuestions - widget.score;
-    double goldThreshold = 0;
-    double silverThreshold = min(max(1, widget.totalQuestions * 0.1), widget.totalQuestions - 1);
-    double bronzeThreshold = min(max(2, widget.totalQuestions * 0.2), widget.totalQuestions - 1);
+    int goldThreshold = (widget.totalQuestions * 0.05).floor();
+    int silverThreshold = min(max(1, widget.totalQuestions * 0.1), widget.totalQuestions - 1).floor();
+    int bronzeThreshold = min(max(2, widget.totalQuestions * 0.2), widget.totalQuestions - 1).floor();
 
     if (mistakes <= goldThreshold) {
       animationAsset = 'assets/animation/trophy_gold.json';
