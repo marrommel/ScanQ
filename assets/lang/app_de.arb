@@ -113,5 +113,6 @@
   "allowHints": "Hinweise erlauben",
   "autoContinue": "Automatisch weiter",
   "onlyUnlearned": "Nur ungelernte Vokabeln",
-  "startQuiz": "Quiz starten"
+  "startQuiz": "Quiz starten",
+  "surveyUnavailable", "Feedback ist leider nur unter Android & IOS verfügbar."
 }

@@ -65,10 +65,20 @@ System: ${iosInfo.systemName}
     }
   }
 
-  Future<void> _openFeedbackSurvey() async {
-    final Uri surveyUri = Uri.parse("https://forms.gle/CkXPdGBrVjVdAXxx7");
-    if (await canLaunchUrl(surveyUri)) {
+  Future<void> _openFeedbackSurvey(BuildContext context) async {
+    Uri? surveyUri = null;
+
+    if (Platform.isIOS) {
+      surveyUri = Uri.parse("https://forms.gle/SqJxaG444RXJ3Q5C7");
+    } else if(Platform.isAndroid) {
+      surveyUri = Uri.parse("https://forms.gle/CkXPdGBrVjVdAXxx7");
+    }
+
+    if (surveyUri != null && await canLaunchUrl(surveyUri)) {
       await launchUrl(surveyUri);
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.surveyUnavailable)));
     }
   }
 
@@ -152,7 +162,6 @@ System: ${iosInfo.systemName}
     );
   }
 
-  /// Simple Text Button
   Widget _buildButton(BuildContext context, String label, Widget screen) {
     return ElevatedButton(
       onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => screen)),
@@ -166,7 +175,11 @@ System: ${iosInfo.systemName}
   }
 
   /// Feedback Card Section
-  Widget _buildFeedbackCard(BuildContext context, VoidCallback onFeedbackTap, VoidCallback onContactTap) {
+  Widget _buildFeedbackCard(
+      BuildContext context,
+      Future<void> Function(BuildContext) onFeedbackTap,
+      VoidCallback onContactTap
+      ) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -181,7 +194,9 @@ System: ${iosInfo.systemName}
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: onFeedbackTap,
+                  onPressed: () async {
+                    await onFeedbackTap(context);
+                  },
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
