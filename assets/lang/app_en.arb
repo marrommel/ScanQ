@@ -145,6 +145,6 @@
   "allowHints": "Allow hints",
   "autoContinue": "Auto continue",
   "onlyUnlearned": "Only unlearned vocabularies",
-  "startQuiz": "Start quiz"
-  "surveyUnavailable", "Feedback is only available on Android & iOS."
+  "startQuiz": "Start quiz",
+  "surveyUnavailable": "Feedback is only available on Android & iOS."
 }

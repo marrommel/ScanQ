@@ -78,7 +78,9 @@ System: ${iosInfo.systemName}
       await launchUrl(surveyUri);
     } else {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.surveyUnavailable)));
+          .showSnackBar(SnackBar(content: Text(
+          AppLocalizations.of(context)!.surveyUnavailable)
+      ));
     }
   }
 

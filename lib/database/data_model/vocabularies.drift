@@ -61,7 +61,7 @@ allVocabularies: SELECT v.*, c.category_name, c.category_language,
         ELSE FALSE
     END AS is_learned
     FROM vocabularies AS v INNER JOIN categories AS c ON v.category_id = c.id;
-allCategoryVocabularies: SELECT * FROM vocabularies AS v WHERE v.category_id = :target_category_id;
+allCategoryVocabularies: SELECT * FROM vocabularies AS v WHERE v.category_id = :target_category_id ORDER BY v.voc_foreign;
 someCategoryVocabularies: SELECT * FROM vocabularies AS v WHERE v.category_id = :target_category_id ORDER BY RANDOM() LIMIT :target_vocab_amount;
 someUntrainedCategoryVocabularies: WITH untrained_vocabs AS (
                                        SELECT * FROM vocabularies
